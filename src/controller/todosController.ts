@@ -1,3 +1,4 @@
+import { ITodo } from "./../interfaces/ITodo";
 import { Request, Response } from "express";
 import * as TodoServices from "../services/todoServices";
 
@@ -15,5 +16,12 @@ export const getTodoById = (req: Request, res: Response) => {
     });
   }
 
+  res.status(200).json(data);
+};
+
+export const addTodo = (req: Request, res: Response) => {
+  const todo = req.body;
+  console.log(req.body);
+  const data = TodoServices.addTodo(todo);
   res.status(200).json(data);
 };
