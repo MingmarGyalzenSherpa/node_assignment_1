@@ -4,10 +4,12 @@ let todos = [
   {
     id: "1",
     title: "Go home",
+    completed: false,
   },
   {
     id: "2",
     title: "Work",
+    completed: true,
   },
 ];
 
