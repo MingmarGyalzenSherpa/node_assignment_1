@@ -33,3 +33,13 @@ export const deleteTodo = (req: Request, res: Response) => {
 
   res.status(200).json(data);
 };
+
+export const updateTodo = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const todo = req.body;
+
+  const data = TodoServices.updateTodo(id, todo);
+
+  res.status(200).json(data);
+};

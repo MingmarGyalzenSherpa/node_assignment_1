@@ -22,3 +22,8 @@ export const deleteTodo = (id: string) => {
 
   return data;
 };
+
+export const updateTodo = (id: string, todo: ITodo) => {
+  const data = TodoModel.updateTodo(id, todo);
+  return data;
+};

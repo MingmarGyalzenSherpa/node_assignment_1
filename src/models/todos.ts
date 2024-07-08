@@ -31,3 +31,21 @@ export const deleteTodo = (id: string) => {
   todos = todos.filter((todo) => todo.id !== id);
   return todos;
 };
+
+export const updateTodo = (id: string, todo: ITodo) => {
+  let todoToUpdate = todos.find(({ id: todoId }) => todoId === id);
+  if (!todoToUpdate) {
+    return {
+      message: `Todo with id ${id} not found`,
+    };
+  }
+
+  todoToUpdate = {
+    ...todoToUpdate,
+    ...todo,
+  };
+
+  todos = [...todos.filter(({ id: todoId }) => todoId != id), todoToUpdate];
+
+  return todoToUpdate;
+};
