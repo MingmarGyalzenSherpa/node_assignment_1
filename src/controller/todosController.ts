@@ -4,12 +4,24 @@ import ResponseObject from "../utils/responseObject";
 import { httpResponseStatus } from "../constants/httpResponseStatus";
 import * as message from "../utils/messageGenerator";
 
+/**
+ * Get all todos
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 export const getTodos = (req: Request, res: Response) => {
   const data = TodoServices.getTodos();
 
   res.status(httpResponseStatus.OK).json(data);
 };
 
+/**
+ * Get todo by id
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 export const getTodoById = (req: Request, res: Response) => {
   const { id } = req.params;
   const data = TodoServices.getTodoById(id);
@@ -23,6 +35,12 @@ export const getTodoById = (req: Request, res: Response) => {
   res.status(200).json(new ResponseObject(message.found("Todo"), [data!]));
 };
 
+/**
+ * add todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 export const addTodo = (req: Request, res: Response) => {
   const todo = req.body;
 
@@ -42,6 +60,12 @@ export const addTodo = (req: Request, res: Response) => {
     .json(new ResponseObject(message.created("Todo"), data));
 };
 
+/**
+ * delete todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 export const deleteTodo = (req: Request, res: Response) => {
   const { id } = req.params;
   const data = TodoServices.deleteTodo(id);
@@ -51,6 +75,12 @@ export const deleteTodo = (req: Request, res: Response) => {
     .json(new ResponseObject(message.deleted("Todo"), data));
 };
 
+/**
+ * update todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 export const updateTodo = (req: Request, res: Response) => {
   const { id } = req.params;
 

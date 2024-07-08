@@ -31,11 +31,23 @@ const TodoServices = __importStar(require("../services/todoServices"));
 const responseObject_1 = __importDefault(require("../utils/responseObject"));
 const httpResponseStatus_1 = require("../constants/httpResponseStatus");
 const message = __importStar(require("../utils/messageGenerator"));
+/**
+ * Get all todos
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 const getTodos = (req, res) => {
     const data = TodoServices.getTodos();
     res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
 };
 exports.getTodos = getTodos;
+/**
+ * Get todo by id
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 const getTodoById = (req, res) => {
     const { id } = req.params;
     const data = TodoServices.getTodoById(id);
@@ -47,6 +59,12 @@ const getTodoById = (req, res) => {
     res.status(200).json(new responseObject_1.default(message.found("Todo"), [data]));
 };
 exports.getTodoById = getTodoById;
+/**
+ * add todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 const addTodo = (req, res) => {
     const todo = req.body;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
@@ -64,6 +82,12 @@ const addTodo = (req, res) => {
         .json(new responseObject_1.default(message.created("Todo"), data));
 };
 exports.addTodo = addTodo;
+/**
+ * delete todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 const deleteTodo = (req, res) => {
     const { id } = req.params;
     const data = TodoServices.deleteTodo(id);
@@ -72,6 +96,12 @@ const deleteTodo = (req, res) => {
         .json(new responseObject_1.default(message.deleted("Todo"), data));
 };
 exports.deleteTodo = deleteTodo;
+/**
+ * update todo
+ * @param {Request} req
+ * @param {Response} res
+ *
+ */
 const updateTodo = (req, res) => {
     const { id } = req.params;
     if (!TodoServices.getTodoById(id)) {

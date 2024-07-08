@@ -13,23 +13,48 @@ let todos = [
         completed: true,
     },
 ];
+/**
+ * Get all todos
+ * @returns {todos}
+ */
 const getTodos = () => todos;
 exports.getTodos = getTodos;
+/**
+ * get a todo by id
+ * @param {string} id
+ * @returns {todo}
+ */
 const getTodoById = (id) => {
     const data = todos.find(({ id: todoId }) => todoId === id);
     return data;
 };
 exports.getTodoById = getTodoById;
+/**
+ * add a todo
+ * @param todo
+ * @returns {todos}
+ */
 const addTodo = (todo) => {
     todos.push(Object.assign({ id: `${todos.length + 1}` }, todo));
     return todos;
 };
 exports.addTodo = addTodo;
+/**
+ * Delete a todo
+ * @param id
+ * @returns {todos}
+ */
 const deleteTodo = (id) => {
     todos = todos.filter((todo) => todo.id !== id);
     return todos;
 };
 exports.deleteTodo = deleteTodo;
+/**
+ * update a todo by id
+ * @param id
+ * @param todo
+ * @returns {todo}
+ */
 const updateTodo = (id, todo) => {
     let todoToUpdate = (0, exports.getTodoById)(id);
     todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), todo);

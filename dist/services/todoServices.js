@@ -25,26 +25,51 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const TodoModel = __importStar(require("../models/todos"));
+/**
+ * get all todos
+ * @returns {todo}
+ */
 const getTodos = () => {
     const data = TodoModel.getTodos();
     return data;
 };
 exports.getTodos = getTodos;
+/**
+ * get a todo by id
+ * @param id
+ * @returns {todo}
+ */
 const getTodoById = (id) => {
     const data = TodoModel.getTodoById(id);
     return data;
 };
 exports.getTodoById = getTodoById;
+/**
+ * add a todo
+ * @param todo
+ * @returns {todos}
+ */
 const addTodo = (todo) => {
     const data = TodoModel.addTodo(todo);
     return data;
 };
 exports.addTodo = addTodo;
+/**
+ *  delete a todo by id
+ * @param id
+ * @returns {todos}
+ */
 const deleteTodo = (id) => {
     const data = TodoModel.deleteTodo(id);
     return data;
 };
 exports.deleteTodo = deleteTodo;
+/**
+ * Update a todo by id
+ * @param id
+ * @param todo
+ * @returns {todo}
+ */
 const updateTodo = (id, todo) => {
     const data = TodoModel.updateTodo(id, todo);
     return data;

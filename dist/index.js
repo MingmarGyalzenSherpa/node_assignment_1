@@ -11,9 +11,15 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 //route
 app.use(index_routes_1.default);
+/**
+ * Base route goes here
+ */
 app.get("/", (req, res) => {
     res.send("HELLO TO TODO CRUD");
 });
+/**
+ * Start the server
+ */
 app.listen(config_1.config.port, () => {
     console.log(`Server listening on port : ${config_1.config.port}`);
 });

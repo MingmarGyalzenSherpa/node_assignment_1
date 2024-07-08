@@ -13,14 +13,28 @@ let todos = [
   },
 ];
 
-export const getTodos = () => todos;
+/**
+ * Get all todos
+ * @returns {todos}
+ */
+export const getTodos = (): ITodo[] => todos;
 
+/**
+ * get a todo by id
+ * @param {string} id
+ * @returns {todo}
+ */
 export const getTodoById = (id: String) => {
   const data = todos.find(({ id: todoId }) => todoId === id);
   return data;
 };
 
-export const addTodo = (todo: ITodo) => {
+/**
+ * add a todo
+ * @param todo
+ * @returns {todos}
+ */
+export const addTodo = (todo: ITodo): ITodo[] => {
   todos.push({
     id: `${todos.length + 1}`,
     ...todo,
@@ -29,12 +43,23 @@ export const addTodo = (todo: ITodo) => {
   return todos;
 };
 
-export const deleteTodo = (id: string) => {
+/**
+ * Delete a todo
+ * @param id
+ * @returns {todos}
+ */
+export const deleteTodo = (id: string): ITodo[] => {
   todos = todos.filter((todo) => todo.id !== id);
   return todos;
 };
 
-export const updateTodo = (id: string, todo: ITodo) => {
+/**
+ * update a todo by id
+ * @param id
+ * @param todo
+ * @returns {todo}
+ */
+export const updateTodo = (id: string, todo: ITodo): ITodo => {
   let todoToUpdate = getTodoById(id);
 
   todoToUpdate = {
