@@ -10,3 +10,8 @@ const todos = [
 ];
 
 export const getTodos = () => todos;
+
+export const getTodoById = (id: String) => {
+  const data = todos.find(({ id: todoId }) => todoId === id);
+  return data;
+};

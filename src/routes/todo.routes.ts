@@ -1,8 +1,10 @@
 import express from "express";
-import { getTodos } from "../controller/todosController";
+import { getTodoById, getTodos } from "../controller/todosController";
 
 const router = express();
 
 router.get("/", getTodos);
+
+router.get("/:id", getTodoById);
 
 export default router;
