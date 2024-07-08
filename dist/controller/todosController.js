@@ -29,9 +29,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const TodoServices = __importStar(require("../services/todoServices"));
 const responseObject_1 = __importDefault(require("../utils/responseObject"));
+const httpResponseStatus_1 = require("../constants/httpResponseStatus");
 const getTodos = (req, res) => {
     const data = TodoServices.getTodos();
-    res.status(200).json(data);
+    res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
 };
 exports.getTodos = getTodos;
 const getTodoById = (req, res) => {
@@ -39,7 +40,7 @@ const getTodoById = (req, res) => {
     const data = TodoServices.getTodoById(id);
     if (!data) {
         res
-            .status(404)
+            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
             .json(new responseObject_1.default(`User with id ${id} not found!`, []));
     }
     res.status(200).json(new responseObject_1.default("User found successfully!", [data]));
@@ -48,7 +49,7 @@ exports.getTodoById = getTodoById;
 const addTodo = (req, res) => {
     const todo = req.body;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
-        res.status(400).json({
+        res.status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST).json({
             message: "Todo not found",
         });
         return;
@@ -57,7 +58,7 @@ const addTodo = (req, res) => {
         todo.completed = false;
     }
     const data = TodoServices.addTodo(todo);
-    res.status(200).json({
+    res.status(httpResponseStatus_1.httpResponseStatus.CREATED).json({
         message: "User added successfully",
         data,
     });
@@ -66,7 +67,7 @@ exports.addTodo = addTodo;
 const deleteTodo = (req, res) => {
     const { id } = req.params;
     const data = TodoServices.deleteTodo(id);
-    res.status(200).json({
+    res.status(httpResponseStatus_1.httpResponseStatus.OK).json({
         message: "User deleted successfully",
         data,
     });
@@ -76,7 +77,7 @@ const updateTodo = (req, res) => {
     const { id } = req.params;
     const todo = req.body;
     const data = TodoServices.updateTodo(id, todo);
-    res.status(200).json({
+    res.status(httpResponseStatus_1.httpResponseStatus.OK).json({
         message: "User updated successfully!",
         data,
     });
