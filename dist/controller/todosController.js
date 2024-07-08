@@ -30,6 +30,7 @@ exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById 
 const TodoServices = __importStar(require("../services/todoServices"));
 const responseObject_1 = __importDefault(require("../utils/responseObject"));
 const httpResponseStatus_1 = require("../constants/httpResponseStatus");
+const message = __importStar(require("../utils/messageGenerator"));
 const getTodos = (req, res) => {
     const data = TodoServices.getTodos();
     res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
@@ -41,46 +42,48 @@ const getTodoById = (req, res) => {
     if (!data) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
-            .json(new responseObject_1.default(`User with id ${id} not found!`, []));
+            .json(new responseObject_1.default(message.notFound("Todo"), []));
     }
-    res.status(200).json(new responseObject_1.default("User found successfully!", [data]));
+    res.status(200).json(new responseObject_1.default(message.found("Todo"), [data]));
 };
 exports.getTodoById = getTodoById;
 const addTodo = (req, res) => {
     const todo = req.body;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
-        res.status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST).json({
-            message: "Todo not found",
-        });
+        res
+            .status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST)
+            .json(new responseObject_1.default(message.notFound("Todo"), []));
         return;
     }
     if (todo.completed === undefined) {
         todo.completed = false;
     }
     const data = TodoServices.addTodo(todo);
-    res.status(httpResponseStatus_1.httpResponseStatus.CREATED).json({
-        message: "User added successfully",
-        data,
-    });
+    res
+        .status(httpResponseStatus_1.httpResponseStatus.CREATED)
+        .json(new responseObject_1.default(message.created("Todo"), data));
 };
 exports.addTodo = addTodo;
 const deleteTodo = (req, res) => {
     const { id } = req.params;
     const data = TodoServices.deleteTodo(id);
-    res.status(httpResponseStatus_1.httpResponseStatus.OK).json({
-        message: "User deleted successfully",
-        data,
-    });
+    res
+        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .json(new responseObject_1.default(message.deleted("Todo"), data));
 };
 exports.deleteTodo = deleteTodo;
 const updateTodo = (req, res) => {
     const { id } = req.params;
+    if (!TodoServices.getTodoById(id)) {
+        res
+            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
+            .json(new responseObject_1.default(message.notFound("Todo"), []));
+    }
     const todo = req.body;
     const data = TodoServices.updateTodo(id, todo);
-    res.status(httpResponseStatus_1.httpResponseStatus.OK).json({
-        message: "User updated successfully!",
-        data,
-    });
+    res
+        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .json(new responseObject_1.default(message.updated("Todo"), [data]));
 };
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todosController.js.map

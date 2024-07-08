@@ -32,11 +32,6 @@ const deleteTodo = (id) => {
 exports.deleteTodo = deleteTodo;
 const updateTodo = (id, todo) => {
     let todoToUpdate = (0, exports.getTodoById)(id);
-    if (!todoToUpdate) {
-        return {
-            message: `Todo with id ${id} not found`,
-        };
-    }
     todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), todo);
     todos = [...todos.filter(({ id: todoId }) => todoId != id), todoToUpdate];
     return todoToUpdate;
