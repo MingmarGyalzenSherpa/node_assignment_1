@@ -25,3 +25,11 @@ export const addTodo = (req: Request, res: Response) => {
   const data = TodoServices.addTodo(todo);
   res.status(200).json(data);
 };
+
+export const deleteTodo = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const data = TodoServices.deleteTodo(id);
+
+  res.status(200).json(data);
+};

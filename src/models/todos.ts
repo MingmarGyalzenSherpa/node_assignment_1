@@ -1,6 +1,6 @@
 import { ITodo } from "../interfaces/ITodo";
 
-const todos = [
+let todos = [
   {
     id: "1",
     title: "Go home",
@@ -24,5 +24,10 @@ export const addTodo = (todo: ITodo) => {
     ...todo,
   });
 
+  return todos;
+};
+
+export const deleteTodo = (id: string) => {
+  todos = todos.filter((todo) => todo.id !== id);
   return todos;
 };

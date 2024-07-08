@@ -16,3 +16,9 @@ export const addTodo = (todo: ITodo) => {
 
   return data;
 };
+
+export const deleteTodo = (id: string) => {
+  const data = TodoModel.deleteTodo(id);
+
+  return data;
+};
