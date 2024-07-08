@@ -47,10 +47,11 @@ const getTodoById = (req, res) => {
 exports.getTodoById = getTodoById;
 const addTodo = (req, res) => {
     const todo = req.body;
-    if (!todo.title) {
+    if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
         res.status(400).json({
-            message: "Todo title not found",
+            message: "Todo not found",
         });
+        return;
     }
     if (todo.completed === undefined) {
         todo.completed = false;

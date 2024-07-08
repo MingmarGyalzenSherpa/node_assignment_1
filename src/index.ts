@@ -9,6 +9,10 @@ app.use(express.json());
 //route
 app.use(router);
 
+app.get("/", (req, res) => {
+  res.send("HELLO TO TODO CRUD");
+});
+
 app.listen(config.port, () => {
   console.log(`Server listening on port : ${config.port}`);
 });
