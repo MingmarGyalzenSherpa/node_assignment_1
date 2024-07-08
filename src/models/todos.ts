@@ -33,7 +33,7 @@ export const deleteTodo = (id: string) => {
 };
 
 export const updateTodo = (id: string, todo: ITodo) => {
-  let todoToUpdate = todos.find(({ id: todoId }) => todoId === id);
+  let todoToUpdate = getTodoById(id);
   if (!todoToUpdate) {
     return {
       message: `Todo with id ${id} not found`,
