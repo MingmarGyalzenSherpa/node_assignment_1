@@ -1,15 +1,17 @@
-import { ITodo } from "../interfaces/ITodo";
+import { ITodo } from "./../interfaces/ITodo";
 
-let todos = [
+let todos: ITodo[] = [
   {
     id: "1",
     title: "Go home",
     completed: false,
+    createdBy: "1",
   },
   {
     id: "2",
     title: "Work",
     completed: true,
+    createdBy: "2",
   },
 ];
 

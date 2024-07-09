@@ -6,11 +6,13 @@ let todos = [
         id: "1",
         title: "Go home",
         completed: false,
+        createdBy: "1",
     },
     {
         id: "2",
         title: "Work",
         completed: true,
+        createdBy: "2",
     },
 ];
 /**

@@ -39,6 +39,17 @@ exports.getUserByEmail = exports.createUser = void 0;
 const UserModel = __importStar(require("../models/user"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(user.name && user.email && user.password)) {
+        return {
+            message: "Email or password missing",
+        };
+    }
+    const existingUser = UserModel.getUserByEmail(user.email);
+    if (existingUser) {
+        return {
+            message: "User already exists!",
+        };
+    }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     const data = UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
     return data;
