@@ -20,7 +20,7 @@ let todos = [
 const getTodos = () => todos;
 exports.getTodos = getTodos;
 /**
- * get a todo by id
+ * Get a todo by id
  * @param {string} id
  * @returns {todo}
  */
@@ -30,7 +30,7 @@ const getTodoById = (id) => {
 };
 exports.getTodoById = getTodoById;
 /**
- * add a todo
+ * Add a todo
  * @param todo
  * @returns {todos}
  */
@@ -50,7 +50,7 @@ const deleteTodo = (id) => {
 };
 exports.deleteTodo = deleteTodo;
 /**
- * update a todo by id
+ * Update a todo by id
  * @param id
  * @param todo
  * @returns {todo}

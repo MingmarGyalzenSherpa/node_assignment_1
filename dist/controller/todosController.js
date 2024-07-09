@@ -56,11 +56,13 @@ const getTodoById = (req, res) => {
             .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
     }
-    res.status(200).json(new responseObject_1.default(message.found("Todo"), [data]));
+    res
+        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .json(new responseObject_1.default(message.found("Todo"), [data]));
 };
 exports.getTodoById = getTodoById;
 /**
- * add todo
+ * Add a todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -83,7 +85,7 @@ const addTodo = (req, res) => {
 };
 exports.addTodo = addTodo;
 /**
- * delete todo
+ * Delete a todo by id
  * @param {Request} req
  * @param {Response} res
  *
@@ -97,7 +99,7 @@ const deleteTodo = (req, res) => {
 };
 exports.deleteTodo = deleteTodo;
 /**
- * update todo
+ * Update todo
  * @param {Request} req
  * @param {Response} res
  *
