@@ -6,7 +6,6 @@ import express from "express";
 const router = express();
 
 router.use("/todos", todoRouter);
-router.use("/user", userRouter);
-
+router.use("/users", userRouter);
 
 export default router;

@@ -8,6 +8,6 @@ const user_routes_1 = __importDefault(require("./user.routes"));
 const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 router.use("/todos", todo_routes_1.default);
-router.use("/user", user_routes_1.default);
+router.use("/users", user_routes_1.default);
 exports.default = router;
 //# sourceMappingURL=index.routes.js.map
