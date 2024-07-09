@@ -40,7 +40,6 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     res.json(data);
 });
 exports.createUser = createUser;
-const getUserByEmil = (email) => {
-};
+const getUserByEmil = (email) => { };
 exports.getUserByEmil = getUserByEmil;
 //# sourceMappingURL=userController.js.map

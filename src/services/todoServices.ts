@@ -5,8 +5,8 @@ import * as TodoModel from "../models/todos";
  * get all todos
  * @returns {todo}
  */
-export const getTodos = (): ITodo[] => {
-  const data = TodoModel.getTodos();
+export const getTodos = (userId: string): ITodo[] => {
+  const data = TodoModel.getTodos(userId);
   return data;
 };
 

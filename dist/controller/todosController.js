@@ -38,7 +38,8 @@ const message = __importStar(require("../utils/messageGenerator"));
  *
  */
 const getTodos = (req, res) => {
-    const data = TodoServices.getTodos();
+    const { userId } = req.headers;
+    const data = TodoServices.getTodos(userId);
     res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
 };
 exports.getTodos = getTodos;

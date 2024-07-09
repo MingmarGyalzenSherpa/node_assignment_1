@@ -31,6 +31,7 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
         };
     }
     const payload = {
+        id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
     };

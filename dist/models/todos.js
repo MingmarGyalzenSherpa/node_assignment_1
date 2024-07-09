@@ -19,7 +19,10 @@ let todos = [
  * Get all todos
  * @returns {todos}
  */
-const getTodos = () => todos;
+const getTodos = (userId) => {
+    console.log(userId);
+    return todos.filter(({ createdBy }) => createdBy === userId);
+};
 exports.getTodos = getTodos;
 /**
  * get a todo by id

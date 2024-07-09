@@ -11,7 +11,8 @@ import * as message from "../utils/messageGenerator";
  *
  */
 export const getTodos = (req: Request, res: Response) => {
-  const data = TodoServices.getTodos();
+  const { userId } = req.headers;
+  const data = TodoServices.getTodos(userId as string);
 
   res.status(httpResponseStatus.OK).json(data);
 };

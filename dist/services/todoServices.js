@@ -29,8 +29,8 @@ const TodoModel = __importStar(require("../models/todos"));
  * get all todos
  * @returns {todo}
  */
-const getTodos = () => {
-    const data = TodoModel.getTodos();
+const getTodos = (userId) => {
+    const data = TodoModel.getTodos(userId);
     return data;
 };
 exports.getTodos = getTodos;

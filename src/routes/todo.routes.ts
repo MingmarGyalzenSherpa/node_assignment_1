@@ -6,10 +6,11 @@ import {
   getTodos,
   updateTodo,
 } from "../controller/todosController";
+import { auth } from "../middlewares/auth.middleware";
 
 const router = express();
 
-router.get("/", getTodos);
+router.get("/", auth, getTodos);
 
 router.get("/:id", getTodoById);
 

@@ -23,6 +23,7 @@ export const login = async (user: Pick<IUser, "email" | "password">) => {
   }
 
   const payload = {
+    id: existingUser.id,
     name: existingUser.name,
     email: existingUser.email,
   };
