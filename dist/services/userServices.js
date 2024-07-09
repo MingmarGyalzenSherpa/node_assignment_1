@@ -35,14 +35,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = void 0;
+exports.getUserByEmail = exports.createUser = void 0;
 const UserModel = __importStar(require("../models/user"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const hashedPassword = yield bcrypt_1.default.hash(user.password, 100);
+    const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     const data = UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
-    console.log("here");
     return data;
 });
 exports.createUser = createUser;
+const getUserByEmail = (email) => {
+    const data = UserModel.getUserByEmail(email);
+    return data;
+};
+exports.getUserByEmail = getUserByEmail;
 //# sourceMappingURL=userServices.js.map

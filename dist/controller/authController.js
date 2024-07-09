@@ -32,15 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmil = exports.createUser = void 0;
-const UserServices = __importStar(require("../services/userServices"));
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.login = void 0;
+const AuthServices = __importStar(require("../services/authServices"));
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const data = yield UserServices.createUser(body);
+    const data = yield AuthServices.login(body);
     res.json(data);
 });
-exports.createUser = createUser;
-const getUserByEmil = (email) => {
-};
-exports.getUserByEmil = getUserByEmil;
-//# sourceMappingURL=userController.js.map
+exports.login = login;
+//# sourceMappingURL=authController.js.map
