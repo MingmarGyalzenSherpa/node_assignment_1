@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.refresh = exports.login = void 0;
 const AuthServices = __importStar(require("../services/authServices"));
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
@@ -40,4 +40,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(data);
 });
 exports.login = login;
+const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.body;
+    const data = AuthServices.refresh(refreshToken);
+    res.json(data);
+});
+exports.refresh = refresh;
 //# sourceMappingURL=authController.js.map

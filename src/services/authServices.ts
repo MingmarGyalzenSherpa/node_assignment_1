@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
 import { getUserByEmail } from "./userServices";
-import { sign } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { config } from "../config";
+import IUserPayload from "../interfaces/IUserPayload";
 
 export const login = async (user: Pick<IUser, "email" | "password">) => {
   const existingUser = getUserByEmail(user.email);
@@ -39,5 +40,39 @@ export const login = async (user: Pick<IUser, "email" | "password">) => {
   return {
     accessToken,
     refreshToken,
+  };
+};
+
+export const refresh = (oldRefreshToken: string) => {
+  if (!oldRefreshToken) {
+    return {
+      message: "Invalid",
+    };
+  }
+
+  const isValidToken = verify(oldRefreshToken, config.jwt.secret) as JwtPayload;
+  if (!isValidToken) {
+    return {
+      message: "Invalid",
+    };
+  }
+
+  const payload: IUserPayload = {
+    id: isValidToken.id,
+    name: isValidToken.name,
+    email: isValidToken.email,
+  };
+
+  const accessToken = sign(payload, config.jwt.secret, {
+    expiresIn: parseInt(config.jwt.accessTokenExpiryMS),
+  });
+
+  const newRefreshToken = sign(payload, config.jwt.secret, {
+    expiresIn: parseInt(config.jwt.refreshTokenExpiryMS),
+  });
+
+  return {
+    accessToken,
+    newRefreshToken,
   };
 };
