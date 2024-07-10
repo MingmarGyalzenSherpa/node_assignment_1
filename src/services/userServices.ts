@@ -49,6 +49,15 @@ export const getAllUsers = (): IUser[] => UserModel.getAllUsers();
  */
 export const getUserByEmail = (email: string): IUser => {
   const data = UserModel.getUserByEmail(email);
+
+  return data;
+};
+
+export const getUserById = (id: string): IUser => {
+  const data = UserModel.getUserById(id);
+  if (!data) {
+    throw new Error("User doesn't exist");
+  }
   return data;
 };
 
@@ -65,6 +74,17 @@ export const updateUser = (id: string, updatedUser: IUser): IUser => {
     throw new Error("User doesn't exist");
   }
   const data = UserModel.updateUser(id, updatedUser);
+
+  return data;
+};
+
+/**
+ * Delete a user by id
+ * @param id - user id
+ * @returns {IUser} - deleted user
+ */
+export const deleteUser = (id: string): IUser => {
+  const data = UserModel.deleteUserById(id);
 
   return data;
 };

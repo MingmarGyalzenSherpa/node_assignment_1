@@ -28,19 +28,19 @@ export const genericErrorHandler = (
 
   //forbidden error
   if (err instanceof ForbiddenError) {
-    res.status(HttpStatusCodes.FORBIDDEN).json({
+    return res.status(HttpStatusCodes.FORBIDDEN).json({
       message: err.message,
     });
   }
 
   //Bad request error
   if (err instanceof BadRequestError) {
-    res.status(HttpStatusCodes.BAD_REQUEST).json({
+    return res.status(HttpStatusCodes.BAD_REQUEST).json({
       message: err.message,
     });
   }
 
-  res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
+  return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
     message: "Internal server error",
   });
 };

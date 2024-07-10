@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.getAllUsers = exports.createUser = void 0;
+exports.deleteUser = exports.updateUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
 const BadRequestError_1 = require("../error/BadRequestError");
@@ -53,6 +53,20 @@ const getAllUsers = (req, res) => {
     });
 };
 exports.getAllUsers = getAllUsers;
+const getUserById = (req, res) => {
+    try {
+        const { id: userId } = req.params;
+        const data = UserServices.getUserById(userId);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User fetched successfully",
+            data: [data],
+        });
+    }
+    catch (error) {
+        throw new BadRequestError_1.BadRequestError(error.message);
+    }
+};
+exports.getUserById = getUserById;
 /**
  *  Update a user by id
  * @param req
@@ -75,4 +89,24 @@ const updateUser = (req, res, next) => {
     }
 };
 exports.updateUser = updateUser;
+/**
+ * Delete a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+const deleteUser = (req, res, next) => {
+    try {
+        const { id: userId } = req.params;
+        const data = UserServices.deleteUser(userId);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User deleted successfully",
+            data: [data],
+        });
+    }
+    catch (error) {
+        next(new BadRequestError_1.BadRequestError(error.message));
+    }
+};
+exports.deleteUser = deleteUser;
 //# sourceMappingURL=userController.js.map

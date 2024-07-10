@@ -19,6 +19,20 @@ export const getAllUsers = (req: Request, res: Response) => {
   });
 };
 
+export const getUserById = (req: Request, res: Response) => {
+  try {
+    const { id: userId } = req.params;
+    const data = UserServices.getUserById(userId);
+
+    res.status(HttpStatusCodes.OK).json({
+      message: "User fetched successfully",
+      data: [data],
+    });
+  } catch (error) {
+    throw new BadRequestError(error.message);
+  }
+};
+
 /**
  *  Update a user by id
  * @param req
@@ -38,6 +52,27 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
     });
   } catch (error) {
     console.log("error ayo");
+    next(new BadRequestError(error.message));
+  }
+};
+
+/**
+ * Delete a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id: userId } = req.params;
+
+    const data = UserServices.deleteUser(userId);
+
+    res.status(HttpStatusCodes.OK).json({
+      message: "User deleted successfully",
+      data: [data],
+    });
+  } catch (error) {
     next(new BadRequestError(error.message));
   }
 };

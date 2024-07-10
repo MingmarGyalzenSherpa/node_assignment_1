@@ -64,13 +64,22 @@ export const getUserById = (id: string): IUser => {
  */
 export const deleteUserById = (id: string): IUser => {
   const user = getUserById(id);
-
+  console.log(user);
+  if (!user) {
+    throw new Error("User doesn't exist");
+  }
   users = users.filter(({ id: userId }) => userId !== id);
 
   return user;
 };
 
-export const updateUser = (id: string, updatedUser: IUser) => {
+/**
+ * Update a user by id
+ * @param id
+ * @param updatedUser
+ * @returns {IUser} - deleted user
+ */
+export const updateUser = (id: string, updatedUser: IUser): IUser => {
   let user = users.find(({ id: userId }) => userId === id);
 
   user = { ...user, ...updatedUser };

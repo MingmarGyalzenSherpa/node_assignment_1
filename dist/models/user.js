@@ -58,10 +58,20 @@ exports.getUserById = getUserById;
  */
 const deleteUserById = (id) => {
     const user = (0, exports.getUserById)(id);
+    console.log(user);
+    if (!user) {
+        throw new Error("User doesn't exist");
+    }
     users = users.filter(({ id: userId }) => userId !== id);
     return user;
 };
 exports.deleteUserById = deleteUserById;
+/**
+ * Update a user by id
+ * @param id
+ * @param updatedUser
+ * @returns {IUser} - deleted user
+ */
 const updateUser = (id, updatedUser) => {
     let user = users.find(({ id: userId }) => userId === id);
     user = Object.assign(Object.assign({}, user), updatedUser);

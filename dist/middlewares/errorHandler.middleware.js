@@ -25,17 +25,17 @@ const genericErrorHandler = (err, req, res, next) => {
     }
     //forbidden error
     if (err instanceof ForbiddenError_1.ForbiddenError) {
-        res.status(http_status_codes_1.default.FORBIDDEN).json({
+        return res.status(http_status_codes_1.default.FORBIDDEN).json({
             message: err.message,
         });
     }
     //Bad request error
     if (err instanceof BadRequestError_1.BadRequestError) {
-        res.status(http_status_codes_1.default.BAD_REQUEST).json({
+        return res.status(http_status_codes_1.default.BAD_REQUEST).json({
             message: err.message,
         });
     }
-    res.status(http_status_codes_1.default.INTERNAL_SERVER_ERROR).json({
+    return res.status(http_status_codes_1.default.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
     });
 };

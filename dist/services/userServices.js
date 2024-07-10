@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+exports.deleteUser = exports.updateUser = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
 const UserModel = __importStar(require("../models/user"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 /**
@@ -81,6 +81,14 @@ const getUserByEmail = (email) => {
     return data;
 };
 exports.getUserByEmail = getUserByEmail;
+const getUserById = (id) => {
+    const data = UserModel.getUserById(id);
+    if (!data) {
+        throw new Error("User doesn't exist");
+    }
+    return data;
+};
+exports.getUserById = getUserById;
 /**
  *  Update a user by id
  * @param {string} id - id of user
@@ -96,4 +104,14 @@ const updateUser = (id, updatedUser) => {
     return data;
 };
 exports.updateUser = updateUser;
+/**
+ * Delete a user by id
+ * @param id - user id
+ * @returns {IUser} - deleted user
+ */
+const deleteUser = (id) => {
+    const data = UserModel.deleteUserById(id);
+    return data;
+};
+exports.deleteUser = deleteUser;
 //# sourceMappingURL=userServices.js.map
