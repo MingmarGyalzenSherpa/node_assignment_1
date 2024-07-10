@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmail = exports.createUser = void 0;
+exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
 const UserModel = __importStar(require("../models/user"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 /**
@@ -65,6 +65,12 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     };
 });
 exports.createUser = createUser;
+/**
+ * Get all users
+ * @returns {IUser[]}
+ */
+const getAllUsers = () => UserModel.getAllUsers();
+exports.getAllUsers = getAllUsers;
 /**
  * Get a user by email
  * @param {string} email - email of the user

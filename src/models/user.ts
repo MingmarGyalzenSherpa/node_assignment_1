@@ -23,13 +23,17 @@ let users: IUser[] = [
  * @param {IUser} user - details of the user
  */
 export const createUser = (user: IUser) => {
-  console.log(users);
-
   users.push({
     id: `${users.length + 1}`,
     ...user,
   });
 };
+
+/**
+ * Get all users
+ * @returns {IUser[]}
+ */
+export const getAllUsers = (): IUser[] => users;
 
 /**
  * Get user by email
@@ -38,5 +42,30 @@ export const createUser = (user: IUser) => {
  */
 export const getUserByEmail = (email: string): IUser => {
   const user = users.find(({ email: userEmail }) => userEmail === email);
+
+  return user;
+};
+
+/**
+ *  Get a user by id
+ * @param {string} id - id of the user
+ * @returns {IUser} - user
+ */
+export const getUserById = (id: string): IUser => {
+  const user = users.find(({ id: userId }) => userId === id);
+
+  return user;
+};
+
+/**
+ * Delete a user by id
+ * @param {string} id
+ * @returns {IUser} - deleted user
+ */
+export const deleteUserById = (id: string): IUser => {
+  const user = getUserById(id);
+
+  users = users.filter(({ id: userId }) => userId !== id);
+
   return user;
 };

@@ -14,7 +14,7 @@ import { UnAuthorizedError } from "../error/UnAuthorizedError";
  * @param next
  * @returns
  */
-export const authenticate = (
+export const authentication = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -30,13 +30,13 @@ export const authenticate = (
   if (token.length != 2 || token[0] != "Bearer") {
     next(new UnAuthorizedError("Unauthorized access"));
   }
-
-  const user = verify(token[1], config.jwt.secret) as IUser;
-
-  if (!user) {
+  try {
+    const user = verify(token[1], config.jwt.secret) as IUser;
+    req.user = user;
+  } catch (error) {
     next(new UnAuthorizedError("Unauthorized access"));
   }
-  req.user = user;
+
   next();
 };
 

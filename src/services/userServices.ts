@@ -37,6 +37,12 @@ export const createUser = async (user: IUser): Promise<object> => {
 };
 
 /**
+ * Get all users
+ * @returns {IUser[]}
+ */
+export const getAllUsers = (): IUser[] => UserModel.getAllUsers();
+
+/**
  * Get a user by email
  * @param {string} email - email of the user
  * @returns {IUser} - user

@@ -8,7 +8,7 @@ const todosController_1 = require("../controller/todosController");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const router = (0, express_1.default)();
 //auth middleware
-router.use(auth_middleware_1.authenticate);
+router.use(auth_middleware_1.authentication);
 //routes
 router.get("/", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodos);
 router.get("/:id", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodoById);
