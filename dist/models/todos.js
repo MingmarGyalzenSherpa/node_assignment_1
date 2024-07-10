@@ -36,8 +36,8 @@ exports.getTodos = getTodos;
  * @param {string} id
  * @returns {ITodo}
  */
-const getTodoById = (id) => {
-    const data = todos.find(({ id: todoId }) => todoId === id);
+const getTodoById = (id, userId) => {
+    const data = todos.find(({ id: todoId, createdBy }) => todoId === id && createdBy === userId);
     return data;
 };
 exports.getTodoById = getTodoById;
@@ -56,9 +56,9 @@ exports.addTodo = addTodo;
  * @param id
  * @returns {ITodo} todo
  */
-const deleteTodo = (id) => {
-    let todo = (0, exports.getTodoById)(id);
-    todos = todos.filter((todo) => todo.id !== id);
+const deleteTodo = (id, userId) => {
+    let todo = (0, exports.getTodoById)(id, userId);
+    todos = todos.filter((todo) => todo.id !== id && todo.createdBy !== userId);
     return todo;
 };
 exports.deleteTodo = deleteTodo;
@@ -68,8 +68,8 @@ exports.deleteTodo = deleteTodo;
  * @param todo - updated field of the todo
  * @returns {ITodo} todo - the updated todo
  */
-const updateTodo = (id, todo) => {
-    let todoToUpdate = (0, exports.getTodoById)(id);
+const updateTodo = (id, userId, todo) => {
+    let todoToUpdate = (0, exports.getTodoById)(id, userId);
     todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), todo);
     todos = [...todos.filter(({ id: todoId }) => todoId != id), todoToUpdate];
     return todoToUpdate;

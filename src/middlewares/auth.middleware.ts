@@ -14,17 +14,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return {
-      message: "Unauthenticated",
-    };
+    next(new Error("Unauthenticated"));
   }
 
   const token = authorization.split(" ");
 
   if (token.length != 2 || token[0] != "Bearer") {
-    return {
-      message: "Unauthenticated",
-    };
+    next(new Error("Unauthenticated"));
   }
 
   const isValidToken = verify(token[1], config.jwt.secret) as JwtPayload;
@@ -35,6 +31,5 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
   const payload: IUserPayload = isValidToken as IUserPayload;
   req.headers.userId = payload.id;
-
   next();
 };
