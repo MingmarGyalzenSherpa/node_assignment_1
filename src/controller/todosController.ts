@@ -11,7 +11,8 @@ import * as message from "../utils/messageGenerator";
  *
  */
 export const getTodos = (req: Request, res: Response) => {
-  const data = TodoServices.getTodos();
+  const { userId } = req.headers;
+  const data = TodoServices.getTodos(userId as string);
 
   res.status(httpResponseStatus.OK).json(data);
 };
@@ -36,7 +37,7 @@ export const getTodoById = (req: Request, res: Response) => {
 };
 
 /**
- * add todo
+ * Add todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -61,7 +62,7 @@ export const addTodo = (req: Request, res: Response) => {
 };
 
 /**
- * delete todo
+ * Delete todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -72,11 +73,11 @@ export const deleteTodo = (req: Request, res: Response) => {
 
   res
     .status(httpResponseStatus.OK)
-    .json(new ResponseObject(message.deleted("Todo"), data));
+    .json(new ResponseObject(message.deleted("Todo"), [data]));
 };
 
 /**
- * update todo
+ * Update todo
  * @param {Request} req
  * @param {Response} res
  *

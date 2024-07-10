@@ -38,7 +38,8 @@ const message = __importStar(require("../utils/messageGenerator"));
  *
  */
 const getTodos = (req, res) => {
-    const data = TodoServices.getTodos();
+    const { userId } = req.headers;
+    const data = TodoServices.getTodos(userId);
     res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
 };
 exports.getTodos = getTodos;
@@ -60,7 +61,7 @@ const getTodoById = (req, res) => {
 };
 exports.getTodoById = getTodoById;
 /**
- * add todo
+ * Add todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -83,7 +84,7 @@ const addTodo = (req, res) => {
 };
 exports.addTodo = addTodo;
 /**
- * delete todo
+ * Delete todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -93,11 +94,11 @@ const deleteTodo = (req, res) => {
     const data = TodoServices.deleteTodo(id);
     res
         .status(httpResponseStatus_1.httpResponseStatus.OK)
-        .json(new responseObject_1.default(message.deleted("Todo"), data));
+        .json(new responseObject_1.default(message.deleted("Todo"), [data]));
 };
 exports.deleteTodo = deleteTodo;
 /**
- * update todo
+ * Update todo
  * @param {Request} req
  * @param {Response} res
  *

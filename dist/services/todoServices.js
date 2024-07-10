@@ -26,18 +26,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const TodoModel = __importStar(require("../models/todos"));
 /**
- * get all todos
- * @returns {todo}
+ * Get all todos by id
+ * @param {string} userId - id of the user
+ * @returns {ITodo[]} todos - list of todos created by user
  */
-const getTodos = () => {
-    const data = TodoModel.getTodos();
+const getTodos = (userId) => {
+    const data = TodoModel.getTodos(userId);
     return data;
 };
 exports.getTodos = getTodos;
 /**
- * get a todo by id
- * @param id
- * @returns {todo}
+ * Get a todo by id
+ * @param {string} id - id of todo
+ * @returns {ITodo} todo - the matching todo
  */
 const getTodoById = (id) => {
     const data = TodoModel.getTodoById(id);
@@ -45,7 +46,7 @@ const getTodoById = (id) => {
 };
 exports.getTodoById = getTodoById;
 /**
- * add a todo
+ * Add a todo
  * @param todo
  * @returns {todos}
  */
@@ -55,9 +56,9 @@ const addTodo = (todo) => {
 };
 exports.addTodo = addTodo;
 /**
- *  delete a todo by id
- * @param id
- * @returns {todos}
+ *  Delete a todo by id
+ * @param {string} id - id of the todo
+ * @returns {ITodo} - deleted todo
  */
 const deleteTodo = (id) => {
     const data = TodoModel.deleteTodo(id);
@@ -66,9 +67,9 @@ const deleteTodo = (id) => {
 exports.deleteTodo = deleteTodo;
 /**
  * Update a todo by id
- * @param id
- * @param todo
- * @returns {todo}
+ * @param id - id of the todo
+ * @param todo - updated field of todo
+ * @returns {ITodo} - updated todo
  */
 const updateTodo = (id, todo) => {
     const data = TodoModel.updateTodo(id, todo);
