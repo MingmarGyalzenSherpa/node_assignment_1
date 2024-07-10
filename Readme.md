@@ -4,9 +4,16 @@ A simple Express-based CRUD API for managing TODO items.
 
 ## Features
 
-- Create, Read, Update, and Delete TODO items
-- RESTful API endpoints
-- JSON data format
+- **User Authentication**: Secure user authentication using JWT.
+- **Password Hashing**: Passwords are hashed using bcrypt for enhanced security.
+- **CRUD Operations**: Users can create, read, update, and delete their own todos.
+- **Authorization**: Users can only access their own todos, ensuring data privacy and security.
+
+## Technologies Used
+
+- **Express**: Fast, unopinionated, minimalist web framework for Node.js.
+- **JWT**: For secure user authentication.
+- **bcrypt**: For hashing passwords to enhance security.
 
 ## Installation
 
@@ -24,6 +31,17 @@ A simple Express-based CRUD API for managing TODO items.
    ```
 
 ## API Endpoints
+
+### USER Endpoint
+
+- `POST /users/create`: register a new user
+
+### Auth Endpoint
+
+- `POST /auth/login`: login
+- `POST /auth/refresh`: refresh access token
+
+### TODO Endpoint
 
 - `GET /todos`: Retrieve all TODO items
 - `GET /todos/:id`: Retrieve a specific TODO item
