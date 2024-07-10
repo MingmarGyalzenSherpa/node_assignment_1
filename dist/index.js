@@ -6,11 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const config_1 = require("./config");
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
+const errorHandler_middleware_1 = require("./middlewares/errorHandler.middleware");
 const app = (0, express_1.default)();
 //middlewares
 app.use(express_1.default.json());
 //route
 app.use(index_routes_1.default);
+//errorhandler middleware
+app.use(errorHandler_middleware_1.notFound);
+app.use(errorHandler_middleware_1.genericErrorHandler);
 /**
  * Base route goes here
  */

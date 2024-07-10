@@ -13,13 +13,13 @@ const router = express();
 //auth middleware
 router.use(authenticate);
 //routes
-router.get("/", authorization("todo.gets"), getTodos);
+router.get("/", authorization("todo.get"), getTodos);
 
-router.get("/:id", getTodoById);
+router.get("/:id", authorization("todo.get"), getTodoById);
 
-router.post("/", addTodo);
+router.post("/", authorization("todo.create"), addTodo);
 
-router.delete("/:id", deleteTodo);
+router.delete("/:id", authorization("todo.delete"), deleteTodo);
 
-router.put("/:id", updateTodo);
+router.put("/:id", authorization("todo.update"), updateTodo);
 export default router;

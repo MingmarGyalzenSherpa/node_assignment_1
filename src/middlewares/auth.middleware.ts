@@ -4,6 +4,8 @@ import { JwtPayload, verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUser from "../interfaces/IUser";
 import { permissions } from "../constants/permissions";
+import { ForbiddenError } from "../error/ForbiddenError";
+import { UnAuthorizedError } from "../error/UnAuthorizedError";
 
 /**
  * Middleware for authentication
@@ -20,21 +22,20 @@ export const authenticate = (
   const { authorization } = req.headers;
 
   if (!authorization) {
-    next(new Error("Unauthenticated"));
+    next(new UnAuthorizedError("Unauthorized access"));
   }
 
   const token = authorization.split(" ");
 
   if (token.length != 2 || token[0] != "Bearer") {
-    next(new Error("Unauthenticated"));
+    next(new UnAuthorizedError("Unauthorized access"));
   }
 
   const user = verify(token[1], config.jwt.secret) as IUser;
 
   if (!user) {
-    next(new Error("Unauthenticated"));
+    next(new UnAuthorizedError("Unauthorized access"));
   }
-  console.log(user);
   req.user = user;
   next();
 };
@@ -47,7 +48,7 @@ export const authorization =
     console.log(permissions[userRole]);
     console.log(permission);
     if (!userPermissions.includes(permission)) {
-      next(new Error("no permission"));
+      next(new ForbiddenError("Access denied"));
     }
 
     next();

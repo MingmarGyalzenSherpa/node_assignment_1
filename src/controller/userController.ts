@@ -8,4 +8,4 @@ export const createUser = async (req: Request, res: Response) => {
   res.json(data);
 };
 
-export const getUserByEmil = (email: string) => {};
+export const getUserByEmail = (email: string) => {};

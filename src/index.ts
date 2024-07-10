@@ -1,6 +1,10 @@
 import express from "express";
 import { config } from "./config";
 import router from "./routes/index.routes";
+import {
+  genericErrorHandler,
+  notFound,
+} from "./middlewares/errorHandler.middleware";
 const app = express();
 
 //middlewares
@@ -8,6 +12,10 @@ app.use(express.json());
 
 //route
 app.use(router);
+
+//errorhandler middleware
+app.use(notFound);
+app.use(genericErrorHandler);
 
 /**
  * Base route goes here

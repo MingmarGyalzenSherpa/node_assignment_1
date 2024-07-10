@@ -29,8 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const TodoServices = __importStar(require("../services/todoServices"));
 const responseObject_1 = __importDefault(require("../utils/responseObject"));
-const httpResponseStatus_1 = require("../constants/httpResponseStatus");
 const message = __importStar(require("../utils/messageGenerator"));
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
 /**
  * Get all todos
  * @param {Request} req
@@ -40,7 +40,7 @@ const message = __importStar(require("../utils/messageGenerator"));
 const getTodos = (req, res) => {
     const { id: userId } = req.user;
     const data = TodoServices.getTodos(userId);
-    res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
+    res.status(http_status_codes_1.default.OK).json(data);
 };
 exports.getTodos = getTodos;
 /**
@@ -55,11 +55,11 @@ const getTodoById = (req, res) => {
     const data = TodoServices.getTodoById(id, userId);
     if (!data) {
         res
-            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
+            .status(http_status_codes_1.default.NOT_FOUND)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
     }
     res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .status(http_status_codes_1.default.OK)
         .json(new responseObject_1.default(message.found("Todo"), [data]));
 };
 exports.getTodoById = getTodoById;
@@ -74,7 +74,7 @@ const addTodo = (req, res) => {
     const { id: userId } = req.user;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
         res
-            .status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST)
+            .status(http_status_codes_1.default.BAD_REQUEST)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
         return;
     }
@@ -84,7 +84,7 @@ const addTodo = (req, res) => {
     todo.createdBy = userId;
     const data = TodoServices.addTodo(todo);
     res
-        .status(httpResponseStatus_1.httpResponseStatus.CREATED)
+        .status(http_status_codes_1.default.CREATED)
         .json(new responseObject_1.default(message.created("Todo"), data));
 };
 exports.addTodo = addTodo;
@@ -99,7 +99,7 @@ const deleteTodo = (req, res) => {
     const { id: userId } = req.user;
     const data = TodoServices.deleteTodo(id, userId);
     res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .status(http_status_codes_1.default.OK)
         .json(new responseObject_1.default(message.deleted("Todo"), [data]));
 };
 exports.deleteTodo = deleteTodo;
@@ -109,19 +109,19 @@ exports.deleteTodo = deleteTodo;
  * @param {Response} res
  *
  */
-const updateTodo = (req, res) => {
+const updateTodo = (req, res, next) => {
     console.log("here");
     const { id } = req.params;
     const { id: userId } = req.user;
     if (!TodoServices.getTodoById(id, userId)) {
         res
-            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
+            .status(http_status_codes_1.default.NOT_FOUND)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
     }
     const todo = req.body;
     const data = TodoServices.updateTodo(id, userId, todo);
     res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .status(http_status_codes_1.default.OK)
         .json(new responseObject_1.default(message.updated("Todo"), [data]));
 };
 exports.updateTodo = updateTodo;

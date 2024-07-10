@@ -4,6 +4,8 @@ exports.authorization = exports.authenticate = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../config");
 const permissions_1 = require("../constants/permissions");
+const ForbiddenError_1 = require("../error/ForbiddenError");
+const UnAuthorizedError_1 = require("../error/UnAuthorizedError");
 /**
  * Middleware for authentication
  * @param req
@@ -14,17 +16,16 @@ const permissions_1 = require("../constants/permissions");
 const authenticate = (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization) {
-        next(new Error("Unauthenticated"));
+        next(new UnAuthorizedError_1.UnAuthorizedError("Unauthorized access"));
     }
     const token = authorization.split(" ");
     if (token.length != 2 || token[0] != "Bearer") {
-        next(new Error("Unauthenticated"));
+        next(new UnAuthorizedError_1.UnAuthorizedError("Unauthorized access"));
     }
     const user = (0, jsonwebtoken_1.verify)(token[1], config_1.config.jwt.secret);
     if (!user) {
-        next(new Error("Unauthenticated"));
+        next(new UnAuthorizedError_1.UnAuthorizedError("Unauthorized access"));
     }
-    console.log(user);
     req.user = user;
     next();
 };
@@ -36,7 +37,7 @@ const authorization = (permission) => (req, res, next) => {
     console.log(permissions_1.permissions[userRole]);
     console.log(permission);
     if (!userPermissions.includes(permission)) {
-        next(new Error("no permission"));
+        next(new ForbiddenError_1.ForbiddenError("Access denied"));
     }
     next();
 };
