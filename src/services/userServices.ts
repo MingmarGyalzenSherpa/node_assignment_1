@@ -23,6 +23,10 @@ export const createUser = async (user: IUser): Promise<object> => {
     };
   }
 
+  if (!user.permissions) {
+    user.permissions = [];
+  }
+
   const hashedPassword = await bcrypt.hash(user.password, 10);
   UserModel.createUser({ ...user, password: hashedPassword });
 
