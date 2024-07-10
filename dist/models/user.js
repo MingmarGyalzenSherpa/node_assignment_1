@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserById = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+exports.updateUser = exports.deleteUserById = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
 let users = [
     {
         id: "1",
@@ -62,4 +62,11 @@ const deleteUserById = (id) => {
     return user;
 };
 exports.deleteUserById = deleteUserById;
+const updateUser = (id, updatedUser) => {
+    let user = users.find(({ id: userId }) => userId === id);
+    user = Object.assign(Object.assign({}, user), updatedUser);
+    users = [...users.filter(({ id: userId }) => userId !== id), user];
+    return user;
+};
+exports.updateUser = updateUser;
 //# sourceMappingURL=user.js.map

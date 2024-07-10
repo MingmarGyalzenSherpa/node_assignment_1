@@ -35,9 +35,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+exports.updateUser = exports.getAllUsers = exports.createUser = void 0;
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
+const BadRequestError_1 = require("../error/BadRequestError");
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     const data = yield UserServices.createUser(body);
@@ -52,6 +53,26 @@ const getAllUsers = (req, res) => {
     });
 };
 exports.getAllUsers = getAllUsers;
-const getUserByEmail = (email) => { };
-exports.getUserByEmail = getUserByEmail;
+/**
+ *  Update a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+const updateUser = (req, res, next) => {
+    try {
+        const { id: userId } = req.params;
+        const { body: updatedUser } = req;
+        const user = UserServices.updateUser(userId, updatedUser);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User updated successfully",
+            data: [user],
+        });
+    }
+    catch (error) {
+        console.log("error ayo");
+        next(new BadRequestError_1.BadRequestError(error.message));
+    }
+};
+exports.updateUser = updateUser;
 //# sourceMappingURL=userController.js.map

@@ -45,8 +45,7 @@ export const authorization =
     const user = req.user;
     const userRole = user.role;
     const userPermissions = permissions[userRole];
-    console.log(permissions[userRole]);
-    console.log(permission);
+
     if (!userPermissions.includes(permission)) {
       next(new ForbiddenError("Access denied"));
     }

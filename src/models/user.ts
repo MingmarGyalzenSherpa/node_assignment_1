@@ -69,3 +69,13 @@ export const deleteUserById = (id: string): IUser => {
 
   return user;
 };
+
+export const updateUser = (id: string, updatedUser: IUser) => {
+  let user = users.find(({ id: userId }) => userId === id);
+
+  user = { ...user, ...updatedUser };
+
+  users = [...users.filter(({ id: userId }) => userId !== id), user];
+
+  return user;
+};

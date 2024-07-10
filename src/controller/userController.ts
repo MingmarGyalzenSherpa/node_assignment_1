@@ -1,7 +1,8 @@
 import HttpStatusCodes from "http-status-codes";
-import { Request, Response } from "express";
+import { NextFunction, Response } from "express";
+import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import * as UserServices from "../services/userServices";
-import ResponseObject from "../utils/responseObject";
+import { BadRequestError } from "../error/BadRequestError";
 
 export const createUser = async (req: Request, res: Response) => {
   const { body } = req;
@@ -18,4 +19,25 @@ export const getAllUsers = (req: Request, res: Response) => {
   });
 };
 
-export const getUserByEmail = (email: string) => {};
+/**
+ *  Update a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id: userId } = req.params;
+    const { body: updatedUser } = req;
+
+    const user = UserServices.updateUser(userId, updatedUser);
+
+    res.status(HttpStatusCodes.OK).json({
+      message: "User updated successfully",
+      data: [user],
+    });
+  } catch (error) {
+    console.log("error ayo");
+    next(new BadRequestError(error.message));
+  }
+};

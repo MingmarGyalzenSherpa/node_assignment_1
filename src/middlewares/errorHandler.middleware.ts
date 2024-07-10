@@ -2,6 +2,7 @@ import HttpStatusCodes from "http-status-codes";
 import { NextFunction, Request, Response } from "express";
 import { UnAuthorizedError } from "../error/UnAuthorizedError";
 import { ForbiddenError } from "../error/ForbiddenError";
+import { BadRequestError } from "../error/BadRequestError";
 
 export const notFound = (req: Request, res: Response) => {
   res.status(HttpStatusCodes.NOT_FOUND).json({
@@ -28,6 +29,13 @@ export const genericErrorHandler = (
   //forbidden error
   if (err instanceof ForbiddenError) {
     res.status(HttpStatusCodes.FORBIDDEN).json({
+      message: err.message,
+    });
+  }
+
+  //Bad request error
+  if (err instanceof BadRequestError) {
+    res.status(HttpStatusCodes.BAD_REQUEST).json({
       message: err.message,
     });
   }

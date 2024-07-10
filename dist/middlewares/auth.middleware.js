@@ -36,8 +36,6 @@ const authorization = (permission) => (req, res, next) => {
     const user = req.user;
     const userRole = user.role;
     const userPermissions = permissions_1.permissions[userRole];
-    console.log(permissions_1.permissions[userRole]);
-    console.log(permission);
     if (!userPermissions.includes(permission)) {
         next(new ForbiddenError_1.ForbiddenError("Access denied"));
     }

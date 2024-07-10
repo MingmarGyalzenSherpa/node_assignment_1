@@ -51,3 +51,20 @@ export const getUserByEmail = (email: string): IUser => {
   const data = UserModel.getUserByEmail(email);
   return data;
 };
+
+/**
+ *  Update a user by id
+ * @param {string} id - id of user
+ * @param {IUser} updatedUser - new field of user
+ * @returns {IUser} - user
+ */
+export const updateUser = (id: string, updatedUser: IUser): IUser => {
+  const userExists = UserModel.getUserById(id);
+
+  if (!userExists) {
+    throw new Error("User doesn't exist");
+  }
+  const data = UserModel.updateUser(id, updatedUser);
+
+  return data;
+};
