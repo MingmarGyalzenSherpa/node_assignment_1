@@ -10,6 +10,12 @@ let todos = [
     },
     {
         id: "2",
+        title: "Go shopping",
+        completed: false,
+        createdBy: "1",
+    },
+    {
+        id: "3",
         title: "Work",
         completed: true,
         createdBy: "2",

@@ -10,7 +10,11 @@ import { auth } from "../middlewares/auth.middleware";
 
 const router = express();
 
-router.get("/", auth, getTodos);
+//auth middleware
+router.use(auth);
+
+//routes
+router.get("/", getTodos);
 
 router.get("/:id", getTodoById);
 

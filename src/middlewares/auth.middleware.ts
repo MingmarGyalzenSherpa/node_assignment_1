@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import { JwtPayload, verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUserPayload from "../interfaces/IUserPayload";
 
@@ -27,7 +27,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     };
   }
 
-  const isValidToken = verify(token[1], config.jwt.secret);
+  const isValidToken = verify(token[1], config.jwt.secret) as JwtPayload;
 
   if (!isValidToken) {
     next(new Error("Unauthenticated"));
