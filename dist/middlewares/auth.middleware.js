@@ -3,6 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../config");
+/**
+ * Middleware for authentication
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 const auth = (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization) {

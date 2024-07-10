@@ -17,7 +17,8 @@ let todos: ITodo[] = [
 
 /**
  * Get all todos
- * @returns {todos}
+ * @param {string} userId - id of the user
+ * @returns {ITodo} - corresponding todo of the user
  */
 export const getTodos = (userId: string): ITodo[] => {
   console.log(userId);
@@ -25,19 +26,19 @@ export const getTodos = (userId: string): ITodo[] => {
 };
 
 /**
- * get a todo by id
+ * Get a todo by id
  * @param {string} id
- * @returns {todo}
+ * @returns {ITodo}
  */
-export const getTodoById = (id: String) => {
+export const getTodoById = (id: String): ITodo => {
   const data = todos.find(({ id: todoId }) => todoId === id);
   return data;
 };
 
 /**
- * add a todo
- * @param todo
- * @returns {todos}
+ * Add a todo
+ * @param {ITodo} todo - details of the todo
+ * @returns {ITodo[]} - new list of todos
  */
 export const addTodo = (todo: ITodo): ITodo[] => {
   todos.push({
@@ -51,18 +52,19 @@ export const addTodo = (todo: ITodo): ITodo[] => {
 /**
  * Delete a todo
  * @param id
- * @returns {todos}
+ * @returns {ITodo} todo
  */
-export const deleteTodo = (id: string): ITodo[] => {
+export const deleteTodo = (id: string): ITodo => {
+  let todo = getTodoById(id);
   todos = todos.filter((todo) => todo.id !== id);
-  return todos;
+  return todo;
 };
 
 /**
- * update a todo by id
- * @param id
- * @param todo
- * @returns {todo}
+ * Update a todo by id
+ * @param id - id of the todo
+ * @param todo - updated field of the todo
+ * @returns {ITodo} todo - the updated todo
  */
 export const updateTodo = (id: string, todo: ITodo): ITodo => {
   let todoToUpdate = getTodoById(id);

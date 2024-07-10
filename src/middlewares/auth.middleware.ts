@@ -3,6 +3,13 @@ import { verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUserPayload from "../interfaces/IUserPayload";
 
+/**
+ * Middleware for authentication
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
 

@@ -15,12 +15,20 @@ let users = [
         password: "$2b$10$VpERQZT46YsPELr0ZJyLceIyW7zJcf1d1mZf6Os9HC2dtkTiLbd6K",
     },
 ];
+/**
+ * Create a user
+ * @param {IUser} user - details of the user
+ */
 const createUser = (user) => {
     console.log(users);
     users.push(Object.assign({ id: `${users.length + 1}` }, user));
-    console.log(users);
 };
 exports.createUser = createUser;
+/**
+ * Get user by email
+ * @param {string} email - email of the user
+ * @returns {IUser} user - details of the user
+ */
 const getUserByEmail = (email) => {
     const user = users.find(({ email: userEmail }) => userEmail === email);
     return user;

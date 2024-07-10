@@ -3,7 +3,12 @@ import * as UserModel from "../models/user";
 
 import bcrypt from "bcrypt";
 
-export const createUser = async (user: IUser) => {
+/**
+ * Create a new user
+ * @param {IUser} user - new user field
+ * @returns {Promise<object>} - message object
+ */
+export const createUser = async (user: IUser): Promise<object> => {
   if (!(user.name && user.email && user.password)) {
     return {
       message: "Email or password missing",
@@ -19,13 +24,19 @@ export const createUser = async (user: IUser) => {
   }
 
   const hashedPassword = await bcrypt.hash(user.password, 10);
-  const data = UserModel.createUser({ ...user, password: hashedPassword });
+  UserModel.createUser({ ...user, password: hashedPassword });
 
-  return data;
+  return {
+    message: "User created successfully",
+  };
 };
 
-export const getUserByEmail = (email: string) => {
+/**
+ * Get a user by email
+ * @param {string} email - email of the user
+ * @returns {IUser} - user
+ */
+export const getUserByEmail = (email: string): IUser => {
   const data = UserModel.getUserByEmail(email);
-
   return data;
 };

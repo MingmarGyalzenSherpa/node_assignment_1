@@ -17,6 +17,11 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const userServices_1 = require("./userServices");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../config");
+/**
+ * Login a user
+ * @param user
+ * @returns {Promise<object>} - accessToken and refreshToken or error message
+ */
 const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const existingUser = (0, userServices_1.getUserByEmail)(user.email);
     if (!existingUser) {
@@ -47,13 +52,18 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
     };
 });
 exports.login = login;
-const refresh = (oldRefreshToken) => {
-    if (!oldRefreshToken) {
+/**
+ * Refresh access token
+ * @param {string} oldRefreshToken - refresh token
+ * @returns {object} - new access token or error message
+ */
+const refresh = (refreshToken) => {
+    if (!refreshToken) {
         return {
             message: "Invalid",
         };
     }
-    const isValidToken = (0, jsonwebtoken_1.verify)(oldRefreshToken, config_1.config.jwt.secret);
+    const isValidToken = (0, jsonwebtoken_1.verify)(refreshToken, config_1.config.jwt.secret);
     if (!isValidToken) {
         return {
             message: "Invalid",
@@ -67,12 +77,8 @@ const refresh = (oldRefreshToken) => {
     const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
         expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),
     });
-    const newRefreshToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
-        expiresIn: parseInt(config_1.config.jwt.refreshTokenExpiryMS),
-    });
     return {
         accessToken,
-        newRefreshToken,
     };
 };
 exports.refresh = refresh;

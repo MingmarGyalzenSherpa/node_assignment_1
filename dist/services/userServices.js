@@ -38,6 +38,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserByEmail = exports.createUser = void 0;
 const UserModel = __importStar(require("../models/user"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+/**
+ * Create a new user
+ * @param {IUser} user - new user field
+ * @returns {Promise<object>} - message object
+ */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(user.name && user.email && user.password)) {
         return {
@@ -51,10 +56,17 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         };
     }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
-    const data = UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
-    return data;
+    UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
+    return {
+        message: "User created successfully",
+    };
 });
 exports.createUser = createUser;
+/**
+ * Get a user by email
+ * @param {string} email - email of the user
+ * @returns {IUser} - user
+ */
 const getUserByEmail = (email) => {
     const data = UserModel.getUserByEmail(email);
     return data;

@@ -5,7 +5,14 @@ import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUserPayload from "../interfaces/IUserPayload";
 
-export const login = async (user: Pick<IUser, "email" | "password">) => {
+/**
+ * Login a user
+ * @param user
+ * @returns {Promise<object>} - accessToken and refreshToken or error message
+ */
+export const login = async (
+  user: Pick<IUser, "email" | "password">
+): Promise<object> => {
   const existingUser = getUserByEmail(user.email);
   if (!existingUser) {
     return {
@@ -43,14 +50,19 @@ export const login = async (user: Pick<IUser, "email" | "password">) => {
   };
 };
 
-export const refresh = (oldRefreshToken: string) => {
-  if (!oldRefreshToken) {
+/**
+ * Refresh access token
+ * @param {string} oldRefreshToken - refresh token
+ * @returns {object} - new access token or error message
+ */
+export const refresh = (refreshToken: string): object => {
+  if (!refreshToken) {
     return {
       message: "Invalid",
     };
   }
 
-  const isValidToken = verify(oldRefreshToken, config.jwt.secret) as JwtPayload;
+  const isValidToken = verify(refreshToken, config.jwt.secret) as JwtPayload;
   if (!isValidToken) {
     return {
       message: "Invalid",
@@ -67,12 +79,7 @@ export const refresh = (oldRefreshToken: string) => {
     expiresIn: parseInt(config.jwt.accessTokenExpiryMS),
   });
 
-  const newRefreshToken = sign(payload, config.jwt.secret, {
-    expiresIn: parseInt(config.jwt.refreshTokenExpiryMS),
-  });
-
   return {
     accessToken,
-    newRefreshToken,
   };
 };

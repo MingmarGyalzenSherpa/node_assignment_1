@@ -94,7 +94,7 @@ const deleteTodo = (req, res) => {
     const data = TodoServices.deleteTodo(id);
     res
         .status(httpResponseStatus_1.httpResponseStatus.OK)
-        .json(new responseObject_1.default(message.deleted("Todo"), data));
+        .json(new responseObject_1.default(message.deleted("Todo"), [data]));
 };
 exports.deleteTodo = deleteTodo;
 /**

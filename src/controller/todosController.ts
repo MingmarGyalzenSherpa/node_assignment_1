@@ -73,7 +73,7 @@ export const deleteTodo = (req: Request, res: Response) => {
 
   res
     .status(httpResponseStatus.OK)
-    .json(new ResponseObject(message.deleted("Todo"), data));
+    .json(new ResponseObject(message.deleted("Todo"), [data]));
 };
 
 /**

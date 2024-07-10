@@ -2,8 +2,9 @@ import { ITodo } from "../interfaces/ITodo";
 import * as TodoModel from "../models/todos";
 
 /**
- * get all todos
- * @returns {todo}
+ * Get all todos by id
+ * @param {string} userId - id of the user
+ * @returns {ITodo[]} todos - list of todos created by user
  */
 export const getTodos = (userId: string): ITodo[] => {
   const data = TodoModel.getTodos(userId);
@@ -11,9 +12,9 @@ export const getTodos = (userId: string): ITodo[] => {
 };
 
 /**
- * get a todo by id
- * @param id
- * @returns {todo}
+ * Get a todo by id
+ * @param {string} id - id of todo
+ * @returns {ITodo} todo - the matching todo
  */
 export const getTodoById = (id: string): ITodo => {
   const data = TodoModel.getTodoById(id);
@@ -21,7 +22,7 @@ export const getTodoById = (id: string): ITodo => {
 };
 
 /**
- * add a todo
+ * Add a todo
  * @param todo
  * @returns {todos}
  */
@@ -32,11 +33,11 @@ export const addTodo = (todo: ITodo): ITodo[] => {
 };
 
 /**
- *  delete a todo by id
- * @param id
- * @returns {todos}
+ *  Delete a todo by id
+ * @param {string} id - id of the todo
+ * @returns {ITodo} - deleted todo
  */
-export const deleteTodo = (id: string): ITodo[] => {
+export const deleteTodo = (id: string): ITodo => {
   const data = TodoModel.deleteTodo(id);
 
   return data;
@@ -44,9 +45,9 @@ export const deleteTodo = (id: string): ITodo[] => {
 
 /**
  * Update a todo by id
- * @param id
- * @param todo
- * @returns {todo}
+ * @param id - id of the todo
+ * @param todo - updated field of todo
+ * @returns {ITodo} - updated todo
  */
 export const updateTodo = (id: string, todo: ITodo): ITodo => {
   const data = TodoModel.updateTodo(id, todo);

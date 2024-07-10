@@ -17,7 +17,8 @@ let todos = [
 ];
 /**
  * Get all todos
- * @returns {todos}
+ * @param {string} userId - id of the user
+ * @returns {ITodo} - corresponding todo of the user
  */
 const getTodos = (userId) => {
     console.log(userId);
@@ -25,9 +26,9 @@ const getTodos = (userId) => {
 };
 exports.getTodos = getTodos;
 /**
- * get a todo by id
+ * Get a todo by id
  * @param {string} id
- * @returns {todo}
+ * @returns {ITodo}
  */
 const getTodoById = (id) => {
     const data = todos.find(({ id: todoId }) => todoId === id);
@@ -35,9 +36,9 @@ const getTodoById = (id) => {
 };
 exports.getTodoById = getTodoById;
 /**
- * add a todo
- * @param todo
- * @returns {todos}
+ * Add a todo
+ * @param {ITodo} todo - details of the todo
+ * @returns {ITodo[]} - new list of todos
  */
 const addTodo = (todo) => {
     todos.push(Object.assign({ id: `${todos.length + 1}` }, todo));
@@ -47,18 +48,19 @@ exports.addTodo = addTodo;
 /**
  * Delete a todo
  * @param id
- * @returns {todos}
+ * @returns {ITodo} todo
  */
 const deleteTodo = (id) => {
+    let todo = (0, exports.getTodoById)(id);
     todos = todos.filter((todo) => todo.id !== id);
-    return todos;
+    return todo;
 };
 exports.deleteTodo = deleteTodo;
 /**
- * update a todo by id
- * @param id
- * @param todo
- * @returns {todo}
+ * Update a todo by id
+ * @param id - id of the todo
+ * @param todo - updated field of the todo
+ * @returns {ITodo} todo - the updated todo
  */
 const updateTodo = (id, todo) => {
     let todoToUpdate = (0, exports.getTodoById)(id);

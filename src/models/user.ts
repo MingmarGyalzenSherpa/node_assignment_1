@@ -15,6 +15,10 @@ let users: IUser[] = [
   },
 ];
 
+/**
+ * Create a user
+ * @param {IUser} user - details of the user
+ */
 export const createUser = (user: IUser) => {
   console.log(users);
 
@@ -22,10 +26,14 @@ export const createUser = (user: IUser) => {
     id: `${users.length + 1}`,
     ...user,
   });
-  console.log(users);
 };
 
-export const getUserByEmail = (email: string) => {
+/**
+ * Get user by email
+ * @param {string} email - email of the user
+ * @returns {IUser} user - details of the user
+ */
+export const getUserByEmail = (email: string): IUser => {
   const user = users.find(({ email: userEmail }) => userEmail === email);
   return user;
 };
