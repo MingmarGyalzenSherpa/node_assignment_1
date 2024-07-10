@@ -37,7 +37,7 @@ export const getTodoById = (req: Request, res: Response) => {
 };
 
 /**
- * add todo
+ * Add todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -62,7 +62,7 @@ export const addTodo = (req: Request, res: Response) => {
 };
 
 /**
- * delete todo
+ * Delete todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -77,7 +77,7 @@ export const deleteTodo = (req: Request, res: Response) => {
 };
 
 /**
- * update todo
+ * Update todo
  * @param {Request} req
  * @param {Response} res
  *

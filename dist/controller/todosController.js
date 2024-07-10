@@ -61,7 +61,7 @@ const getTodoById = (req, res) => {
 };
 exports.getTodoById = getTodoById;
 /**
- * add todo
+ * Add todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -84,7 +84,7 @@ const addTodo = (req, res) => {
 };
 exports.addTodo = addTodo;
 /**
- * delete todo
+ * Delete todo
  * @param {Request} req
  * @param {Response} res
  *
@@ -98,7 +98,7 @@ const deleteTodo = (req, res) => {
 };
 exports.deleteTodo = deleteTodo;
 /**
- * update todo
+ * Update todo
  * @param {Request} req
  * @param {Response} res
  *
