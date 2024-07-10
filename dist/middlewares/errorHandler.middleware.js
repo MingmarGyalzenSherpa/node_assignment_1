@@ -8,6 +8,7 @@ const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UnAuthorizedError_1 = require("../error/UnAuthorizedError");
 const ForbiddenError_1 = require("../error/ForbiddenError");
 const BadRequestError_1 = require("../error/BadRequestError");
+const NotFoundError_1 = require("../error/NotFoundError");
 const notFound = (req, res) => {
     res.status(http_status_codes_1.default.NOT_FOUND).json({
         message: "NOT FOUND",
@@ -32,6 +33,11 @@ const genericErrorHandler = (err, req, res, next) => {
     //Bad request error
     if (err instanceof BadRequestError_1.BadRequestError) {
         return res.status(http_status_codes_1.default.BAD_REQUEST).json({
+            message: err.message,
+        });
+    }
+    if (err instanceof NotFoundError_1.NotFoundError) {
+        return res.status(http_status_codes_1.default.NOT_FOUND).json({
             message: err.message,
         });
     }

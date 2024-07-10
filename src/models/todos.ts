@@ -23,20 +23,20 @@ let todos: ITodo[] = [
 
 /**
  * Get all todos
+ *
  * @param {string} userId - id of the user
- * @returns {ITodo} - corresponding todo of the user
+ * @returns {ITodo} - corresponding todos of the user
  */
-export const getTodos = (userId: string): ITodo[] => {
-  console.log(userId);
-  return todos.filter(({ createdBy }) => createdBy === userId);
-};
+export const getTodos = (userId: string): ITodo[] =>
+  todos.filter(({ createdBy }) => createdBy === userId);
 
 /**
  * Get a todo by id
- * @param {string} id
- * @returns {ITodo}
+ *
+ * @param {string} id - id of the todo
+ * @returns {ITodo | undefined} - corresponding user or undefined if todo doesn't exist
  */
-export const getTodoById = (id: String, userId: string): ITodo => {
+export const getTodoById = (id: String, userId: string): ITodo | undefined => {
   const data = todos.find(
     ({ id: todoId, createdBy }) => todoId === id && createdBy === userId
   );
@@ -45,6 +45,7 @@ export const getTodoById = (id: String, userId: string): ITodo => {
 
 /**
  * Add a todo
+ *
  * @param {ITodo} todo - details of the todo
  * @returns {ITodo[]} - new list of todos
  */
@@ -59,6 +60,7 @@ export const addTodo = (todo: ITodo): ITodo[] => {
 
 /**
  * Delete a todo
+ *
  * @param id
  * @returns {ITodo} todo
  */
@@ -70,19 +72,21 @@ export const deleteTodo = (id: string, userId: string): ITodo => {
 
 /**
  * Update a todo by id
- * @param id - id of the todo
- * @param todo - updated field of the todo
- * @returns {ITodo} todo - the updated todo
+ *
+ * @param todoToUpdate - old todo
+ * @param updatedTodo  - new todo fields
+ * @returns {ITodo} - updated todo
  */
-export const updateTodo = (id: string, userId: string, todo: ITodo): ITodo => {
-  let todoToUpdate = getTodoById(id, userId);
-
+export const updateTodo = (todoToUpdate: ITodo, updatedTodo: ITodo): ITodo => {
   todoToUpdate = {
     ...todoToUpdate,
-    ...todo,
+    ...updatedTodo,
   };
 
-  todos = [...todos.filter(({ id: todoId }) => todoId != id), todoToUpdate];
+  todos = [
+    ...todos.filter(({ id: todoId }) => todoId != todoToUpdate.id),
+    todoToUpdate,
+  ];
 
   return todoToUpdate;
 };

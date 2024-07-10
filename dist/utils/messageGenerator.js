@@ -1,14 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleted = exports.updated = exports.created = exports.found = exports.notFound = void 0;
+exports.invalid = exports.deleted = exports.updated = exports.alreadyExists = exports.created = exports.successful = exports.fetched = exports.notFound = void 0;
 const notFound = (title) => `${title} not found`;
 exports.notFound = notFound;
-const found = (title) => `${title} found successfully`;
-exports.found = found;
+const fetched = (title) => `${title} fetched successfully`;
+exports.fetched = fetched;
+const successful = (title) => `${title} successful`;
+exports.successful = successful;
 const created = (title) => `${title} created successfully`;
 exports.created = created;
+const alreadyExists = (title) => `${title} already exists`;
+exports.alreadyExists = alreadyExists;
 const updated = (title) => `${title} updated successfully`;
 exports.updated = updated;
 const deleted = (title) => `${title} deleted successfully`;
 exports.deleted = deleted;
+const invalid = (title) => `Invalid ${title}`;
+exports.invalid = invalid;
 //# sourceMappingURL=messageGenerator.js.map

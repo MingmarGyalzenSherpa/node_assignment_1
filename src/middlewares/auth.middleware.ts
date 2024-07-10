@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUser from "../interfaces/IUser";
 import { permissions } from "../constants/permissions";
@@ -27,11 +27,12 @@ export const authentication = (
 
   const token = authorization.split(" ");
 
-  if (token.length != 2 || token[0] != "Bearer") {
+  if (token.length != 2 || token[0] !== "Bearer") {
     next(new UnAuthorizedError("Unauthorized access"));
   }
   try {
     const user = verify(token[1], config.jwt.secret) as IUser;
+
     req.user = user;
   } catch (error) {
     next(new UnAuthorizedError("Unauthorized access"));
@@ -45,7 +46,6 @@ export const authorization =
     const user = req.user;
     const userRole = user.role;
     const userPermissions = permissions[userRole];
-
     if (!userPermissions.includes(permission)) {
       next(new ForbiddenError("Access denied"));
     }

@@ -19,6 +19,7 @@ let users = [
 ];
 /**
  * Create a user
+ *
  * @param {IUser} user - details of the user
  */
 const createUser = (user) => {
@@ -27,14 +28,16 @@ const createUser = (user) => {
 exports.createUser = createUser;
 /**
  * Get all users
+ *
  * @returns {IUser[]}
  */
 const getAllUsers = () => users;
 exports.getAllUsers = getAllUsers;
 /**
  * Get user by email
+ *
  * @param {string} email - email of the user
- * @returns {IUser} user - details of the user
+ * @returns {IUser | undefined} user - details of the user
  */
 const getUserByEmail = (email) => {
     const user = users.find(({ email: userEmail }) => userEmail === email);
@@ -43,8 +46,9 @@ const getUserByEmail = (email) => {
 exports.getUserByEmail = getUserByEmail;
 /**
  *  Get a user by id
+ *
  * @param {string} id - id of the user
- * @returns {IUser} - user
+ * @returns {IUser | undefined} - user
  */
 const getUserById = (id) => {
     const user = users.find(({ id: userId }) => userId === id);
@@ -53,21 +57,19 @@ const getUserById = (id) => {
 exports.getUserById = getUserById;
 /**
  * Delete a user by id
+ *
  * @param {string} id
  * @returns {IUser} - deleted user
  */
 const deleteUserById = (id) => {
     const user = (0, exports.getUserById)(id);
-    console.log(user);
-    if (!user) {
-        throw new Error("User doesn't exist");
-    }
     users = users.filter(({ id: userId }) => userId !== id);
     return user;
 };
 exports.deleteUserById = deleteUserById;
 /**
  * Update a user by id
+ *
  * @param id
  * @param updatedUser
  * @returns {IUser} - deleted user

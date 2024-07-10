@@ -19,7 +19,7 @@ const authentication = (req, res, next) => {
         next(new UnAuthorizedError_1.UnAuthorizedError("Unauthorized access"));
     }
     const token = authorization.split(" ");
-    if (token.length != 2 || token[0] != "Bearer") {
+    if (token.length != 2 || token[0] !== "Bearer") {
         next(new UnAuthorizedError_1.UnAuthorizedError("Unauthorized access"));
     }
     try {

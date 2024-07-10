@@ -3,20 +3,23 @@ import IUser from "../interfaces/IUser";
 import { getUserByEmail } from "./userServices";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { config } from "../config";
+import { NotFoundError } from "../error/NotFoundError";
+import * as messageGenerator from "../utils/messageGenerator";
+import { UnAuthorizedError } from "../error/UnAuthorizedError";
 
 /**
  * Login a user
+ *
  * @param user
- * @returns {Promise<object>} - accessToken and refreshToken or error message
+ * @returns {Promise<object>} - accessToken and refreshToken
  */
 export const login = async (
   user: Pick<IUser, "email" | "password">
 ): Promise<object> => {
   const existingUser = getUserByEmail(user.email);
+
   if (!existingUser) {
-    return {
-      message: "Invalid email or password",
-    };
+    throw new NotFoundError(messageGenerator.invalid("email or password"));
   }
   const isValidPassword = await bcrypt.compare(
     user.password,
@@ -24,9 +27,7 @@ export const login = async (
   );
 
   if (!isValidPassword) {
-    return {
-      message: "Invalid email or password",
-    };
+    throw new NotFoundError(messageGenerator.invalid("email or password"));
   }
 
   const payload = {
@@ -52,21 +53,18 @@ export const login = async (
 
 /**
  * Refresh access token
+ *
  * @param {string} refreshToken - refresh token
- * @returns {object} - new access token or error message
+ * @returns {object} - new access token
  */
 export const refresh = (refreshToken: string): object => {
   if (!refreshToken) {
-    return {
-      message: "Invalid",
-    };
+    throw new NotFoundError(messageGenerator.notFound("Refresh Token"));
   }
 
   const isValidToken = verify(refreshToken, config.jwt.secret) as JwtPayload;
   if (!isValidToken) {
-    return {
-      message: "Invalid",
-    };
+    throw new UnAuthorizedError(messageGenerator.invalid("Refresh Token"));
   }
 
   const payload = {

@@ -1,6 +1,6 @@
 import { userRole } from "./userRole";
 
-export const permissions = {
+export const permissions: Record<userRole, string[]> = {
   superUser: [
     "user.get",
     "user.create",

@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { UnAuthorizedError } from "../error/UnAuthorizedError";
 import { ForbiddenError } from "../error/ForbiddenError";
 import { BadRequestError } from "../error/BadRequestError";
+import { NotFoundError } from "../error/NotFoundError";
 
 export const notFound = (req: Request, res: Response) => {
   res.status(HttpStatusCodes.NOT_FOUND).json({
@@ -36,6 +37,12 @@ export const genericErrorHandler = (
   //Bad request error
   if (err instanceof BadRequestError) {
     return res.status(HttpStatusCodes.BAD_REQUEST).json({
+      message: err.message,
+    });
+  }
+
+  if (err instanceof NotFoundError) {
+    return res.status(HttpStatusCodes.NOT_FOUND).json({
       message: err.message,
     });
   }

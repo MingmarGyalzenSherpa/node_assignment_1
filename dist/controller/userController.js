@@ -105,7 +105,7 @@ const deleteUser = (req, res, next) => {
         });
     }
     catch (error) {
-        next(new BadRequestError_1.BadRequestError(error.message));
+        next(error);
     }
 };
 exports.deleteUser = deleteUser;

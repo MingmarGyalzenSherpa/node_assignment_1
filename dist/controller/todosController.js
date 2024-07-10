@@ -37,10 +37,17 @@ const http_status_codes_1 = __importDefault(require("http-status-codes"));
  * @param {Response} res
  *
  */
-const getTodos = (req, res) => {
-    const { id: userId } = req.user;
-    const data = TodoServices.getTodos(userId);
-    res.status(http_status_codes_1.default.OK).json(data);
+const getTodos = (req, res, next) => {
+    try {
+        const { id: userId } = req.user;
+        const data = TodoServices.getTodos(userId);
+        res
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.fetched("User"), data));
+    }
+    catch (error) {
+        next(error);
+    }
 };
 exports.getTodos = getTodos;
 /**
@@ -49,18 +56,18 @@ exports.getTodos = getTodos;
  * @param {Response} res
  *
  */
-const getTodoById = (req, res) => {
-    const { id } = req.params;
-    const { id: userId } = req.user;
-    const data = TodoServices.getTodoById(id, userId);
-    if (!data) {
+const getTodoById = (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.user;
+        const data = TodoServices.getTodoById(id, userId);
         res
-            .status(http_status_codes_1.default.NOT_FOUND)
-            .json(new responseObject_1.default(message.notFound("Todo"), []));
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.fetched("Todo"), [data]));
     }
-    res
-        .status(http_status_codes_1.default.OK)
-        .json(new responseObject_1.default(message.found("Todo"), [data]));
+    catch (error) {
+        next(error);
+    }
 };
 exports.getTodoById = getTodoById;
 /**
@@ -69,7 +76,7 @@ exports.getTodoById = getTodoById;
  * @param {Response} res
  *
  */
-const addTodo = (req, res) => {
+const addTodo = (req, res, next) => {
     const todo = req.body;
     const { id: userId } = req.user;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
@@ -94,7 +101,7 @@ exports.addTodo = addTodo;
  * @param {Response} res
  *
  */
-const deleteTodo = (req, res) => {
+const deleteTodo = (req, res, next) => {
     const { id } = req.params;
     const { id: userId } = req.user;
     const data = TodoServices.deleteTodo(id, userId);
@@ -110,19 +117,18 @@ exports.deleteTodo = deleteTodo;
  *
  */
 const updateTodo = (req, res, next) => {
-    console.log("here");
-    const { id } = req.params;
-    const { id: userId } = req.user;
-    if (!TodoServices.getTodoById(id, userId)) {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.user;
+        const todo = req.body;
+        const data = TodoServices.updateTodo(id, userId, todo);
         res
-            .status(http_status_codes_1.default.NOT_FOUND)
-            .json(new responseObject_1.default(message.notFound("Todo"), []));
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.updated("Todo"), [data]));
     }
-    const todo = req.body;
-    const data = TodoServices.updateTodo(id, userId, todo);
-    res
-        .status(http_status_codes_1.default.OK)
-        .json(new responseObject_1.default(message.updated("Todo"), [data]));
+    catch (error) {
+        next(error);
+    }
 };
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todosController.js.map

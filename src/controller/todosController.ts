@@ -5,17 +5,24 @@ import ResponseObject from "../utils/responseObject";
 import { httpResponseStatus } from "../constants/httpResponseStatus";
 import * as message from "../utils/messageGenerator";
 import HttpStatusCodes from "http-status-codes";
+import { ITodo } from "../interfaces/ITodo";
 /**
  * Get all todos
  * @param {Request} req
  * @param {Response} res
  *
  */
-export const getTodos = (req: Request, res: Response) => {
-  const { id: userId } = req.user;
-  const data = TodoServices.getTodos(userId as string);
+export const getTodos = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id: userId } = req.user;
+    const data = TodoServices.getTodos(userId as string);
 
-  res.status(HttpStatusCodes.OK).json(data);
+    res
+      .status(HttpStatusCodes.OK)
+      .json(new ResponseObject<ITodo>(message.fetched("User"), data));
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
@@ -24,19 +31,22 @@ export const getTodos = (req: Request, res: Response) => {
  * @param {Response} res
  *
  */
-export const getTodoById = (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { id: userId } = req.user;
-  const data = TodoServices.getTodoById(id, userId as string);
-  if (!data) {
-    res
-      .status(HttpStatusCodes.NOT_FOUND)
-      .json(new ResponseObject(message.notFound("Todo"), []));
-  }
+export const getTodoById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const { id: userId } = req.user;
+    const data = TodoServices.getTodoById(id, userId as string);
 
-  res
-    .status(HttpStatusCodes.OK)
-    .json(new ResponseObject(message.found("Todo"), [data!]));
+    res
+      .status(HttpStatusCodes.OK)
+      .json(new ResponseObject<ITodo>(message.fetched("Todo"), [data]));
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
@@ -45,13 +55,13 @@ export const getTodoById = (req: Request, res: Response) => {
  * @param {Response} res
  *
  */
-export const addTodo = (req: Request, res: Response) => {
+export const addTodo = (req: Request, res: Response, next: NextFunction) => {
   const todo = req.body;
   const { id: userId } = req.user;
   if (!todo || !todo?.title) {
     res
       .status(HttpStatusCodes.BAD_REQUEST)
-      .json(new ResponseObject(message.notFound("Todo"), []));
+      .json(new ResponseObject<ITodo>(message.notFound("Todo"), []));
     return;
   }
   if (todo.completed === undefined) {
@@ -63,7 +73,7 @@ export const addTodo = (req: Request, res: Response) => {
   const data = TodoServices.addTodo(todo);
   res
     .status(HttpStatusCodes.CREATED)
-    .json(new ResponseObject(message.created("Todo"), data));
+    .json(new ResponseObject<ITodo>(message.created("Todo"), data));
 };
 
 /**
@@ -72,14 +82,14 @@ export const addTodo = (req: Request, res: Response) => {
  * @param {Response} res
  *
  */
-export const deleteTodo = (req: Request, res: Response) => {
+export const deleteTodo = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const { id: userId } = req.user;
   const data = TodoServices.deleteTodo(id, userId as string);
 
   res
     .status(HttpStatusCodes.OK)
-    .json(new ResponseObject(message.deleted("Todo"), [data]));
+    .json(new ResponseObject<ITodo>(message.deleted("Todo"), [data]));
 };
 
 /**
@@ -89,18 +99,16 @@ export const deleteTodo = (req: Request, res: Response) => {
  *
  */
 export const updateTodo = (req: Request, res: Response, next: NextFunction) => {
-  console.log("here");
-  const { id } = req.params;
-  const { id: userId } = req.user;
-  if (!TodoServices.getTodoById(id, userId as string)) {
-    res
-      .status(HttpStatusCodes.NOT_FOUND)
-      .json(new ResponseObject(message.notFound("Todo"), []));
-  }
-  const todo = req.body;
-  const data = TodoServices.updateTodo(id, userId as string, todo);
+  try {
+    const { id } = req.params;
+    const { id: userId } = req.user;
+    const todo = req.body;
+    const data = TodoServices.updateTodo(id, userId as string, todo);
 
-  res
-    .status(HttpStatusCodes.OK)
-    .json(new ResponseObject(message.updated("Todo"), [data]));
+    res
+      .status(HttpStatusCodes.OK)
+      .json(new ResponseObject(message.updated("Todo"), [data]));
+  } catch (error) {
+    next(error);
+  }
 };

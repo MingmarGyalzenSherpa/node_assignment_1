@@ -73,6 +73,6 @@ export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
       data: [data],
     });
   } catch (error) {
-    next(new BadRequestError(error.message));
+    next(error);
   }
 };

@@ -1,3 +1,4 @@
+import { BadRequestError } from "../error/BadRequestError";
 import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 
@@ -20,6 +21,7 @@ let users: IUser[] = [
 
 /**
  * Create a user
+ *
  * @param {IUser} user - details of the user
  */
 export const createUser = (user: IUser) => {
@@ -31,16 +33,18 @@ export const createUser = (user: IUser) => {
 
 /**
  * Get all users
+ *
  * @returns {IUser[]}
  */
 export const getAllUsers = (): IUser[] => users;
 
 /**
  * Get user by email
+ *
  * @param {string} email - email of the user
- * @returns {IUser} user - details of the user
+ * @returns {IUser | undefined} user - details of the user
  */
-export const getUserByEmail = (email: string): IUser => {
+export const getUserByEmail = (email: string): IUser | undefined => {
   const user = users.find(({ email: userEmail }) => userEmail === email);
 
   return user;
@@ -48,10 +52,11 @@ export const getUserByEmail = (email: string): IUser => {
 
 /**
  *  Get a user by id
+ *
  * @param {string} id - id of the user
- * @returns {IUser} - user
+ * @returns {IUser | undefined} - user
  */
-export const getUserById = (id: string): IUser => {
+export const getUserById = (id: string): IUser | undefined => {
   const user = users.find(({ id: userId }) => userId === id);
 
   return user;
@@ -59,15 +64,12 @@ export const getUserById = (id: string): IUser => {
 
 /**
  * Delete a user by id
+ *
  * @param {string} id
  * @returns {IUser} - deleted user
  */
 export const deleteUserById = (id: string): IUser => {
   const user = getUserById(id);
-  console.log(user);
-  if (!user) {
-    throw new Error("User doesn't exist");
-  }
   users = users.filter(({ id: userId }) => userId !== id);
 
   return user;
@@ -75,6 +77,7 @@ export const deleteUserById = (id: string): IUser => {
 
 /**
  * Update a user by id
+ *
  * @param id
  * @param updatedUser
  * @returns {IUser} - deleted user

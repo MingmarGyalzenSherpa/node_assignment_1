@@ -36,24 +36,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+const NotFoundError_1 = require("../error/NotFoundError");
 const UserModel = __importStar(require("../models/user"));
+const messageGenerator = __importStar(require("../utils/messageGenerator"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const BadRequestError_1 = require("../error/BadRequestError");
 /**
  * Create a new user
+ *
  * @param {IUser} user - new user field
  * @returns {Promise<object>} - message object
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(user.name && user.email && user.password)) {
-        return {
-            message: "Email or password missing",
-        };
+        throw new NotFoundError_1.NotFoundError(messageGenerator.invalid("Field"));
     }
     const existingUser = UserModel.getUserByEmail(user.email);
     if (existingUser) {
-        return {
-            message: "User already exists!",
-        };
+        throw new BadRequestError_1.BadRequestError(messageGenerator.alreadyExists("User"));
     }
     if (!user.role) {
         user.role = "user" /* userRole.USER */;
@@ -61,36 +61,45 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
     return {
-        message: "User created successfully",
+        message: messageGenerator.created("User"),
     };
 });
 exports.createUser = createUser;
 /**
  * Get all users
+ *
  * @returns {IUser[]}
  */
 const getAllUsers = () => UserModel.getAllUsers();
 exports.getAllUsers = getAllUsers;
 /**
  * Get a user by email
+ *
  * @param {string} email - email of the user
- * @returns {IUser} - user
+ * @returns {IUser | undefined} - user or undefined if doesn't exist
  */
 const getUserByEmail = (email) => {
     const data = UserModel.getUserByEmail(email);
     return data;
 };
 exports.getUserByEmail = getUserByEmail;
+/**
+ * Get a user by id
+ *
+ * @param id
+ * @returns {IUser | undefined} - user or undefined if doesn't exist
+ */
 const getUserById = (id) => {
     const data = UserModel.getUserById(id);
     if (!data) {
-        throw new Error("User doesn't exist");
+        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("User"));
     }
     return data;
 };
 exports.getUserById = getUserById;
 /**
  *  Update a user by id
+ *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
  * @returns {IUser} - user
@@ -98,7 +107,7 @@ exports.getUserById = getUserById;
 const updateUser = (id, updatedUser) => {
     const userExists = UserModel.getUserById(id);
     if (!userExists) {
-        throw new Error("User doesn't exist");
+        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("User"));
     }
     const data = UserModel.updateUser(id, updatedUser);
     return data;
@@ -106,10 +115,15 @@ const updateUser = (id, updatedUser) => {
 exports.updateUser = updateUser;
 /**
  * Delete a user by id
+ *
  * @param id - user id
  * @returns {IUser} - deleted user
  */
 const deleteUser = (id) => {
+    const userExists = UserModel.getUserById(id);
+    if (!userExists) {
+        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("User"));
+    }
     const data = UserModel.deleteUserById(id);
     return data;
 };

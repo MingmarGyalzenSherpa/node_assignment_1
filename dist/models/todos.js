@@ -23,18 +23,17 @@ let todos = [
 ];
 /**
  * Get all todos
+ *
  * @param {string} userId - id of the user
- * @returns {ITodo} - corresponding todo of the user
+ * @returns {ITodo} - corresponding todos of the user
  */
-const getTodos = (userId) => {
-    console.log(userId);
-    return todos.filter(({ createdBy }) => createdBy === userId);
-};
+const getTodos = (userId) => todos.filter(({ createdBy }) => createdBy === userId);
 exports.getTodos = getTodos;
 /**
  * Get a todo by id
- * @param {string} id
- * @returns {ITodo}
+ *
+ * @param {string} id - id of the todo
+ * @returns {ITodo | undefined} - corresponding user or undefined if todo doesn't exist
  */
 const getTodoById = (id, userId) => {
     const data = todos.find(({ id: todoId, createdBy }) => todoId === id && createdBy === userId);
@@ -43,6 +42,7 @@ const getTodoById = (id, userId) => {
 exports.getTodoById = getTodoById;
 /**
  * Add a todo
+ *
  * @param {ITodo} todo - details of the todo
  * @returns {ITodo[]} - new list of todos
  */
@@ -53,6 +53,7 @@ const addTodo = (todo) => {
 exports.addTodo = addTodo;
 /**
  * Delete a todo
+ *
  * @param id
  * @returns {ITodo} todo
  */
@@ -64,14 +65,17 @@ const deleteTodo = (id, userId) => {
 exports.deleteTodo = deleteTodo;
 /**
  * Update a todo by id
- * @param id - id of the todo
- * @param todo - updated field of the todo
- * @returns {ITodo} todo - the updated todo
+ *
+ * @param todoToUpdate - old todo
+ * @param updatedTodo  - new todo fields
+ * @returns {ITodo} - updated todo
  */
-const updateTodo = (id, userId, todo) => {
-    let todoToUpdate = (0, exports.getTodoById)(id, userId);
-    todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), todo);
-    todos = [...todos.filter(({ id: todoId }) => todoId != id), todoToUpdate];
+const updateTodo = (todoToUpdate, updatedTodo) => {
+    todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), updatedTodo);
+    todos = [
+        ...todos.filter(({ id: todoId }) => todoId != todoToUpdate.id),
+        todoToUpdate,
+    ];
     return todoToUpdate;
 };
 exports.updateTodo = updateTodo;

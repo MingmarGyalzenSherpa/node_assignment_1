@@ -10,10 +10,15 @@ const router = (0, express_1.default)();
 //auth middleware
 router.use(auth_middleware_1.authentication);
 //routes
+//get all todos
 router.get("/", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodos);
+//get a todo by id
 router.get("/:id", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodoById);
+//create a todo
 router.post("/", (0, auth_middleware_1.authorization)("todo.create"), todosController_1.addTodo);
+//delete a todo
 router.delete("/:id", (0, auth_middleware_1.authorization)("todo.delete"), todosController_1.deleteTodo);
+//update a todo
 router.put("/:id", (0, auth_middleware_1.authorization)("todo.update"), todosController_1.updateTodo);
 exports.default = router;
 //# sourceMappingURL=todo.routes.js.map
