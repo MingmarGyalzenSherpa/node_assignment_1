@@ -51,7 +51,8 @@ exports.getTodos = getTodos;
  */
 const getTodoById = (req, res) => {
     const { id } = req.params;
-    const data = TodoServices.getTodoById(id);
+    const { userId } = req.headers;
+    const data = TodoServices.getTodoById(id, userId);
     if (!data) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
@@ -68,6 +69,7 @@ exports.getTodoById = getTodoById;
  */
 const addTodo = (req, res) => {
     const todo = req.body;
+    const { userId } = req.headers;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST)
@@ -77,6 +79,7 @@ const addTodo = (req, res) => {
     if (todo.completed === undefined) {
         todo.completed = false;
     }
+    todo.createdBy = userId;
     const data = TodoServices.addTodo(todo);
     res
         .status(httpResponseStatus_1.httpResponseStatus.CREATED)
@@ -91,7 +94,8 @@ exports.addTodo = addTodo;
  */
 const deleteTodo = (req, res) => {
     const { id } = req.params;
-    const data = TodoServices.deleteTodo(id);
+    const { userId } = req.headers;
+    const data = TodoServices.deleteTodo(id, userId);
     res
         .status(httpResponseStatus_1.httpResponseStatus.OK)
         .json(new responseObject_1.default(message.deleted("Todo"), [data]));
@@ -104,14 +108,16 @@ exports.deleteTodo = deleteTodo;
  *
  */
 const updateTodo = (req, res) => {
+    console.log("here");
     const { id } = req.params;
-    if (!TodoServices.getTodoById(id)) {
+    const { userId } = req.headers;
+    if (!TodoServices.getTodoById(id, userId)) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
     }
     const todo = req.body;
-    const data = TodoServices.updateTodo(id, todo);
+    const data = TodoServices.updateTodo(id, userId, todo);
     res
         .status(httpResponseStatus_1.httpResponseStatus.OK)
         .json(new responseObject_1.default(message.updated("Todo"), [data]));

@@ -36,8 +36,10 @@ export const getTodos = (userId: string): ITodo[] => {
  * @param {string} id
  * @returns {ITodo}
  */
-export const getTodoById = (id: String): ITodo => {
-  const data = todos.find(({ id: todoId }) => todoId === id);
+export const getTodoById = (id: String, userId: string): ITodo => {
+  const data = todos.find(
+    ({ id: todoId, createdBy }) => todoId === id && createdBy === userId
+  );
   return data;
 };
 
@@ -60,9 +62,9 @@ export const addTodo = (todo: ITodo): ITodo[] => {
  * @param id
  * @returns {ITodo} todo
  */
-export const deleteTodo = (id: string): ITodo => {
-  let todo = getTodoById(id);
-  todos = todos.filter((todo) => todo.id !== id);
+export const deleteTodo = (id: string, userId: string): ITodo => {
+  let todo = getTodoById(id, userId);
+  todos = todos.filter((todo) => todo.id !== id && todo.createdBy !== userId);
   return todo;
 };
 
@@ -72,8 +74,8 @@ export const deleteTodo = (id: string): ITodo => {
  * @param todo - updated field of the todo
  * @returns {ITodo} todo - the updated todo
  */
-export const updateTodo = (id: string, todo: ITodo): ITodo => {
-  let todoToUpdate = getTodoById(id);
+export const updateTodo = (id: string, userId: string, todo: ITodo): ITodo => {
+  let todoToUpdate = getTodoById(id, userId);
 
   todoToUpdate = {
     ...todoToUpdate,

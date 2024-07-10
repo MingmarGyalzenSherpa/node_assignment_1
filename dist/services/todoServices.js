@@ -40,8 +40,8 @@ exports.getTodos = getTodos;
  * @param {string} id - id of todo
  * @returns {ITodo} todo - the matching todo
  */
-const getTodoById = (id) => {
-    const data = TodoModel.getTodoById(id);
+const getTodoById = (id, userId) => {
+    const data = TodoModel.getTodoById(id, userId);
     return data;
 };
 exports.getTodoById = getTodoById;
@@ -60,8 +60,8 @@ exports.addTodo = addTodo;
  * @param {string} id - id of the todo
  * @returns {ITodo} - deleted todo
  */
-const deleteTodo = (id) => {
-    const data = TodoModel.deleteTodo(id);
+const deleteTodo = (id, userId) => {
+    const data = TodoModel.deleteTodo(id, userId);
     return data;
 };
 exports.deleteTodo = deleteTodo;
@@ -71,8 +71,8 @@ exports.deleteTodo = deleteTodo;
  * @param todo - updated field of todo
  * @returns {ITodo} - updated todo
  */
-const updateTodo = (id, todo) => {
-    const data = TodoModel.updateTodo(id, todo);
+const updateTodo = (id, userId, todo) => {
+    const data = TodoModel.updateTodo(id, userId, todo);
     return data;
 };
 exports.updateTodo = updateTodo;
