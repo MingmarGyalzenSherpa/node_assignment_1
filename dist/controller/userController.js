@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
+exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
 const BadRequestError_1 = require("../error/BadRequestError");
@@ -95,10 +95,10 @@ exports.updateUser = updateUser;
  * @param res
  * @param next
  */
-const deleteUser = (req, res, next) => {
+const deleteUserById = (req, res, next) => {
     try {
         const { id: userId } = req.params;
-        const data = UserServices.deleteUser(userId);
+        const data = UserServices.deleteUserById(userId);
         res.status(http_status_codes_1.default.OK).json({
             message: "User deleted successfully",
             data: [data],
@@ -108,5 +108,5 @@ const deleteUser = (req, res, next) => {
         next(error);
     }
 };
-exports.deleteUser = deleteUser;
+exports.deleteUserById = deleteUserById;
 //# sourceMappingURL=userController.js.map

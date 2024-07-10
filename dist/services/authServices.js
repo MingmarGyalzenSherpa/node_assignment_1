@@ -43,6 +43,8 @@ const config_1 = require("../config");
 const NotFoundError_1 = require("../error/NotFoundError");
 const messageGenerator = __importStar(require("../utils/messageGenerator"));
 const UnAuthorizedError_1 = require("../error/UnAuthorizedError");
+const logger_1 = __importDefault(require("../utils/logger"));
+const logger = (0, logger_1.default)("Auth Services");
 /**
  * Login a user
  *
@@ -51,12 +53,18 @@ const UnAuthorizedError_1 = require("../error/UnAuthorizedError");
  */
 const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const existingUser = (0, userServices_1.getUserByEmail)(user.email);
+    //log
+    logger.info("Started login service");
     if (!existingUser) {
-        throw new NotFoundError_1.NotFoundError(messageGenerator.invalid("email or password"));
+        const message = messageGenerator.invalid("email or password");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
     const isValidPassword = yield bcrypt_1.default.compare(user.password, existingUser.password);
     if (!isValidPassword) {
-        throw new NotFoundError_1.NotFoundError(messageGenerator.invalid("email or password"));
+        const message = messageGenerator.invalid("email or password");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
     const payload = {
         id: existingUser.id,
@@ -70,6 +78,7 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
         expiresIn: parseInt(config_1.config.jwt.refreshTokenExpiryMS),
     });
+    logger.info("Exiting login service");
     return {
         accessToken,
         refreshToken,
@@ -83,24 +92,32 @@ exports.login = login;
  * @returns {object} - new access token
  */
 const refresh = (refreshToken) => {
+    logger.info("Starting access token refresh service");
     if (!refreshToken) {
-        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("Refresh Token"));
+        const message = messageGenerator.notFound("Refresh Token");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
-    const isValidToken = (0, jsonwebtoken_1.verify)(refreshToken, config_1.config.jwt.secret);
-    if (!isValidToken) {
-        throw new UnAuthorizedError_1.UnAuthorizedError(messageGenerator.invalid("Refresh Token"));
+    try {
+        const isValidToken = (0, jsonwebtoken_1.verify)(refreshToken, config_1.config.jwt.secret);
+        const payload = {
+            id: isValidToken.id,
+            name: isValidToken.name,
+            email: isValidToken.email,
+        };
+        const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
+            expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),
+        });
+        logger.info("Exiting access token refresh service");
+        return {
+            accessToken,
+        };
     }
-    const payload = {
-        id: isValidToken.id,
-        name: isValidToken.name,
-        email: isValidToken.email,
-    };
-    const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
-        expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),
-    });
-    return {
-        accessToken,
-    };
+    catch (error) {
+        const message = messageGenerator.invalid("Refresh Token");
+        logger.error(message);
+        throw new UnAuthorizedError_1.UnAuthorizedError(message);
+    }
 };
 exports.refresh = refresh;
 //# sourceMappingURL=authServices.js.map

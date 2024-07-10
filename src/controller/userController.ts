@@ -62,11 +62,15 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
  * @param res
  * @param next
  */
-export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+export const deleteUserById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id: userId } = req.params;
 
-    const data = UserServices.deleteUser(userId);
+    const data = UserServices.deleteUserById(userId);
 
     res.status(HttpStatusCodes.OK).json({
       message: "User deleted successfully",

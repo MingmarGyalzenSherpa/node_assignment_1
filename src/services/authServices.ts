@@ -6,7 +6,9 @@ import { config } from "../config";
 import { NotFoundError } from "../error/NotFoundError";
 import * as messageGenerator from "../utils/messageGenerator";
 import { UnAuthorizedError } from "../error/UnAuthorizedError";
+import loggerWithNameSpace from "../utils/logger";
 
+const logger = loggerWithNameSpace("Auth Services");
 /**
  * Login a user
  *
@@ -18,16 +20,24 @@ export const login = async (
 ): Promise<object> => {
   const existingUser = getUserByEmail(user.email);
 
+  //log
+  logger.info("Started login service");
+
   if (!existingUser) {
-    throw new NotFoundError(messageGenerator.invalid("email or password"));
+    const message = messageGenerator.invalid("email or password");
+    logger.error(message);
+    throw new NotFoundError(message);
   }
+
   const isValidPassword = await bcrypt.compare(
     user.password,
     existingUser.password
   );
 
   if (!isValidPassword) {
-    throw new NotFoundError(messageGenerator.invalid("email or password"));
+    const message = messageGenerator.invalid("email or password");
+    logger.error(message);
+    throw new NotFoundError(message);
   }
 
   const payload = {
@@ -45,6 +55,8 @@ export const login = async (
     expiresIn: parseInt(config.jwt.refreshTokenExpiryMS),
   });
 
+  logger.info("Exiting login service");
+
   return {
     accessToken,
     refreshToken,
@@ -58,26 +70,36 @@ export const login = async (
  * @returns {object} - new access token
  */
 export const refresh = (refreshToken: string): object => {
+  logger.info("Starting access token refresh service");
+
   if (!refreshToken) {
-    throw new NotFoundError(messageGenerator.notFound("Refresh Token"));
+    const message = messageGenerator.notFound("Refresh Token");
+
+    logger.error(message);
+    throw new NotFoundError(message);
   }
 
-  const isValidToken = verify(refreshToken, config.jwt.secret) as JwtPayload;
-  if (!isValidToken) {
-    throw new UnAuthorizedError(messageGenerator.invalid("Refresh Token"));
+  try {
+    const isValidToken = verify(refreshToken, config.jwt.secret) as JwtPayload;
+
+    const payload = {
+      id: isValidToken.id,
+      name: isValidToken.name,
+      email: isValidToken.email,
+    };
+
+    const accessToken = sign(payload, config.jwt.secret, {
+      expiresIn: parseInt(config.jwt.accessTokenExpiryMS),
+    });
+
+    logger.info("Exiting access token refresh service");
+
+    return {
+      accessToken,
+    };
+  } catch (error) {
+    const message = messageGenerator.invalid("Refresh Token");
+    logger.error(message);
+    throw new UnAuthorizedError(message);
   }
-
-  const payload = {
-    id: isValidToken.id,
-    name: isValidToken.name,
-    email: isValidToken.email,
-  };
-
-  const accessToken = sign(payload, config.jwt.secret, {
-    expiresIn: parseInt(config.jwt.accessTokenExpiryMS),
-  });
-
-  return {
-    accessToken,
-  };
 };

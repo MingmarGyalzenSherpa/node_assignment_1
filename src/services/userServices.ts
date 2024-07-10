@@ -5,6 +5,9 @@ import * as UserModel from "../models/user";
 import * as messageGenerator from "../utils/messageGenerator";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../error/BadRequestError";
+import loggerWithNameSpace from "../utils/logger";
+
+const logger = loggerWithNameSpace("User Services");
 
 /**
  * Create a new user
@@ -13,14 +16,20 @@ import { BadRequestError } from "../error/BadRequestError";
  * @returns {Promise<object>} - message object
  */
 export const createUser = async (user: IUser): Promise<object> => {
+  logger.info("Started createUser service");
+
   if (!(user.name && user.email && user.password)) {
-    throw new NotFoundError(messageGenerator.invalid("Field"));
+    const message = messageGenerator.invalid("Field");
+    logger.error(message);
+    throw new NotFoundError(message);
   }
 
   const existingUser = UserModel.getUserByEmail(user.email);
 
   if (existingUser) {
-    throw new BadRequestError(messageGenerator.alreadyExists("User"));
+    const message = messageGenerator.alreadyExists("User");
+    logger.error(message);
+    throw new BadRequestError(message);
   }
 
   if (!user.role) {
@@ -30,6 +39,7 @@ export const createUser = async (user: IUser): Promise<object> => {
   const hashedPassword = await bcrypt.hash(user.password, 10);
   UserModel.createUser({ ...user, password: hashedPassword });
 
+  logger.info("Exiting createUser service");
   return {
     message: messageGenerator.created("User"),
   };
@@ -40,7 +50,11 @@ export const createUser = async (user: IUser): Promise<object> => {
  *
  * @returns {IUser[]}
  */
-export const getAllUsers = (): IUser[] => UserModel.getAllUsers();
+export const getAllUsers = (): IUser[] => {
+  logger.info("Started getAllUsers service");
+  logger.info("Exiting getAllUsers service");
+  return UserModel.getAllUsers();
+};
 
 /**
  * Get a user by email
@@ -49,8 +63,10 @@ export const getAllUsers = (): IUser[] => UserModel.getAllUsers();
  * @returns {IUser | undefined} - user or undefined if doesn't exist
  */
 export const getUserByEmail = (email: string): IUser | undefined => {
+  logger.info("Started getUserByEmail service");
   const data = UserModel.getUserByEmail(email);
 
+  logger.info("Exiting getUserByEmail service");
   return data;
 };
 
@@ -61,10 +77,16 @@ export const getUserByEmail = (email: string): IUser | undefined => {
  * @returns {IUser | undefined} - user or undefined if doesn't exist
  */
 export const getUserById = (id: string): IUser | undefined => {
+  logger.info("Started getUserById service");
+
   const data = UserModel.getUserById(id);
   if (!data) {
-    throw new NotFoundError(messageGenerator.notFound("User"));
+    const message = messageGenerator.notFound("User");
+    logger.error(message);
+    throw new NotFoundError(message);
   }
+
+  logger.info("Exiting getUserById service");
   return data;
 };
 
@@ -76,14 +98,19 @@ export const getUserById = (id: string): IUser | undefined => {
  * @returns {IUser} - user
  */
 export const updateUser = (id: string, updatedUser: IUser): IUser => {
+  logger.info("Started updateUser service");
+
   const userExists = UserModel.getUserById(id);
 
   if (!userExists) {
-    throw new NotFoundError(messageGenerator.notFound("User"));
+    const message = messageGenerator.notFound("User");
+    logger.error(message);
+    throw new NotFoundError(message);
   }
 
   const data = UserModel.updateUser(id, updatedUser);
 
+  logger.info("Exiting updateUser service");
   return data;
 };
 
@@ -93,13 +120,18 @@ export const updateUser = (id: string, updatedUser: IUser): IUser => {
  * @param id - user id
  * @returns {IUser} - deleted user
  */
-export const deleteUser = (id: string): IUser => {
+export const deleteUserById = (id: string): IUser => {
+  logger.info("started deleteUser service");
+
   const userExists = UserModel.getUserById(id);
   if (!userExists) {
-    throw new NotFoundError(messageGenerator.notFound("User"));
+    const message = messageGenerator.notFound("User");
+    logger.info(message);
+    throw new NotFoundError(message);
   }
 
   const data = UserModel.deleteUserById(id);
 
+  logger.info("Exiting deleteUser service");
   return data;
 };

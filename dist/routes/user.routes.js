@@ -17,6 +17,6 @@ router.put("/:id", (0, auth_middleware_1.authorization)("user.update"), userCont
 //create a user
 router.post("/create", (0, auth_middleware_1.authorization)("user.create"), userController_1.createUser);
 //delete a user
-router.delete("/:id", (0, auth_middleware_1.authorization)("user.delete"), userController_1.deleteUser);
+router.delete("/:id", (0, auth_middleware_1.authorization)("user.delete"), userController_1.deleteUserById);
 exports.default = router;
 //# sourceMappingURL=user.routes.js.map

@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createUser,
-  deleteUser,
+  deleteUserById,
   getAllUsers,
   getUserById,
   updateUser,
@@ -25,5 +25,6 @@ router.put("/:id", authorization("user.update"), updateUser);
 router.post("/create", authorization("user.create"), createUser);
 
 //delete a user
-router.delete("/:id", authorization("user.delete"), deleteUser);
+router.delete("/:id", authorization("user.delete"), deleteUserById);
+
 export default router;

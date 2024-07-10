@@ -22,12 +22,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const NotFoundError_1 = require("../error/NotFoundError");
-const BadRequestError_1 = require("../error/BadRequestError");
 const TodoModel = __importStar(require("../models/todos"));
 const messageGenerator = __importStar(require("../utils/messageGenerator"));
+const logger_1 = __importDefault(require("../utils/logger"));
+const logger = (0, logger_1.default)("Todo Services");
 /**
  * Get all todos by id
  *
@@ -35,10 +39,14 @@ const messageGenerator = __importStar(require("../utils/messageGenerator"));
  * @returns {ITodo[]} todos - list of todos created by user
  */
 const getTodos = (userId) => {
+    logger.info("Started getTodos service");
     const data = TodoModel.getTodos(userId);
     if (!data) {
-        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("Todo"));
+        const message = messageGenerator.notFound("Todo");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
+    logger.info("Exiting get todos service");
     return data;
 };
 exports.getTodos = getTodos;
@@ -49,10 +57,14 @@ exports.getTodos = getTodos;
  * @returns {ITodo} todo - the matching todo
  */
 const getTodoById = (id, userId) => {
+    logger.info("Started getTodoById service");
     const data = TodoModel.getTodoById(id, userId);
     if (!data) {
-        throw new BadRequestError_1.BadRequestError(messageGenerator.notFound("Todo"));
+        const message = messageGenerator.notFound("Todo");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
+    logger.info("Exiting getTodoById service");
     return data;
 };
 exports.getTodoById = getTodoById;
@@ -63,7 +75,9 @@ exports.getTodoById = getTodoById;
  * @returns {todos}
  */
 const addTodo = (todo) => {
+    logger.info("Started addTodo service");
     const data = TodoModel.addTodo(todo);
+    logger.info("Exiting addTodo service");
     return data;
 };
 exports.addTodo = addTodo;
@@ -74,23 +88,30 @@ exports.addTodo = addTodo;
  * @returns {ITodo} - deleted todo
  */
 const deleteTodo = (id, userId) => {
+    logger.info("Started deleteTodo service");
     const data = TodoModel.deleteTodo(id, userId);
+    logger.info("Exiting deleteTodo service");
     return data;
 };
 exports.deleteTodo = deleteTodo;
 /**
  * Update a todo by id
+ *
  * @param id - id of the todo
  * @param  userId - id of user
  * @param updatedTodo - updated field of todo
  * @returns {ITodo} - updated todo
  */
 const updateTodo = (id, userId, updatedTodo) => {
+    logger.info("Started updateTodo service");
     const todoToUpdate = TodoModel.getTodoById(id, userId);
     if (!todoToUpdate) {
-        throw new NotFoundError_1.NotFoundError(messageGenerator.notFound("Todo"));
+        const message = messageGenerator.notFound("Todo");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
     const data = TodoModel.updateTodo(todoToUpdate, updatedTodo);
+    logger.info("Exiting updateTodo service");
     return data;
 };
 exports.updateTodo = updateTodo;
