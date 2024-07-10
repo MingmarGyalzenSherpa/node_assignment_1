@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
+import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { config } from "../config";
-import IUserPayload from "../interfaces/IUserPayload";
+import IUser from "../interfaces/IUser";
+import { permissions } from "../constants/permissions";
 
 /**
  * Middleware for authentication
@@ -10,7 +12,11 @@ import IUserPayload from "../interfaces/IUserPayload";
  * @param next
  * @returns
  */
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -23,13 +29,26 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     next(new Error("Unauthenticated"));
   }
 
-  const isValidToken = verify(token[1], config.jwt.secret) as JwtPayload;
+  const user = verify(token[1], config.jwt.secret) as IUser;
 
-  if (!isValidToken) {
+  if (!user) {
     next(new Error("Unauthenticated"));
   }
-
-  const payload: IUserPayload = isValidToken as IUserPayload;
-  req.headers.userId = payload.id;
+  console.log(user);
+  req.user = user;
   next();
 };
+
+export const authorization =
+  (permission: string) => (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    const userRole = user.role;
+    const userPermissions = permissions[userRole];
+    console.log(permissions[userRole]);
+    console.log(permission);
+    if (!userPermissions.includes(permission)) {
+      next(new Error("no permission"));
+    }
+
+    next();
+  };

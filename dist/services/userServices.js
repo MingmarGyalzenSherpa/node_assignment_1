@@ -55,8 +55,8 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
             message: "User already exists!",
         };
     }
-    if (!user.permissions) {
-        user.permissions = [];
+    if (!user.role) {
+        user.role = "user" /* userRole.USER */;
     }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));

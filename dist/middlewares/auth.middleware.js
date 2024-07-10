@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
+exports.authorization = exports.authenticate = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../config");
+const permissions_1 = require("../constants/permissions");
 /**
  * Middleware for authentication
  * @param req
@@ -10,7 +11,7 @@ const config_1 = require("../config");
  * @param next
  * @returns
  */
-const auth = (req, res, next) => {
+const authenticate = (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization) {
         next(new Error("Unauthenticated"));
@@ -19,13 +20,25 @@ const auth = (req, res, next) => {
     if (token.length != 2 || token[0] != "Bearer") {
         next(new Error("Unauthenticated"));
     }
-    const isValidToken = (0, jsonwebtoken_1.verify)(token[1], config_1.config.jwt.secret);
-    if (!isValidToken) {
+    const user = (0, jsonwebtoken_1.verify)(token[1], config_1.config.jwt.secret);
+    if (!user) {
         next(new Error("Unauthenticated"));
     }
-    const payload = isValidToken;
-    req.headers.userId = payload.id;
+    console.log(user);
+    req.user = user;
     next();
 };
-exports.auth = auth;
+exports.authenticate = authenticate;
+const authorization = (permission) => (req, res, next) => {
+    const user = req.user;
+    const userRole = user.role;
+    const userPermissions = permissions_1.permissions[userRole];
+    console.log(permissions_1.permissions[userRole]);
+    console.log(permission);
+    if (!userPermissions.includes(permission)) {
+        next(new Error("no permission"));
+    }
+    next();
+};
+exports.authorization = authorization;
 //# sourceMappingURL=auth.middleware.js.map

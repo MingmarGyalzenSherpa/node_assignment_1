@@ -38,7 +38,7 @@ const message = __importStar(require("../utils/messageGenerator"));
  *
  */
 const getTodos = (req, res) => {
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     const data = TodoServices.getTodos(userId);
     res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
 };
@@ -51,7 +51,7 @@ exports.getTodos = getTodos;
  */
 const getTodoById = (req, res) => {
     const { id } = req.params;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     const data = TodoServices.getTodoById(id, userId);
     if (!data) {
         res
@@ -64,18 +64,14 @@ const getTodoById = (req, res) => {
 };
 exports.getTodoById = getTodoById;
 /**
-<<<<<<< HEAD
  * Add a todo
-=======
- * Add todo
->>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
 const addTodo = (req, res) => {
     const todo = req.body;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST)
@@ -93,18 +89,14 @@ const addTodo = (req, res) => {
 };
 exports.addTodo = addTodo;
 /**
-<<<<<<< HEAD
  * Delete a todo by id
-=======
- * Delete todo
->>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
 const deleteTodo = (req, res) => {
     const { id } = req.params;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     const data = TodoServices.deleteTodo(id, userId);
     res
         .status(httpResponseStatus_1.httpResponseStatus.OK)
@@ -120,7 +112,7 @@ exports.deleteTodo = deleteTodo;
 const updateTodo = (req, res) => {
     console.log("here");
     const { id } = req.params;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     if (!TodoServices.getTodoById(id, userId)) {
         res
             .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)

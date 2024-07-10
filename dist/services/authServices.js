@@ -39,6 +39,7 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
         id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
+        role: existingUser.role,
     };
     const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
         expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),
@@ -54,7 +55,7 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
 exports.login = login;
 /**
  * Refresh access token
- * @param {string} oldRefreshToken - refresh token
+ * @param {string} refreshToken - refresh token
  * @returns {object} - new access token or error message
  */
 const refresh = (refreshToken) => {

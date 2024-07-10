@@ -3,7 +3,6 @@ import IUser from "../interfaces/IUser";
 import { getUserByEmail } from "./userServices";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { config } from "../config";
-import IUserPayload from "../interfaces/IUserPayload";
 
 /**
  * Login a user
@@ -34,6 +33,7 @@ export const login = async (
     id: existingUser.id,
     name: existingUser.name,
     email: existingUser.email,
+    role: existingUser.role,
   };
 
   const accessToken = sign(payload, config.jwt.secret, {
@@ -52,7 +52,7 @@ export const login = async (
 
 /**
  * Refresh access token
- * @param {string} oldRefreshToken - refresh token
+ * @param {string} refreshToken - refresh token
  * @returns {object} - new access token or error message
  */
 export const refresh = (refreshToken: string): object => {
@@ -69,7 +69,7 @@ export const refresh = (refreshToken: string): object => {
     };
   }
 
-  const payload: IUserPayload = {
+  const payload = {
     id: isValidToken.id,
     name: isValidToken.name,
     email: isValidToken.email,

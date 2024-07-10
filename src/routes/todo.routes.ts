@@ -6,15 +6,14 @@ import {
   getTodos,
   updateTodo,
 } from "../controller/todosController";
-import { auth } from "../middlewares/auth.middleware";
+import { authenticate, authorization } from "../middlewares/auth.middleware";
 
 const router = express();
 
 //auth middleware
-router.use(auth);
-
+router.use(authenticate);
 //routes
-router.get("/", getTodos);
+router.get("/", authorization("todo.gets"), getTodos);
 
 router.get("/:id", getTodoById);
 

@@ -1,3 +1,4 @@
+import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 import * as UserModel from "../models/user";
 
@@ -23,8 +24,8 @@ export const createUser = async (user: IUser): Promise<object> => {
     };
   }
 
-  if (!user.permissions) {
-    user.permissions = [];
+  if (!user.role) {
+    user.role = userRole.USER;
   }
 
   const hashedPassword = await bcrypt.hash(user.password, 10);

@@ -1,3 +1,4 @@
+import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 
 let users: IUser[] = [
@@ -6,14 +7,14 @@ let users: IUser[] = [
     name: "test",
     email: "test@test.com",
     password: "$2b$10$cOMTC5jxv5hRZ8VHGTRMce7CIm.owtUdZIKJ73ZY5xL9ePIWMm2Re",
-    permissions: [],
+    role: userRole.SUPER_USER,
   },
   {
     id: "2",
     email: "ming@test.com",
     name: "ming",
     password: "$2b$10$VpERQZT46YsPELr0ZJyLceIyW7zJcf1d1mZf6Os9HC2dtkTiLbd6K",
-    permissions: [],
+    role: userRole.USER,
   },
 ];
 
