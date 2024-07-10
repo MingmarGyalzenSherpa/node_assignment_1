@@ -11,7 +11,8 @@ import * as message from "../utils/messageGenerator";
  *
  */
 export const getTodos = (req: Request, res: Response) => {
-  const data = TodoServices.getTodos();
+  const { userId } = req.headers;
+  const data = TodoServices.getTodos(userId as string);
 
   res.status(httpResponseStatus.OK).json(data);
 };
@@ -24,8 +25,8 @@ export const getTodos = (req: Request, res: Response) => {
  */
 export const getTodoById = (req: Request, res: Response) => {
   const { id } = req.params;
-  const data = TodoServices.getTodoById(id);
-
+  const { userId } = req.headers;
+  const data = TodoServices.getTodoById(id, userId as string);
   if (!data) {
     res
       .status(httpResponseStatus.NOT_FOUND)
@@ -38,14 +39,18 @@ export const getTodoById = (req: Request, res: Response) => {
 };
 
 /**
+<<<<<<< HEAD
  * Add a todo
+=======
+ * Add todo
+>>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
 export const addTodo = (req: Request, res: Response) => {
   const todo = req.body;
-
+  const { userId } = req.headers;
   if (!todo || !todo?.title) {
     res
       .status(httpResponseStatus.BAD_REQUEST)
@@ -56,6 +61,8 @@ export const addTodo = (req: Request, res: Response) => {
     todo.completed = false;
   }
 
+  todo.createdBy = userId;
+
   const data = TodoServices.addTodo(todo);
   res
     .status(httpResponseStatus.CREATED)
@@ -63,18 +70,23 @@ export const addTodo = (req: Request, res: Response) => {
 };
 
 /**
+<<<<<<< HEAD
  * Delete a todo by id
+=======
+ * Delete todo
+>>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
 export const deleteTodo = (req: Request, res: Response) => {
   const { id } = req.params;
-  const data = TodoServices.deleteTodo(id);
+  const { userId } = req.headers;
+  const data = TodoServices.deleteTodo(id, userId as string);
 
   res
     .status(httpResponseStatus.OK)
-    .json(new ResponseObject(message.deleted("Todo"), data));
+    .json(new ResponseObject(message.deleted("Todo"), [data]));
 };
 
 /**
@@ -84,15 +96,16 @@ export const deleteTodo = (req: Request, res: Response) => {
  *
  */
 export const updateTodo = (req: Request, res: Response) => {
+  console.log("here");
   const { id } = req.params;
-
-  if (!TodoServices.getTodoById(id)) {
+  const { userId } = req.headers;
+  if (!TodoServices.getTodoById(id, userId as string)) {
     res
       .status(httpResponseStatus.NOT_FOUND)
       .json(new ResponseObject(message.notFound("Todo"), []));
   }
   const todo = req.body;
-  const data = TodoServices.updateTodo(id, todo);
+  const data = TodoServices.updateTodo(id, userId as string, todo);
 
   res
     .status(httpResponseStatus.OK)
