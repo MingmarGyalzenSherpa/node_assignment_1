@@ -1,6 +1,7 @@
 import { BadRequestError } from "../error/BadRequestError";
 import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
+import { IGetRequestQuery } from "../interfaces/IReqQueryParams";
 
 let users: IUser[] = [
   {
@@ -36,7 +37,14 @@ export const createUser = (user: IUser) => {
  *
  * @returns {IUser[]}
  */
-export const getAllUsers = (): IUser[] => users;
+export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
+  const { q } = query;
+  console.log(q);
+  if (q) {
+    return users.filter((user) => user.name.includes(q));
+  }
+  return users;
+};
 
 /**
  * Get user by email

@@ -6,6 +6,7 @@ import * as messageGenerator from "../utils/messageGenerator";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../error/BadRequestError";
 import loggerWithNameSpace from "../utils/logger";
+import { IGetRequestQuery } from "../interfaces/IReqQueryParams";
 
 const logger = loggerWithNameSpace("User Services");
 
@@ -50,10 +51,10 @@ export const createUser = async (user: IUser): Promise<object> => {
  *
  * @returns {IUser[]}
  */
-export const getAllUsers = (): IUser[] => {
+export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
   logger.info("Started getAllUsers service");
   logger.info("Exiting getAllUsers service");
-  return UserModel.getAllUsers();
+  return UserModel.getAllUsers(query);
 };
 
 /**
