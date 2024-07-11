@@ -29,18 +29,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = void 0;
 const TodoServices = __importStar(require("../services/todoServices"));
 const responseObject_1 = __importDefault(require("../utils/responseObject"));
-const httpResponseStatus_1 = require("../constants/httpResponseStatus");
 const message = __importStar(require("../utils/messageGenerator"));
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
 /**
  * Get all todos
  * @param {Request} req
  * @param {Response} res
  *
  */
-const getTodos = (req, res) => {
-    const { userId } = req.headers;
-    const data = TodoServices.getTodos(userId);
-    res.status(httpResponseStatus_1.httpResponseStatus.OK).json(data);
+const getTodos = (req, res, next) => {
+    try {
+        const { id: userId } = req.user;
+        const data = TodoServices.getTodos(userId);
+        res
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.fetched("User"), data));
+    }
+    catch (error) {
+        next(error);
+    }
 };
 exports.getTodos = getTodos;
 /**
@@ -49,36 +56,32 @@ exports.getTodos = getTodos;
  * @param {Response} res
  *
  */
-const getTodoById = (req, res) => {
-    const { id } = req.params;
-    const { userId } = req.headers;
-    const data = TodoServices.getTodoById(id, userId);
-    if (!data) {
+const getTodoById = (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.user;
+        const data = TodoServices.getTodoById(id, userId);
         res
-            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
-            .json(new responseObject_1.default(message.notFound("Todo"), []));
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.fetched("Todo"), [data]));
     }
-    res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
-        .json(new responseObject_1.default(message.found("Todo"), [data]));
+    catch (error) {
+        next(error);
+    }
 };
 exports.getTodoById = getTodoById;
 /**
-<<<<<<< HEAD
  * Add a todo
-=======
- * Add todo
->>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
-const addTodo = (req, res) => {
+const addTodo = (req, res, next) => {
     const todo = req.body;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     if (!todo || !(todo === null || todo === void 0 ? void 0 : todo.title)) {
         res
-            .status(httpResponseStatus_1.httpResponseStatus.BAD_REQUEST)
+            .status(http_status_codes_1.default.BAD_REQUEST)
             .json(new responseObject_1.default(message.notFound("Todo"), []));
         return;
     }
@@ -88,26 +91,22 @@ const addTodo = (req, res) => {
     todo.createdBy = userId;
     const data = TodoServices.addTodo(todo);
     res
-        .status(httpResponseStatus_1.httpResponseStatus.CREATED)
+        .status(http_status_codes_1.default.CREATED)
         .json(new responseObject_1.default(message.created("Todo"), data));
 };
 exports.addTodo = addTodo;
 /**
-<<<<<<< HEAD
  * Delete a todo by id
-=======
- * Delete todo
->>>>>>> 0ba8b6649d662b94f76641ee178dab5bc2616f11
  * @param {Request} req
  * @param {Response} res
  *
  */
-const deleteTodo = (req, res) => {
+const deleteTodo = (req, res, next) => {
     const { id } = req.params;
-    const { userId } = req.headers;
+    const { id: userId } = req.user;
     const data = TodoServices.deleteTodo(id, userId);
     res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
+        .status(http_status_codes_1.default.OK)
         .json(new responseObject_1.default(message.deleted("Todo"), [data]));
 };
 exports.deleteTodo = deleteTodo;
@@ -117,20 +116,19 @@ exports.deleteTodo = deleteTodo;
  * @param {Response} res
  *
  */
-const updateTodo = (req, res) => {
-    console.log("here");
-    const { id } = req.params;
-    const { userId } = req.headers;
-    if (!TodoServices.getTodoById(id, userId)) {
+const updateTodo = (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.user;
+        const todo = req.body;
+        const data = TodoServices.updateTodo(id, userId, todo);
         res
-            .status(httpResponseStatus_1.httpResponseStatus.NOT_FOUND)
-            .json(new responseObject_1.default(message.notFound("Todo"), []));
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(message.updated("Todo"), [data]));
     }
-    const todo = req.body;
-    const data = TodoServices.updateTodo(id, userId, todo);
-    res
-        .status(httpResponseStatus_1.httpResponseStatus.OK)
-        .json(new responseObject_1.default(message.updated("Todo"), [data]));
+    catch (error) {
+        next(error);
+    }
 };
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todosController.js.map

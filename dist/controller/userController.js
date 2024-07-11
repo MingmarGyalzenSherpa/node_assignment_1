@@ -31,15 +31,82 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmil = exports.createUser = void 0;
+exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getAllUsers = exports.createUser = void 0;
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
+const BadRequestError_1 = require("../error/BadRequestError");
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     const data = yield UserServices.createUser(body);
     res.json(data);
 });
 exports.createUser = createUser;
-const getUserByEmil = (email) => { };
-exports.getUserByEmil = getUserByEmil;
+const getAllUsers = (req, res) => {
+    const data = UserServices.getAllUsers();
+    res.status(http_status_codes_1.default.OK).json({
+        message: "User fetched successfully",
+        data: data,
+    });
+};
+exports.getAllUsers = getAllUsers;
+const getUserById = (req, res) => {
+    try {
+        const { id: userId } = req.params;
+        const data = UserServices.getUserById(userId);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User fetched successfully",
+            data: [data],
+        });
+    }
+    catch (error) {
+        throw new BadRequestError_1.BadRequestError(error.message);
+    }
+};
+exports.getUserById = getUserById;
+/**
+ *  Update a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+const updateUser = (req, res, next) => {
+    try {
+        const { id: userId } = req.params;
+        const { body: updatedUser } = req;
+        const user = UserServices.updateUser(userId, updatedUser);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User updated successfully",
+            data: [user],
+        });
+    }
+    catch (error) {
+        console.log("error ayo");
+        next(new BadRequestError_1.BadRequestError(error.message));
+    }
+};
+exports.updateUser = updateUser;
+/**
+ * Delete a user by id
+ * @param req
+ * @param res
+ * @param next
+ */
+const deleteUserById = (req, res, next) => {
+    try {
+        const { id: userId } = req.params;
+        const data = UserServices.deleteUserById(userId);
+        res.status(http_status_codes_1.default.OK).json({
+            message: "User deleted successfully",
+            data: [data],
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.deleteUserById = deleteUserById;
 //# sourceMappingURL=userController.js.map

@@ -1,7 +1,11 @@
-import { NextFunction, Request, Response } from "express";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { NextFunction, Response } from "express";
+import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
+import { verify } from "jsonwebtoken";
 import { config } from "../config";
-import IUserPayload from "../interfaces/IUserPayload";
+import IUser from "../interfaces/IUser";
+import { permissions } from "../constants/permissions";
+import { ForbiddenError } from "../error/ForbiddenError";
+import { UnAuthorizedError } from "../error/UnAuthorizedError";
 
 /**
  * Middleware for authentication
@@ -10,26 +14,41 @@ import IUserPayload from "../interfaces/IUserPayload";
  * @param next
  * @returns
  */
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const authentication = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    next(new Error("Unauthenticated"));
+    next(new UnAuthorizedError("Unauthorized access"));
   }
 
   const token = authorization.split(" ");
 
-  if (token.length != 2 || token[0] != "Bearer") {
-    next(new Error("Unauthenticated"));
+  if (token.length != 2 || token[0] !== "Bearer") {
+    next(new UnAuthorizedError("Unauthorized access"));
+  }
+  try {
+    const user = verify(token[1], config.jwt.secret) as IUser;
+
+    req.user = user;
+  } catch (error) {
+    next(new UnAuthorizedError("Unauthorized access"));
   }
 
-  const isValidToken = verify(token[1], config.jwt.secret) as JwtPayload;
-
-  if (!isValidToken) {
-    next(new Error("Unauthenticated"));
-  }
-
-  const payload: IUserPayload = isValidToken as IUserPayload;
-  req.headers.userId = payload.id;
   next();
 };
+
+export const authorization =
+  (permission: string) => (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    const userRole = user.role;
+    const userPermissions = permissions[userRole];
+    if (!userPermissions.includes(permission)) {
+      next(new ForbiddenError("Access denied"));
+    }
+
+    next();
+  };

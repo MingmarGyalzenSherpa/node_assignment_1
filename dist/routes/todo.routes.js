@@ -8,12 +8,17 @@ const todosController_1 = require("../controller/todosController");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const router = (0, express_1.default)();
 //auth middleware
-router.use(auth_middleware_1.auth);
+router.use(auth_middleware_1.authentication);
 //routes
-router.get("/", todosController_1.getTodos);
-router.get("/:id", todosController_1.getTodoById);
-router.post("/", todosController_1.addTodo);
-router.delete("/:id", todosController_1.deleteTodo);
-router.put("/:id", todosController_1.updateTodo);
+//get all todos
+router.get("/", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodos);
+//get a todo by id
+router.get("/:id", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodoById);
+//create a todo
+router.post("/", (0, auth_middleware_1.authorization)("todo.create"), todosController_1.addTodo);
+//delete a todo
+router.delete("/:id", (0, auth_middleware_1.authorization)("todo.delete"), todosController_1.deleteTodo);
+//update a todo
+router.put("/:id", (0, auth_middleware_1.authorization)("todo.update"), todosController_1.updateTodo);
 exports.default = router;
 //# sourceMappingURL=todo.routes.js.map

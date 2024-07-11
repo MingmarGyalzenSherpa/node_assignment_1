@@ -1,8 +1,8 @@
 import { ITodo } from "./../interfaces/ITodo";
-export default class ResponseObject {
+export default class ResponseObject<TData> {
   message: string;
-  data: ITodo[];
-  constructor(message: string, data: ITodo[]) {
+  data: TData[];
+  constructor(message: string, data: TData[]) {
     this.message = message;
     this.data = data;
   }

@@ -31,19 +31,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refresh = exports.login = void 0;
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const AuthServices = __importStar(require("../services/authServices"));
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const data = yield AuthServices.login(body);
-    res.json(data);
+const messageGenerator = __importStar(require("../utils/messageGenerator"));
+const responseObject_1 = __importDefault(require("../utils/responseObject"));
+/**
+ * Login a user
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { body } = req;
+        const data = yield AuthServices.login(body);
+        res
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(messageGenerator.successful("Login"), [data]));
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.login = login;
-const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { refreshToken } = req.body;
-    const data = AuthServices.refresh(refreshToken);
-    res.json(data);
+/**
+ * This function is for refreshing the access token
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+const refresh = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { refreshToken } = req.body;
+        const data = AuthServices.refresh(refreshToken);
+        res
+            .status(http_status_codes_1.default.OK)
+            .json(new responseObject_1.default(messageGenerator.successful("Token refresh"), [data]));
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.refresh = refresh;
 //# sourceMappingURL=authController.js.map

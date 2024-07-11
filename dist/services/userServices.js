@@ -35,41 +35,123 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByEmail = exports.createUser = void 0;
+exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+const NotFoundError_1 = require("../error/NotFoundError");
 const UserModel = __importStar(require("../models/user"));
+const messageGenerator = __importStar(require("../utils/messageGenerator"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const BadRequestError_1 = require("../error/BadRequestError");
+const logger_1 = __importDefault(require("../utils/logger"));
+const logger = (0, logger_1.default)("User Services");
 /**
  * Create a new user
+ *
  * @param {IUser} user - new user field
  * @returns {Promise<object>} - message object
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    logger.info("Started createUser service");
     if (!(user.name && user.email && user.password)) {
-        return {
-            message: "Email or password missing",
-        };
+        const message = messageGenerator.invalid("Field");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
     }
     const existingUser = UserModel.getUserByEmail(user.email);
     if (existingUser) {
-        return {
-            message: "User already exists!",
-        };
+        const message = messageGenerator.alreadyExists("User");
+        logger.error(message);
+        throw new BadRequestError_1.BadRequestError(message);
+    }
+    if (!user.role) {
+        user.role = "user" /* userRole.USER */;
     }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
+    logger.info("Exiting createUser service");
     return {
-        message: "User created successfully",
+        message: messageGenerator.created("User"),
     };
 });
 exports.createUser = createUser;
 /**
+ * Get all users
+ *
+ * @returns {IUser[]}
+ */
+const getAllUsers = () => {
+    logger.info("Started getAllUsers service");
+    logger.info("Exiting getAllUsers service");
+    return UserModel.getAllUsers();
+};
+exports.getAllUsers = getAllUsers;
+/**
  * Get a user by email
+ *
  * @param {string} email - email of the user
- * @returns {IUser} - user
+ * @returns {IUser | undefined} - user or undefined if doesn't exist
  */
 const getUserByEmail = (email) => {
+    logger.info("Started getUserByEmail service");
     const data = UserModel.getUserByEmail(email);
+    logger.info("Exiting getUserByEmail service");
     return data;
 };
 exports.getUserByEmail = getUserByEmail;
+/**
+ * Get a user by id
+ *
+ * @param id
+ * @returns {IUser | undefined} - user or undefined if doesn't exist
+ */
+const getUserById = (id) => {
+    logger.info("Started getUserById service");
+    const data = UserModel.getUserById(id);
+    if (!data) {
+        const message = messageGenerator.notFound("User");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
+    }
+    logger.info("Exiting getUserById service");
+    return data;
+};
+exports.getUserById = getUserById;
+/**
+ *  Update a user by id
+ *
+ * @param {string} id - id of user
+ * @param {IUser} updatedUser - new field of user
+ * @returns {IUser} - user
+ */
+const updateUser = (id, updatedUser) => {
+    logger.info("Started updateUser service");
+    const userExists = UserModel.getUserById(id);
+    if (!userExists) {
+        const message = messageGenerator.notFound("User");
+        logger.error(message);
+        throw new NotFoundError_1.NotFoundError(message);
+    }
+    const data = UserModel.updateUser(id, updatedUser);
+    logger.info("Exiting updateUser service");
+    return data;
+};
+exports.updateUser = updateUser;
+/**
+ * Delete a user by id
+ *
+ * @param id - user id
+ * @returns {IUser} - deleted user
+ */
+const deleteUserById = (id) => {
+    logger.info("started deleteUser service");
+    const userExists = UserModel.getUserById(id);
+    if (!userExists) {
+        const message = messageGenerator.notFound("User");
+        logger.info(message);
+        throw new NotFoundError_1.NotFoundError(message);
+    }
+    const data = UserModel.deleteUserById(id);
+    logger.info("Exiting deleteUser service");
+    return data;
+};
+exports.deleteUserById = deleteUserById;
 //# sourceMappingURL=userServices.js.map

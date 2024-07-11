@@ -6,21 +6,28 @@ import {
   getTodos,
   updateTodo,
 } from "../controller/todosController";
-import { auth } from "../middlewares/auth.middleware";
+import { authentication, authorization } from "../middlewares/auth.middleware";
 
 const router = express();
 
 //auth middleware
-router.use(auth);
+router.use(authentication);
 
 //routes
-router.get("/", getTodos);
 
-router.get("/:id", getTodoById);
+//get all todos
+router.get("/", authorization("todo.get"), getTodos);
 
-router.post("/", addTodo);
+//get a todo by id
+router.get("/:id", authorization("todo.get"), getTodoById);
 
-router.delete("/:id", deleteTodo);
+//create a todo
+router.post("/", authorization("todo.create"), addTodo);
 
-router.put("/:id", updateTodo);
+//delete a todo
+router.delete("/:id", authorization("todo.delete"), deleteTodo);
+
+//update a todo
+router.put("/:id", authorization("todo.update"), updateTodo);
+
 export default router;
