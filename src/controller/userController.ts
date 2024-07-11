@@ -12,7 +12,8 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const getAllUsers = (req: Request, res: Response) => {
-  const data = UserServices.getAllUsers();
+  const { query } = req;
+  const data = UserServices.getAllUsers(query);
   res.status(HttpStatusCodes.OK).json({
     message: "User fetched successfully",
     data: data,

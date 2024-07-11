@@ -78,10 +78,10 @@ exports.createUser = createUser;
  *
  * @returns {IUser[]}
  */
-const getAllUsers = () => {
+const getAllUsers = (query) => {
     logger.info("Started getAllUsers service");
     logger.info("Exiting getAllUsers service");
-    return UserModel.getAllUsers();
+    return UserModel.getAllUsers(query);
 };
 exports.getAllUsers = getAllUsers;
 /**

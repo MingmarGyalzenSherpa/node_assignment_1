@@ -31,7 +31,14 @@ exports.createUser = createUser;
  *
  * @returns {IUser[]}
  */
-const getAllUsers = () => users;
+const getAllUsers = (query) => {
+    const { q } = query;
+    console.log(q);
+    if (q) {
+        return users.filter((user) => user.name.includes(q));
+    }
+    return users;
+};
 exports.getAllUsers = getAllUsers;
 /**
  * Get user by email

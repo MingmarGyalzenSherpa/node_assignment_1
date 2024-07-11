@@ -99,6 +99,7 @@ export const refresh = (refreshToken: string): object => {
     };
   } catch (error) {
     const message = messageGenerator.invalid("Refresh Token");
+
     logger.error(message);
     throw new UnAuthorizedError(message);
   }
