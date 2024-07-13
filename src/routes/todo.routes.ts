@@ -7,6 +7,8 @@ import {
   updateTodo,
 } from "../controller/todosController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
+import { validateReqQuery } from "../middlewares/validator";
+import { getTodoQuery } from "../schema/todo.schema";
 
 const router = express();
 
@@ -16,7 +18,12 @@ router.use(authentication);
 //routes
 
 //get all todos
-router.get("/", authorization("todo.get"), getTodos);
+router.get(
+  "/",
+  authorization("todo.get"),
+  validateReqQuery(getTodoQuery),
+  getTodos
+);
 
 //get a todo by id
 router.get("/:id", authorization("todo.get"), getTodoById);

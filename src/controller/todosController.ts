@@ -14,6 +14,8 @@ import { ITodo } from "../interfaces/ITodo";
  */
 export const getTodos = (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { query } = req;
+    console.log(query);
     const { id: userId } = req.user;
     const data = TodoServices.getTodos(userId as string);
 

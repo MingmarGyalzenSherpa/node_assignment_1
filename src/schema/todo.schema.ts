@@ -1,11 +1,9 @@
 import joi from "joi";
 
-export const getUserQuery = joi
+export const getTodoQuery = joi
   .object({
-    q: joi.string().optional(),
+    name: joi.string().optional(),
   })
   .options({
     stripUnknown: true,
   });
-
-

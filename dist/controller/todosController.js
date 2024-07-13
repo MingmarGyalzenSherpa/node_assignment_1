@@ -39,6 +39,8 @@ const http_status_codes_1 = __importDefault(require("http-status-codes"));
  */
 const getTodos = (req, res, next) => {
     try {
+        const { query } = req;
+        console.log(query);
         const { id: userId } = req.user;
         const data = TodoServices.getTodos(userId);
         res
