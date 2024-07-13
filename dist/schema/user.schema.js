@@ -46,6 +46,7 @@ exports.createUserBodySchema = joi_1.default
             return helpers.error("password.number");
         }
     }),
+    role: joi_1.default.string().optional(),
 })
     .options({
     stripUnknown: true,

@@ -44,6 +44,7 @@ export const createUserBodySchema = joi
           return helpers.error("password.number");
         }
       }),
+    role: joi.string().optional(),
   })
   .options({
     stripUnknown: true,
