@@ -15,7 +15,7 @@ router.get("/", (0, auth_middleware_1.authorization)("user.get"), (0, validator_
 //get user by id
 router.get("/:id", (0, auth_middleware_1.authorization)("user.get"), userController_1.getUserById);
 //update user
-router.put("/:id", (0, auth_middleware_1.authorization)("user.update"), userController_1.updateUser);
+router.put("/:id", (0, auth_middleware_1.authorization)("user.update"), (0, validator_1.validateReqBody)(user_schema_1.updateUserBodySchema), userController_1.updateUser);
 //create a user
 router.post("/create", (0, auth_middleware_1.authorization)("user.create"), (0, validator_1.validateReqBody)(user_schema_1.createUserBodySchema), userController_1.createUser);
 //delete a user

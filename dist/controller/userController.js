@@ -82,6 +82,7 @@ exports.getUserById = getUserById;
 const updateUser = (req, res, next) => {
     try {
         const { id: userId } = req.params;
+        console.log("insidde");
         const { body: updatedUser } = req;
         const user = UserServices.updateUser(userId, updatedUser);
         res.status(http_status_codes_1.default.OK).json({

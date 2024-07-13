@@ -51,6 +51,7 @@ export const getUserById = (req: Request, res: Response) => {
 export const updateUser = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id: userId } = req.params;
+    console.log("insidde");
     const { body: updatedUser } = req;
 
     const user = UserServices.updateUser(userId, updatedUser);

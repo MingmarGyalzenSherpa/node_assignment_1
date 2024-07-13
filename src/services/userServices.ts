@@ -109,6 +109,12 @@ export const updateUser = (id: string, updatedUser: IUser): IUser => {
     throw new NotFoundError(message);
   }
 
+  console.log(updatedUser);
+
+  if (updatedUser.password) {
+    console.log("hehe");
+  }
+
   const data = UserModel.updateUser(id, updatedUser);
 
   logger.info("Exiting updateUser service");

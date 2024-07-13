@@ -130,6 +130,10 @@ const updateUser = (id, updatedUser) => {
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
+    console.log(updatedUser);
+    if (updatedUser.password) {
+        console.log("hehe");
+    }
     const data = UserModel.updateUser(id, updatedUser);
     logger.info("Exiting updateUser service");
     return data;
