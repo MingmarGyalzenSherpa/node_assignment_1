@@ -14,3 +14,14 @@ export const validateReqQuery =
     req.query = value;
     next();
   };
+
+export const validateReqBody =
+  (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
+    const { error, value } = schema.validate(req.body);
+    console.log(value);
+    if (error) {
+      next(new BadRequestError(error.message));
+    }
+
+    next();
+  };

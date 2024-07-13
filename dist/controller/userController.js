@@ -39,10 +39,15 @@ exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getA
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
 const BadRequestError_1 = require("../error/BadRequestError");
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const data = yield UserServices.createUser(body);
-    res.json(data);
+const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { body } = req;
+        const data = yield UserServices.createUser(body);
+        res.json(data);
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.createUser = createUser;
 const getAllUsers = (req, res) => {

@@ -4,11 +4,19 @@ import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import * as UserServices from "../services/userServices";
 import { BadRequestError } from "../error/BadRequestError";
 
-export const createUser = async (req: Request, res: Response) => {
-  const { body } = req;
-  const data = await UserServices.createUser(body);
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { body } = req;
+    const data = await UserServices.createUser(body);
 
-  res.json(data);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getAllUsers = (req: Request, res: Response) => {

@@ -7,8 +7,11 @@ import {
   updateUser,
 } from "../controller/userController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
-import { validateReqQuery } from "../middlewares/validator";
-import { getUserQuery } from "../schema/user.schema";
+import { validateReqBody, validateReqQuery } from "../middlewares/validator";
+import {
+  createUserBodySchema,
+  getUserQuerySchema,
+} from "../schema/user.schema";
 
 const router = express();
 
@@ -18,7 +21,7 @@ router.use(authentication);
 router.get(
   "/",
   authorization("user.get"),
-  validateReqQuery(getUserQuery),
+  validateReqQuery(getUserQuerySchema),
   getAllUsers
 );
 
@@ -29,7 +32,12 @@ router.get("/:id", authorization("user.get"), getUserById);
 router.put("/:id", authorization("user.update"), updateUser);
 
 //create a user
-router.post("/create", authorization("user.create"), createUser);
+router.post(
+  "/create",
+  authorization("user.create"),
+  validateReqBody(createUserBodySchema),
+  createUser
+);
 
 //delete a user
 router.delete("/:id", authorization("user.delete"), deleteUserById);

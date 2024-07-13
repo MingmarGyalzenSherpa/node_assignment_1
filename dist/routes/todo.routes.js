@@ -13,7 +13,7 @@ const router = (0, express_1.default)();
 router.use(auth_middleware_1.authentication);
 //routes
 //get all todos
-router.get("/", (0, auth_middleware_1.authorization)("todo.get"), (0, validator_1.validateReqQuery)(todo_schema_1.getTodoQuery), todosController_1.getTodos);
+router.get("/", (0, auth_middleware_1.authorization)("todo.get"), (0, validator_1.validateReqQuery)(todo_schema_1.getTodoQuerySchema), todosController_1.getTodos);
 //get a todo by id
 router.get("/:id", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodoById);
 //create a todo

@@ -8,7 +8,7 @@ import {
 } from "../controller/todosController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
 import { validateReqQuery } from "../middlewares/validator";
-import { getTodoQuery } from "../schema/todo.schema";
+import { getTodoQuerySchema } from "../schema/todo.schema";
 
 const router = express();
 
@@ -21,7 +21,7 @@ router.use(authentication);
 router.get(
   "/",
   authorization("todo.get"),
-  validateReqQuery(getTodoQuery),
+  validateReqQuery(getTodoQuerySchema),
   getTodos
 );
 
