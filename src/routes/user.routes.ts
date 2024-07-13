@@ -7,13 +7,20 @@ import {
   updateUser,
 } from "../controller/userController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
+import { validateReqQuery } from "../middlewares/validator";
+import { getUserQuery } from "../schema/user.schema";
 
 const router = express();
 
 router.use(authentication);
 
 //get all user
-router.get("/", authorization("user.get"), getAllUsers);
+router.get(
+  "/",
+  authorization("user.get"),
+  validateReqQuery(getUserQuery),
+  getAllUsers
+);
 
 //get user by id
 router.get("/:id", authorization("user.get"), getUserById);

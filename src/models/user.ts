@@ -1,7 +1,7 @@
 import { BadRequestError } from "../error/BadRequestError";
 import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
-import { IGetRequestQuery } from "../interfaces/IReqQueryParams";
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 
 let users: IUser[] = [
   {

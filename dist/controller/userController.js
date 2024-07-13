@@ -47,6 +47,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.createUser = createUser;
 const getAllUsers = (req, res) => {
     const { query } = req;
+    console.log(query);
     const data = UserServices.getAllUsers(query);
     res.status(http_status_codes_1.default.OK).json({
         message: "User fetched successfully",

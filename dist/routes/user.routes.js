@@ -6,10 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userController_1 = require("../controller/userController");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const validator_1 = require("../middlewares/validator");
+const user_schema_1 = require("../schema/user.schema");
 const router = (0, express_1.default)();
 router.use(auth_middleware_1.authentication);
 //get all user
-router.get("/", (0, auth_middleware_1.authorization)("user.get"), userController_1.getAllUsers);
+router.get("/", (0, auth_middleware_1.authorization)("user.get"), (0, validator_1.validateReqQuery)(user_schema_1.getUserQuery), userController_1.getAllUsers);
 //get user by id
 router.get("/:id", (0, auth_middleware_1.authorization)("user.get"), userController_1.getUserById);
 //update user

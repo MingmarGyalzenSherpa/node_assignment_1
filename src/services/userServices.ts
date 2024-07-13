@@ -6,7 +6,7 @@ import * as messageGenerator from "../utils/messageGenerator";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../error/BadRequestError";
 import loggerWithNameSpace from "../utils/logger";
-import { IGetRequestQuery } from "../interfaces/IReqQueryParams";
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 
 const logger = loggerWithNameSpace("User Services");
 
