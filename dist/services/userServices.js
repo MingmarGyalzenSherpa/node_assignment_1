@@ -51,11 +51,6 @@ const logger = (0, logger_1.default)("User Services");
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started createUser service");
-    if (!(user.name && user.email && user.password)) {
-        const message = messageGenerator.invalid("Field");
-        logger.error(message);
-        throw new NotFoundError_1.NotFoundError(message);
-    }
     const existingUser = UserModel.getUserByEmail(user.email);
     if (existingUser) {
         const message = messageGenerator.alreadyExists("User");
@@ -120,9 +115,9 @@ exports.getUserById = getUserById;
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns {IUser} - user
+ * @returns {Promise<IUser>} - user
  */
-const updateUser = (id, updatedUser) => {
+const updateUser = (id, updatedUser) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateUser service");
     const userExists = UserModel.getUserById(id);
     if (!userExists) {
@@ -132,12 +127,13 @@ const updateUser = (id, updatedUser) => {
     }
     console.log(updatedUser);
     if (updatedUser.password) {
-        console.log("hehe");
+        updatedUser.password = yield bcrypt_1.default.hash(updatedUser.password, 10);
     }
+    console.log(updatedUser.password);
     const data = UserModel.updateUser(id, updatedUser);
     logger.info("Exiting updateUser service");
     return data;
-};
+});
 exports.updateUser = updateUser;
 /**
  * Delete a user by id

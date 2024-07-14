@@ -79,12 +79,11 @@ exports.getUserById = getUserById;
  * @param res
  * @param next
  */
-const updateUser = (req, res, next) => {
+const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id: userId } = req.params;
-        console.log("insidde");
         const { body: updatedUser } = req;
-        const user = UserServices.updateUser(userId, updatedUser);
+        const user = yield UserServices.updateUser(userId, updatedUser);
         res.status(http_status_codes_1.default.OK).json({
             message: "User updated successfully",
             data: [user],
@@ -94,7 +93,7 @@ const updateUser = (req, res, next) => {
         console.log("error ayo");
         next(new BadRequestError_1.BadRequestError(error.message));
     }
-};
+});
 exports.updateUser = updateUser;
 /**
  * Delete a user by id

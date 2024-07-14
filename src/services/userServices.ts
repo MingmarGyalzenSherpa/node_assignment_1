@@ -19,12 +19,6 @@ const logger = loggerWithNameSpace("User Services");
 export const createUser = async (user: IUser): Promise<object> => {
   logger.info("Started createUser service");
 
-  if (!(user.name && user.email && user.password)) {
-    const message = messageGenerator.invalid("Field");
-    logger.error(message);
-    throw new NotFoundError(message);
-  }
-
   const existingUser = UserModel.getUserByEmail(user.email);
 
   if (existingUser) {
@@ -96,9 +90,12 @@ export const getUserById = (id: string): IUser | undefined => {
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns {IUser} - user
+ * @returns {Promise<IUser>} - user
  */
-export const updateUser = (id: string, updatedUser: IUser): IUser => {
+export const updateUser = async (
+  id: string,
+  updatedUser: IUser
+): Promise<IUser> => {
   logger.info("Started updateUser service");
 
   const userExists = UserModel.getUserById(id);
@@ -112,9 +109,10 @@ export const updateUser = (id: string, updatedUser: IUser): IUser => {
   console.log(updatedUser);
 
   if (updatedUser.password) {
-    console.log("hehe");
+    updatedUser.password = await bcrypt.hash(updatedUser.password, 10);
   }
 
+  console.log(updatedUser.password);
   const data = UserModel.updateUser(id, updatedUser);
 
   logger.info("Exiting updateUser service");
