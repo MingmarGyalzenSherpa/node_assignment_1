@@ -80,6 +80,8 @@ export const updateUserBodySchema = joi
         if (!/[0-9]/.test(value)) {
           return helpers.error("password.number");
         }
+
+        return value;
       }),
   })
   .options({

@@ -45,7 +45,7 @@ const getTodos = (req, res, next) => {
         const data = TodoServices.getTodos(userId);
         res
             .status(http_status_codes_1.default.OK)
-            .json(new responseObject_1.default(message.fetched("User"), data));
+            .json(new responseObject_1.default(message.fetched("Todo"), data));
     }
     catch (error) {
         next(error);

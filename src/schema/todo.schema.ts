@@ -7,3 +7,7 @@ export const getTodoQuerySchema = joi
   .options({
     stripUnknown: true,
   });
+
+  export const createTodoBodySchema = joi.object({
+    
+  })

@@ -21,7 +21,7 @@ export const getTodos = (req: Request, res: Response, next: NextFunction) => {
 
     res
       .status(HttpStatusCodes.OK)
-      .json(new ResponseObject<ITodo>(message.fetched("User"), data));
+      .json(new ResponseObject<ITodo>(message.fetched("Todo"), data));
   } catch (error) {
     next(error);
   }
