@@ -17,7 +17,7 @@ router.get("/", (0, auth_middleware_1.authorization)("todo.get"), (0, validator_
 //get a todo by id
 router.get("/:id", (0, auth_middleware_1.authorization)("todo.get"), todosController_1.getTodoById);
 //create a todo
-router.post("/", (0, auth_middleware_1.authorization)("todo.create"), todosController_1.addTodo);
+router.post("/", (0, auth_middleware_1.authorization)("todo.create"), (0, validator_1.validateReqBody)(todo_schema_1.createTodoBodySchema), todosController_1.addTodo);
 //delete a todo
 router.delete("/:id", (0, auth_middleware_1.authorization)("todo.delete"), todosController_1.deleteTodo);
 //update a todo

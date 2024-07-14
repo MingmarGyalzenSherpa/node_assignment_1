@@ -7,8 +7,11 @@ import {
   updateTodo,
 } from "../controller/todosController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
-import { validateReqQuery } from "../middlewares/validator";
-import { getTodoQuerySchema } from "../schema/todo.schema";
+import { validateReqBody, validateReqQuery } from "../middlewares/validator";
+import {
+  createTodoBodySchema,
+  getTodoQuerySchema,
+} from "../schema/todo.schema";
 
 const router = express();
 
@@ -29,7 +32,12 @@ router.get(
 router.get("/:id", authorization("todo.get"), getTodoById);
 
 //create a todo
-router.post("/", authorization("todo.create"), addTodo);
+router.post(
+  "/",
+  authorization("todo.create"),
+  validateReqBody(createTodoBodySchema),
+  addTodo
+);
 
 //delete a todo
 router.delete("/:id", authorization("todo.delete"), deleteTodo);

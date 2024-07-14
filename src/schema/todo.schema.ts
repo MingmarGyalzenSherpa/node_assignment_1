@@ -8,6 +8,14 @@ export const getTodoQuerySchema = joi
     stripUnknown: true,
   });
 
-  export const createTodoBodySchema = joi.object({
-    
+export const createTodoBodySchema = joi
+  .object({
+    title: joi.string().required().messages({
+      "any.required": "Title is required",
+    }),
+    completed: joi.boolean().optional(),
   })
+  .options({
+    stripUnknown: true,
+  });
+

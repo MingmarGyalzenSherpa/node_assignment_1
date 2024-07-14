@@ -12,5 +12,14 @@ exports.getTodoQuerySchema = joi_1.default
     .options({
     stripUnknown: true,
 });
-exports.createTodoBodySchema = joi_1.default.object({});
+exports.createTodoBodySchema = joi_1.default
+    .object({
+    title: joi_1.default.string().required().messages({
+        "any.required": "Title is required",
+    }),
+    completed: joi_1.default.boolean().optional(),
+})
+    .options({
+    stripUnknown: true,
+});
 //# sourceMappingURL=todo.schema.js.map
