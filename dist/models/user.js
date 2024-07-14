@@ -33,6 +33,7 @@ exports.createUser = createUser;
  */
 const getAllUsers = (query) => {
     const { q } = query;
+    console.log("inside model");
     if (q) {
         return users.filter((user) => user.name.includes(q));
     }

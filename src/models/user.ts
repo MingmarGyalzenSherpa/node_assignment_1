@@ -39,6 +39,7 @@ export const createUser = (user: IUser) => {
  */
 export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
   const { q } = query;
+  console.log("inside model");
   if (q) {
     return users.filter((user) => user.name.includes(q));
   }
