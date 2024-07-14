@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTodoBodySchema = exports.getTodoQuerySchema = void 0;
+exports.updateTodoBodySchema = exports.createTodoBodySchema = exports.getTodoQuerySchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.getTodoQuerySchema = joi_1.default
     .object({
@@ -17,6 +17,14 @@ exports.createTodoBodySchema = joi_1.default
     title: joi_1.default.string().required().messages({
         "any.required": "Title is required",
     }),
+    completed: joi_1.default.boolean().optional(),
+})
+    .options({
+    stripUnknown: true,
+});
+exports.updateTodoBodySchema = joi_1.default
+    .object({
+    title: joi_1.default.string().optional(),
     completed: joi_1.default.boolean().optional(),
 })
     .options({

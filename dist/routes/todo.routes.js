@@ -21,6 +21,6 @@ router.post("/", (0, auth_middleware_1.authorization)("todo.create"), (0, valida
 //delete a todo
 router.delete("/:id", (0, auth_middleware_1.authorization)("todo.delete"), todosController_1.deleteTodo);
 //update a todo
-router.put("/:id", (0, auth_middleware_1.authorization)("todo.update"), todosController_1.updateTodo);
+router.put("/:id", (0, auth_middleware_1.authorization)("todo.update"), (0, validator_1.validateReqBody)(todo_schema_1.updateTodoBodySchema), todosController_1.updateTodo);
 exports.default = router;
 //# sourceMappingURL=todo.routes.js.map

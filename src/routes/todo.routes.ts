@@ -11,6 +11,7 @@ import { validateReqBody, validateReqQuery } from "../middlewares/validator";
 import {
   createTodoBodySchema,
   getTodoQuerySchema,
+  updateTodoBodySchema,
 } from "../schema/todo.schema";
 
 const router = express();
@@ -43,6 +44,11 @@ router.post(
 router.delete("/:id", authorization("todo.delete"), deleteTodo);
 
 //update a todo
-router.put("/:id", authorization("todo.update"), updateTodo);
+router.put(
+  "/:id",
+  authorization("todo.update"),
+  validateReqBody(updateTodoBodySchema),
+  updateTodo
+);
 
 export default router;

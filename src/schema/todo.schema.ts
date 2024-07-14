@@ -19,3 +19,11 @@ export const createTodoBodySchema = joi
     stripUnknown: true,
   });
 
+export const updateTodoBodySchema = joi
+  .object({
+    title: joi.string().optional(),
+    completed: joi.boolean().optional(),
+  })
+  .options({
+    stripUnknown: true,
+  });
