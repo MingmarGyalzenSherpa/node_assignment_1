@@ -22,14 +22,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const userServices_1 = require("../../../services/userServices");
 const expect_1 = __importDefault(require("expect"));
 const UserModel = __importStar(require("../../../models/user"));
 const sinon_1 = __importDefault(require("sinon"));
+const messageGenerator = __importStar(require("../../../utils/messageGenerator"));
+const BadRequestError_1 = require("../../../error/BadRequestError");
 describe("User Service Test Suite", () => {
     //get all user test
     describe("getAllUsers", () => {
@@ -48,5 +60,38 @@ describe("User Service Test Suite", () => {
         });
     });
     //create a new user test
+    describe("createUser", () => {
+        let userModelGetUserByEmailStub;
+        let bcryptHashStub;
+        const user = {
+            email: "test@test.com",
+            name: "test",
+            password: "thisispassword",
+        };
+        beforeEach(() => {
+            userModelGetUserByEmailStub = sinon_1.default.stub(UserModel, "getUserByEmail");
+            bcryptHashStub = sinon_1.default.stub(bcrypt_1.default, "hash");
+        });
+        afterEach(() => {
+            userModelGetUserByEmailStub.restore();
+            bcryptHashStub.restore();
+        });
+        //successful user create
+        it("should return a object with message 'User created successfully' on successful user creation", () => __awaiter(void 0, void 0, void 0, function* () {
+            userModelGetUserByEmailStub.returns(undefined);
+            bcryptHashStub.resolves("hashedPassword");
+            const response = yield (0, userServices_1.createUser)(user);
+            const expectedOutput = {
+                message: "User created successfully",
+            };
+            (0, expect_1.default)(response).toStrictEqual(expectedOutput);
+        }));
+        //unsuccessful user create
+        it("should throw bad request error on 'unsuccessful user create' ", () => __awaiter(void 0, void 0, void 0, function* () {
+            userModelGetUserByEmailStub.returns(user);
+            bcryptHashStub.resolves("hashedPassword");
+            (0, expect_1.default)(() => __awaiter(void 0, void 0, void 0, function* () { return yield (0, userServices_1.createUser)(user); })).rejects.toThrowError(new BadRequestError_1.BadRequestError(messageGenerator.alreadyExists("User")));
+        }));
+    });
 });
 //# sourceMappingURL=user.test.js.map
