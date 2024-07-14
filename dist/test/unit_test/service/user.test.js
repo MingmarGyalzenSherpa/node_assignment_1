@@ -93,5 +93,33 @@ describe("User Service Test Suite", () => {
             (0, expect_1.default)(() => __awaiter(void 0, void 0, void 0, function* () { return yield (0, userServices_1.createUser)(user); })).rejects.toThrowError(new BadRequestError_1.BadRequestError(messageGenerator.alreadyExists("User")));
         }));
     });
+    //get user by email test
+    describe("getUserByEmail", () => {
+        let testEmail = "ming@ming.com";
+        let user = {
+            id: "1",
+            name: "Mingma",
+            email: testEmail,
+            password: "password",
+            role: "user" /* userRole.USER */,
+        };
+        let userModelGetUserByEmailStub;
+        beforeEach(() => {
+            userModelGetUserByEmailStub = sinon_1.default.stub(UserModel, "getUserByEmail");
+        });
+        afterEach(() => {
+            userModelGetUserByEmailStub.restore();
+        });
+        it("should return user if user is found", () => {
+            userModelGetUserByEmailStub.returns(user);
+            const response = (0, userServices_1.getUserByEmail)(testEmail);
+            (0, expect_1.default)(response).toStrictEqual(user);
+        });
+        it("should throw undefined user is not found", () => {
+            userModelGetUserByEmailStub.returns(undefined);
+            const response = (0, userServices_1.getUserByEmail)(testEmail);
+            (0, expect_1.default)(response).toBe(undefined);
+        });
+    });
 });
 //# sourceMappingURL=user.test.js.map

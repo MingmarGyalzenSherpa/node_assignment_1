@@ -51,6 +51,7 @@ const logger = (0, logger_1.default)("User Services");
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started createUser service");
+    console.log(user);
     const existingUser = UserModel.getUserByEmail(user.email);
     if (existingUser) {
         const message = messageGenerator.alreadyExists("User");

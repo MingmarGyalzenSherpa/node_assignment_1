@@ -18,7 +18,7 @@ const logger = loggerWithNameSpace("User Services");
  */
 export const createUser = async (user: IUser): Promise<object> => {
   logger.info("Started createUser service");
-
+  console.log(user);
   const existingUser = UserModel.getUserByEmail(user.email);
 
   if (existingUser) {

@@ -13,7 +13,7 @@ export const createUser = async (
     const { body } = req;
     const data = await UserServices.createUser(body);
 
-    res.json(data);
+    res.status(HttpStatusCodes.CREATED).json(data);
   } catch (error) {
     next(error);
   }

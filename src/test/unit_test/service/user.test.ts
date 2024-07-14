@@ -1,11 +1,17 @@
 import bcrypt from "bcrypt";
-import { createUser, getAllUsers } from "../../../services/userServices";
+import {
+  createUser,
+  getAllUsers,
+  getUserByEmail,
+} from "../../../services/userServices";
 import expect from "expect";
 import * as UserModel from "../../../models/user";
 import sinon from "sinon";
 import IUser from "../../../interfaces/IUser";
 import * as messageGenerator from "../../../utils/messageGenerator";
 import { BadRequestError } from "../../../error/BadRequestError";
+import { userRole } from "../../../constants/userRole";
+import { NotFoundError } from "../../../error/NotFoundError";
 describe("User Service Test Suite", () => {
   //get all user test
   describe("getAllUsers", () => {
@@ -70,4 +76,41 @@ describe("User Service Test Suite", () => {
       );
     });
   });
+
+  //get user by email test
+  describe("getUserByEmail", () => {
+    let testEmail = "ming@ming.com";
+    let user: IUser = {
+      id: "1",
+      name: "Mingma",
+      email: testEmail,
+      password: "password",
+      role: userRole.USER,
+    };
+    let userModelGetUserByEmailStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      userModelGetUserByEmailStub = sinon.stub(UserModel, "getUserByEmail");
+    });
+
+    afterEach(() => {
+      userModelGetUserByEmailStub.restore();
+    });
+
+    it("should return user if user is found", () => {
+      userModelGetUserByEmailStub.returns(user);
+
+      const response = getUserByEmail(testEmail);
+      expect(response).toStrictEqual(user);
+    });
+
+    it("should throw undefined user is not found", () => {
+      userModelGetUserByEmailStub.returns(undefined);
+
+      const response = getUserByEmail(testEmail);
+      expect(response).toBe(undefined);
+    });
+  });
+
+  
 });

@@ -14,8 +14,6 @@ const validateReqQuery = (schema) => (req, res, next) => {
 exports.validateReqQuery = validateReqQuery;
 const validateReqBody = (schema) => (req, res, next) => {
     const { error, value } = schema.validate(req.body);
-    console.log(req.body);
-    console.log(value);
     if (error) {
         next(new BadRequestError_1.BadRequestError(error.message));
     }

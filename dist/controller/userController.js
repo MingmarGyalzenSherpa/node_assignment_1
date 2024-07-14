@@ -43,7 +43,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { body } = req;
         const data = yield UserServices.createUser(body);
-        res.json(data);
+        res.status(http_status_codes_1.default.CREATED).json(data);
     }
     catch (error) {
         next(error);

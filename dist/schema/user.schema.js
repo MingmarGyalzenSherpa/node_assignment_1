@@ -45,6 +45,7 @@ exports.createUserBodySchema = joi_1.default
         if (!/[0-9]/.test(value)) {
             return helpers.error("password.number");
         }
+        return value;
     }),
     role: joi_1.default.string().optional(),
 })
