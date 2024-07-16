@@ -20,6 +20,11 @@ const knexConfig: Knex.Config = {
     extension: "ts",
     stub: "./stubs/migration.stub",
   },
+  seeds: {
+    directory: "./database/seeds",
+    extension: "ts",
+    stub: "./stubs/seed.stub",
+  },
 };
 
 export default knexConfig;

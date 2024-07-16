@@ -16,6 +16,10 @@ const knexConfig = Object.assign(Object.assign({}, baseKnexConfig), { migrations
         tableName: "migrations",
         extension: "ts",
         stub: "./stubs/migration.stub",
+    }, seeds: {
+        directory: "./database/seeds",
+        extension: "ts",
+        stub: "./stubs/seed.stub",
     } });
 exports.default = knexConfig;
 //# sourceMappingURL=knexfile.js.map

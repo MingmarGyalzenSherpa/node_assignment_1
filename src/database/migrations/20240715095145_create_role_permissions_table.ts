@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 /**
- * Drop table TABLE_NAME. 
+ * Drop table TABLE_NAME.
  *
  * @param   {Knex} knex
  * @returns {Promise}

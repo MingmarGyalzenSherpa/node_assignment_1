@@ -11,7 +11,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "knex": "knex --knexfile=./src/knexfile.ts",
     "migrate:make": "npm run knex migrate:make --verbose",
-    "migrate": "npm run knex migrate:latest --verbose"
+    "migrate": "npm run knex migrate:latest --verbose",
+    "rollback": "npm run knex migrate:rollback --verbose",
+    "seed:make": "npm run knex seed:make --verbose",
+    "seed:run": "npm run knex seed:run --verbose"
   },
   "pre-commit": [
     "ts.check",
