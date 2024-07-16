@@ -86,15 +86,12 @@ export const getUserById = async (id: string) => {
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns {Promise<IUser>} - user
+ * @returns - user
  */
-export const updateUser = async (
-  id: string,
-  updatedUser: IUser
-): Promise<IUser> => {
+export const updateUser = async (id: string, updatedUser: IUser) => {
   logger.info("Started updateUser service");
 
-  const userExists = UserModel.getUserById(id);
+  const userExists = UserModel.UserModel.getUserById(id);
 
   if (!userExists) {
     const message = messageGenerator.notFound("User");
@@ -102,14 +99,11 @@ export const updateUser = async (
     throw new NotFoundError(message);
   }
 
-  console.log(updatedUser);
-
   if (updatedUser.password) {
     updatedUser.password = await bcrypt.hash(updatedUser.password, 10);
   }
 
-  console.log(updatedUser.password);
-  const data = UserModel.updateUser(id, updatedUser);
+  const data = await UserModel.UserModel.updateUser(id, updatedUser);
 
   logger.info("Exiting updateUser service");
   return data;

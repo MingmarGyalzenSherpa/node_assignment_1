@@ -113,22 +113,20 @@ exports.getUserById = getUserById;
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns {Promise<IUser>} - user
+ * @returns - user
  */
 const updateUser = (id, updatedUser) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateUser service");
-    const userExists = UserModel.getUserById(id);
+    const userExists = UserModel.UserModel.getUserById(id);
     if (!userExists) {
         const message = messageGenerator.notFound("User");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
-    console.log(updatedUser);
     if (updatedUser.password) {
         updatedUser.password = yield bcrypt_1.default.hash(updatedUser.password, 10);
     }
-    console.log(updatedUser.password);
-    const data = UserModel.updateUser(id, updatedUser);
+    const data = yield UserModel.UserModel.updateUser(id, updatedUser);
     logger.info("Exiting updateUser service");
     return data;
 });

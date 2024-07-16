@@ -18,6 +18,7 @@ exports.UserModel = UserModel;
 _a = UserModel;
 /**
  *  Create a user
+ *
  * @param user
  */
 UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
@@ -43,11 +44,13 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
 });
 /**
  *  Get all users
+ *
  * @param filter - filter for getting users
  * @returns
  */
 UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () {
     const { q } = filter;
+    console.log(q);
     const query = _a.queryBuilder()
         .table("users")
         .leftJoin("roles", "users.role_id", "=", "roles.id")
@@ -55,14 +58,15 @@ UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () 
         .limit(filter.size)
         .offset((filter.page - 1) * filter.size);
     if (q) {
-        query.where({ email: q });
+        query.whereLike("name", `%${q}%`);
     }
     const data = yield query;
     return data;
 });
 /**
+ * Get a user by id
  *
- * @param id
+ * @param id - user id
  * @returns
  */
 UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -75,6 +79,12 @@ UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield query;
     return data;
 });
+/**
+ * Get a user by email
+ *
+ * @param email
+ * @returns
+ */
 UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const query = _a.queryBuilder()
         .table("users")
@@ -83,6 +93,17 @@ UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function
         .where({ email })
         .first();
     return yield query;
+});
+UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, function* () {
+    //check if role is available and valid
+    if (userDetails.role) {
+    }
+    console.log(id);
+    console.log(userDetails);
+    //update user
+    yield _a.queryBuilder().update(userDetails).table("users").where({ id });
+    const user = yield _a.getUserById(id);
+    return user;
 });
 let users = [
     {

@@ -8,6 +8,7 @@ import { table } from "console";
 export class UserModel extends BaseModel {
   /**
    *  Create a user
+   *
    * @param user
    */
   static createUser = async (user: IUser) => {
@@ -38,12 +39,13 @@ export class UserModel extends BaseModel {
 
   /**
    *  Get all users
+   *
    * @param filter - filter for getting users
    * @returns
    */
   static getUsers = async (filter: IGetRequestQuery) => {
     const { q } = filter;
-
+    console.log(q);
     const query = this.queryBuilder()
       .table("users")
       .leftJoin("roles", "users.role_id", "=", "roles.id")
@@ -57,7 +59,7 @@ export class UserModel extends BaseModel {
       .limit(filter.size)
       .offset((filter.page - 1) * filter.size);
     if (q) {
-      query.where({ email: q });
+      query.whereLike("name", `%${q}%`);
     }
 
     const data = await query;
@@ -65,8 +67,9 @@ export class UserModel extends BaseModel {
   };
 
   /**
+   * Get a user by id
    *
-   * @param id
+   * @param id - user id
    * @returns
    */
   static getUserById = async (id: string) => {
@@ -87,6 +90,12 @@ export class UserModel extends BaseModel {
     return data;
   };
 
+  /**
+   * Get a user by email
+   *
+   * @param email
+   * @returns
+   */
   static getUserByEmail = async (email: string) => {
     const query = this.queryBuilder()
       .table("users")
@@ -96,6 +105,19 @@ export class UserModel extends BaseModel {
       .first();
 
     return await query;
+  };
+
+  static updateUser = async (id: string, userDetails: IUser) => {
+    //check if role is available and valid
+    if (userDetails.role) {
+    }
+    console.log(id);
+    console.log(userDetails);
+    //update user
+    await this.queryBuilder().update(userDetails).table("users").where({ id });
+
+    const user = await this.getUserById(id);
+    return user;
   };
 }
 
