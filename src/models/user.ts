@@ -1,7 +1,7 @@
 import { BadRequestError } from "../error/BadRequestError";
 import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
-import { IGetRequestQuery } from "../interfaces/IReqQueryParams";
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 
 let users: IUser[] = [
   {
@@ -39,7 +39,7 @@ export const createUser = (user: IUser) => {
  */
 export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
   const { q } = query;
-  console.log(q);
+  console.log("inside model");
   if (q) {
     return users.filter((user) => user.name.includes(q));
   }

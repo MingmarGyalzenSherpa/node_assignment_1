@@ -4,11 +4,19 @@ import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import * as UserServices from "../services/userServices";
 import { BadRequestError } from "../error/BadRequestError";
 
-export const createUser = async (req: Request, res: Response) => {
-  const { body } = req;
-  const data = await UserServices.createUser(body);
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { body } = req;
+    const data = await UserServices.createUser(body);
 
-  res.json(data);
+    res.status(HttpStatusCodes.CREATED).json(data);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getAllUsers = (req: Request, res: Response) => {
@@ -40,12 +48,16 @@ export const getUserById = (req: Request, res: Response) => {
  * @param res
  * @param next
  */
-export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id: userId } = req.params;
     const { body: updatedUser } = req;
 
-    const user = UserServices.updateUser(userId, updatedUser);
+    const user = await UserServices.updateUser(userId, updatedUser);
 
     res.status(HttpStatusCodes.OK).json({
       message: "User updated successfully",

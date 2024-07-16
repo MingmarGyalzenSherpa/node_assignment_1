@@ -39,10 +39,15 @@ exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getA
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const UserServices = __importStar(require("../services/userServices"));
 const BadRequestError_1 = require("../error/BadRequestError");
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const data = yield UserServices.createUser(body);
-    res.json(data);
+const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { body } = req;
+        const data = yield UserServices.createUser(body);
+        res.status(http_status_codes_1.default.CREATED).json(data);
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.createUser = createUser;
 const getAllUsers = (req, res) => {
@@ -74,11 +79,11 @@ exports.getUserById = getUserById;
  * @param res
  * @param next
  */
-const updateUser = (req, res, next) => {
+const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id: userId } = req.params;
         const { body: updatedUser } = req;
-        const user = UserServices.updateUser(userId, updatedUser);
+        const user = yield UserServices.updateUser(userId, updatedUser);
         res.status(http_status_codes_1.default.OK).json({
             message: "User updated successfully",
             data: [user],
@@ -88,7 +93,7 @@ const updateUser = (req, res, next) => {
         console.log("error ayo");
         next(new BadRequestError_1.BadRequestError(error.message));
     }
-};
+});
 exports.updateUser = updateUser;
 /**
  * Delete a user by id
