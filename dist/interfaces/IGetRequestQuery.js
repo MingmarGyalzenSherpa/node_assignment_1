@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=IReqQueryParams.js.map
+//# sourceMappingURL=IGetRequestQuery.js.map

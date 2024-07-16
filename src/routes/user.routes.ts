@@ -7,22 +7,43 @@ import {
   updateUser,
 } from "../controller/userController";
 import { authentication, authorization } from "../middlewares/auth.middleware";
+import { validateReqBody, validateReqQuery } from "../middlewares/validator";
+import {
+  createUserBodySchema,
+  getUserQuerySchema,
+  updateUserBodySchema,
+} from "../schema/user.schema";
 
 const router = express();
 
 router.use(authentication);
 
 //get all user
-router.get("/", authorization("user.get"), getAllUsers);
+router.get(
+  "/",
+  authorization("user.get"),
+  validateReqQuery(getUserQuerySchema),
+  getAllUsers
+);
 
 //get user by id
 router.get("/:id", authorization("user.get"), getUserById);
 
 //update user
-router.put("/:id", authorization("user.update"), updateUser);
+router.put(
+  "/:id",
+  authorization("user.update"),
+  validateReqBody(updateUserBodySchema),
+  updateUser
+);
 
 //create a user
-router.post("/create", authorization("user.create"), createUser);
+router.post(
+  "/create",
+  authorization("user.create"),
+  validateReqBody(createUserBodySchema),
+  createUser
+);
 
 //delete a user
 router.delete("/:id", authorization("user.delete"), deleteUserById);
