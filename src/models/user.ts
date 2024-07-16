@@ -44,7 +44,9 @@ export class UserModel extends BaseModel {
         "users.email",
         "roles.role_name",
         "users.created_at"
-      );
+      )
+      .limit(filter.size)
+      .offset((filter.page - 1) * filter.size);
     if (q) {
       query.where({ email: q });
     }

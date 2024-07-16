@@ -43,7 +43,9 @@ UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () 
     const query = _a.queryBuilder()
         .table("users")
         .leftJoin("roles", "users.role_id", "=", "roles.id")
-        .select("users.name", "users.email", "roles.role_name", "users.created_at");
+        .select("users.name", "users.email", "roles.role_name", "users.created_at")
+        .limit(filter.size)
+        .offset((filter.page - 1) * filter.size);
     if (q) {
         query.where({ email: q });
     }
