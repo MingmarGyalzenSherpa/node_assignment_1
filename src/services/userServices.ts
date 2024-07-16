@@ -65,12 +65,13 @@ export const getUserByEmail = (email: string): IUser | undefined => {
  * Get a user by id
  *
  * @param id
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns {object | undefined} - user or undefined if doesn't exist
  */
-export const getUserById = (id: string): IUser | undefined => {
+export const getUserById = async (id: string) => {
   logger.info("Started getUserById service");
 
-  const data = UserModel.getUserById(id);
+  const data = await UserModel.UserModel.getUserById(id);
+
   if (!data) {
     const message = messageGenerator.notFound("User");
     logger.error(message);

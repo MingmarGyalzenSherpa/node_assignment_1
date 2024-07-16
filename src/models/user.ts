@@ -6,7 +6,10 @@ import { BaseModel } from "./base";
 import { table } from "console";
 
 export class UserModel extends BaseModel {
-  /** */
+  /**
+   *  Create a user
+   * @param user
+   */
   static createUser = async (user: IUser) => {
     //check if user role is give
     if (!user.role) {
@@ -33,6 +36,11 @@ export class UserModel extends BaseModel {
       .table("users");
   };
 
+  /**
+   *  Get all users
+   * @param filter - filter for getting users
+   * @returns
+   */
   static getUsers = async (filter: IGetRequestQuery) => {
     const { q } = filter;
 
@@ -40,6 +48,7 @@ export class UserModel extends BaseModel {
       .table("users")
       .leftJoin("roles", "users.role_id", "=", "roles.id")
       .select(
+        "users.id",
         "users.name",
         "users.email",
         "roles.role_name",
@@ -52,6 +61,24 @@ export class UserModel extends BaseModel {
     }
 
     const data = await query;
+    return data;
+  };
+
+  static getUserById = async (id: string) => {
+    const query = this.queryBuilder()
+      .table("users")
+      .leftJoin("roles", "users.role_id", "=", "roles.id")
+      .select(
+        "users.name",
+        "users.email",
+        "roles.role_name",
+        "users.created_at"
+      )
+      .where("users.id", id)
+      .first();
+
+    const data = await query;
+
     return data;
   };
 }

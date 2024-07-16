@@ -29,17 +29,21 @@ export const getAllUsers = async (req: Request, res: Response) => {
   });
 };
 
-export const getUserById = (req: Request, res: Response) => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id: userId } = req.params;
-    const data = UserServices.getUserById(userId);
+    const data = await UserServices.getUserById(userId);
 
     res.status(HttpStatusCodes.OK).json({
       message: "User fetched successfully",
       data: [data],
     });
   } catch (error) {
-    throw new BadRequestError(error.message);
+    next(error);
   }
 };
 

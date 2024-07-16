@@ -16,7 +16,10 @@ class UserModel extends base_1.BaseModel {
 }
 exports.UserModel = UserModel;
 _a = UserModel;
-/** */
+/**
+ *  Create a user
+ * @param user
+ */
 UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     //check if user role is give
     if (!user.role) {
@@ -38,17 +41,32 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
         .insert(Object.assign(Object.assign({}, userToCreate), { role_id }))
         .table("users");
 });
+/**
+ *  Get all users
+ * @param filter - filter for getting users
+ * @returns
+ */
 UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () {
     const { q } = filter;
     const query = _a.queryBuilder()
         .table("users")
         .leftJoin("roles", "users.role_id", "=", "roles.id")
-        .select("users.name", "users.email", "roles.role_name", "users.created_at")
+        .select("users.id", "users.name", "users.email", "roles.role_name", "users.created_at")
         .limit(filter.size)
         .offset((filter.page - 1) * filter.size);
     if (q) {
         query.where({ email: q });
     }
+    const data = yield query;
+    return data;
+});
+UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = _a.queryBuilder()
+        .table("users")
+        .leftJoin("roles", "users.role_id", "=", "roles.id")
+        .select("users.name", "users.email", "roles.role_name", "users.created_at")
+        .where("users.id", id)
+        .first();
     const data = yield query;
     return data;
 });

@@ -93,11 +93,11 @@ exports.getUserByEmail = getUserByEmail;
  * Get a user by id
  *
  * @param id
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns {object | undefined} - user or undefined if doesn't exist
  */
-const getUserById = (id) => {
+const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getUserById service");
-    const data = UserModel.getUserById(id);
+    const data = yield UserModel.UserModel.getUserById(id);
     if (!data) {
         const message = messageGenerator.notFound("User");
         logger.error(message);
@@ -105,7 +105,7 @@ const getUserById = (id) => {
     }
     logger.info("Exiting getUserById service");
     return data;
-};
+});
 exports.getUserById = getUserById;
 /**
  *  Update a user by id

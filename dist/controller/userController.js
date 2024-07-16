@@ -60,19 +60,19 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
 });
 exports.getAllUsers = getAllUsers;
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id: userId } = req.params;
-        const data = UserServices.getUserById(userId);
+        const data = yield UserServices.getUserById(userId);
         res.status(http_status_codes_1.default.OK).json({
             message: "User fetched successfully",
             data: [data],
         });
     }
     catch (error) {
-        throw new BadRequestError_1.BadRequestError(error.message);
+        next(error);
     }
-};
+});
 exports.getUserById = getUserById;
 /**
  *  Update a user by id
