@@ -50,14 +50,15 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.createUser = createUser;
-const getAllUsers = (req, res) => {
+const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req;
-    const data = UserServices.getAllUsers(query);
+    const data = yield UserServices.getAllUsers(query);
+    console.log(data);
     res.status(http_status_codes_1.default.OK).json({
         message: "User fetched successfully",
         data: data,
     });
-};
+});
 exports.getAllUsers = getAllUsers;
 const getUserById = (req, res) => {
     try {

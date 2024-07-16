@@ -68,13 +68,13 @@ exports.createUser = createUser;
 /**
  * Get all users
  *
- * @returns {IUser[]}
+ * @returns
  */
-const getAllUsers = (query) => {
+const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getAllUsers service");
     logger.info("Exiting getAllUsers service");
-    return UserModel.getAllUsers(query);
-};
+    return UserModel.UserModel.getUsers(query);
+});
 exports.getAllUsers = getAllUsers;
 /**
  * Get a user by email

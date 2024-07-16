@@ -3,6 +3,7 @@ import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 import { BaseModel } from "./base";
+import { table } from "console";
 
 export class UserModel extends BaseModel {
   /** */
@@ -32,7 +33,25 @@ export class UserModel extends BaseModel {
       .table("users");
   };
 
-  static getUsers = (filter: IGetRequestQuery) => {};
+  static getUsers = async (filter: IGetRequestQuery) => {
+    const { q } = filter;
+
+    const query = this.queryBuilder()
+      .table("users")
+      .leftJoin("roles", "users.role_id", "=", "roles.id")
+      .select(
+        "users.name",
+        "users.email",
+        "roles.role_name",
+        "users.created_at"
+      );
+    if (q) {
+      query.where({ email: q });
+    }
+
+    const data = await query;
+    return data;
+  };
 }
 
 let users: IUser[] = [

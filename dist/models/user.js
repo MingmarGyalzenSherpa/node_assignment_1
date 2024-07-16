@@ -38,7 +38,18 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
         .insert(Object.assign(Object.assign({}, userToCreate), { role_id }))
         .table("users");
 });
-UserModel.getUsers = (filter) => { };
+UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () {
+    const { q } = filter;
+    const query = _a.queryBuilder()
+        .table("users")
+        .leftJoin("roles", "users.role_id", "=", "roles.id")
+        .select("users.name", "users.email", "roles.role_name", "users.created_at");
+    if (q) {
+        query.where({ email: q });
+    }
+    const data = yield query;
+    return data;
+});
 let users = [
     {
         id: "1",

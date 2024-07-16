@@ -39,12 +39,12 @@ export const createUser = async (user: IUser): Promise<object> => {
 /**
  * Get all users
  *
- * @returns {IUser[]}
+ * @returns
  */
-export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
+export const getAllUsers = async (query: IGetRequestQuery) => {
   logger.info("Started getAllUsers service");
   logger.info("Exiting getAllUsers service");
-  return UserModel.getAllUsers(query);
+  return UserModel.UserModel.getUsers(query);
 };
 
 /**
