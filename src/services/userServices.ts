@@ -18,14 +18,13 @@ const logger = loggerWithNameSpace("User Services");
  */
 export const createUser = async (user: IUser): Promise<object> => {
   logger.info("Started createUser service");
-  console.log(user);
-  // const existingUser = UserModel.getUserByEmail(user.email);
-
-  // if (existingUser) {
-  //   const message = messageGenerator.alreadyExists("User");
-  //   logger.error(message);
-  //   throw new BadRequestError(message);
-  // }
+  const existingUser = await UserModel.UserModel.getUserByEmail(user.email);
+  console.log(existingUser);
+  if (existingUser) {
+    const message = messageGenerator.alreadyExists("User");
+    logger.error(message);
+    throw new BadRequestError(message);
+  }
 
   const hashedPassword = await bcrypt.hash(user.password, 10);
   UserModel.UserModel.createUser({ ...user, password: hashedPassword });

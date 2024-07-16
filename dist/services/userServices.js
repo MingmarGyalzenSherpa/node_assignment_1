@@ -40,6 +40,7 @@ const NotFoundError_1 = require("../error/NotFoundError");
 const UserModel = __importStar(require("../models/user"));
 const messageGenerator = __importStar(require("../utils/messageGenerator"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const BadRequestError_1 = require("../error/BadRequestError");
 const logger_1 = __importDefault(require("../utils/logger"));
 const logger = (0, logger_1.default)("User Services");
 /**
@@ -50,13 +51,13 @@ const logger = (0, logger_1.default)("User Services");
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started createUser service");
-    console.log(user);
-    // const existingUser = UserModel.getUserByEmail(user.email);
-    // if (existingUser) {
-    //   const message = messageGenerator.alreadyExists("User");
-    //   logger.error(message);
-    //   throw new BadRequestError(message);
-    // }
+    const existingUser = yield UserModel.UserModel.getUserByEmail(user.email);
+    console.log(existingUser);
+    if (existingUser) {
+        const message = messageGenerator.alreadyExists("User");
+        logger.error(message);
+        throw new BadRequestError_1.BadRequestError(message);
+    }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
     UserModel.UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
     logger.info("Exiting createUser service");

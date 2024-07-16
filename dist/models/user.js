@@ -60,6 +60,11 @@ UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () 
     const data = yield query;
     return data;
 });
+/**
+ *
+ * @param id
+ * @returns
+ */
 UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const query = _a.queryBuilder()
         .table("users")
@@ -69,6 +74,15 @@ UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         .first();
     const data = yield query;
     return data;
+});
+UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = _a.queryBuilder()
+        .table("users")
+        .leftJoin("roles", "users.role_id", "=", "roles.id")
+        .select("users.name", "users.email", "roles.role_name")
+        .where({ email })
+        .first();
+    return yield query;
 });
 let users = [
     {

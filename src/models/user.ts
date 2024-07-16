@@ -64,6 +64,11 @@ export class UserModel extends BaseModel {
     return data;
   };
 
+  /**
+   *
+   * @param id
+   * @returns
+   */
   static getUserById = async (id: string) => {
     const query = this.queryBuilder()
       .table("users")
@@ -80,6 +85,17 @@ export class UserModel extends BaseModel {
     const data = await query;
 
     return data;
+  };
+
+  static getUserByEmail = async (email: string) => {
+    const query = this.queryBuilder()
+      .table("users")
+      .leftJoin("roles", "users.role_id", "=", "roles.id")
+      .select("users.name", "users.email", "roles.role_name")
+      .where({ email })
+      .first();
+
+    return await query;
   };
 }
 
