@@ -16,9 +16,8 @@ const notFound = (req, res) => {
 };
 exports.notFound = notFound;
 const genericErrorHandler = (err, req, res, next) => {
-    console.log("here");
     //unauthorized error
-    console.log(err.message);
+    console.log(err);
     if (err instanceof UnAuthorizedError_1.UnAuthorizedError) {
         return res.status(http_status_codes_1.default.UNAUTHORIZED).json({
             message: err.message,

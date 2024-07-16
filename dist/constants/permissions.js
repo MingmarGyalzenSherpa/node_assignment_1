@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.permissions = void 0;
 exports.permissions = {
-    superUser: [
+    superAdmin: [
         "user.get",
         "user.create",
         "user.delete",

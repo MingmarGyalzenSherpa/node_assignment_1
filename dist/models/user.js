@@ -1,13 +1,51 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUserById = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
+exports.updateUser = exports.deleteUserById = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = exports.UserModel = void 0;
+const base_1 = require("./base");
+class UserModel extends base_1.BaseModel {
+}
+exports.UserModel = UserModel;
+_a = UserModel;
+/** */
+UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    //check if user role is give
+    if (!user.role) {
+        user.role = "user" /* userRole.USER */;
+    }
+    const userToCreate = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+    };
+    //get the id of the role
+    const role_id = (yield _a.queryBuilder()
+        .select("id")
+        .table("roles")
+        .where({ role_name: user.role })
+        .first()).id;
+    //insert into user table
+    yield _a.queryBuilder()
+        .insert(Object.assign(Object.assign({}, userToCreate), { role_id }))
+        .table("users");
+});
+UserModel.getUsers = (filter) => { };
 let users = [
     {
         id: "1",
         name: "test",
         email: "test@test.com",
         password: "$2b$10$cOMTC5jxv5hRZ8VHGTRMce7CIm.owtUdZIKJ73ZY5xL9ePIWMm2Re",
-        role: "superUser" /* userRole.SUPER_USER */,
+        role: "superAdmin" /* userRole.SUPER_USER */,
     },
     {
         id: "2",

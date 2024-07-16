@@ -2,6 +2,38 @@ import { BadRequestError } from "../error/BadRequestError";
 import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
+import { BaseModel } from "./base";
+
+export class UserModel extends BaseModel {
+  /** */
+  static createUser = async (user: IUser) => {
+    //check if user role is give
+    if (!user.role) {
+      user.role = userRole.USER;
+    }
+    const userToCreate = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    };
+
+    //get the id of the role
+    const role_id = (
+      await this.queryBuilder()
+        .select("id")
+        .table("roles")
+        .where({ role_name: user.role })
+        .first()
+    ).id;
+
+    //insert into user table
+    await this.queryBuilder()
+      .insert({ ...userToCreate, role_id })
+      .table("users");
+  };
+
+  static getUsers = (filter: IGetRequestQuery) => {};
+}
 
 let users: IUser[] = [
   {

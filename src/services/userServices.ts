@@ -19,20 +19,16 @@ const logger = loggerWithNameSpace("User Services");
 export const createUser = async (user: IUser): Promise<object> => {
   logger.info("Started createUser service");
   console.log(user);
-  const existingUser = UserModel.getUserByEmail(user.email);
+  // const existingUser = UserModel.getUserByEmail(user.email);
 
-  if (existingUser) {
-    const message = messageGenerator.alreadyExists("User");
-    logger.error(message);
-    throw new BadRequestError(message);
-  }
-
-  if (!user.role) {
-    user.role = userRole.USER;
-  }
+  // if (existingUser) {
+  //   const message = messageGenerator.alreadyExists("User");
+  //   logger.error(message);
+  //   throw new BadRequestError(message);
+  // }
 
   const hashedPassword = await bcrypt.hash(user.password, 10);
-  UserModel.createUser({ ...user, password: hashedPassword });
+  UserModel.UserModel.createUser({ ...user, password: hashedPassword });
 
   logger.info("Exiting createUser service");
   return {
