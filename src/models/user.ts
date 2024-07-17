@@ -23,13 +23,7 @@ export class UserModel extends BaseModel {
     };
 
     //get the id of the role
-    const role_id = (
-      await this.queryBuilder()
-        .select("id")
-        .table("roles")
-        .where({ role_name: user.role })
-        .first()
-    ).id;
+    const role_id = (await this.getRoleByName(user.role)).id;
 
     //insert into user table
     await this.queryBuilder()
@@ -110,14 +104,33 @@ export class UserModel extends BaseModel {
   static updateUser = async (id: string, userDetails: IUser) => {
     //check if role is available and valid
     if (userDetails.role) {
+      const role = await this.getRoleById(userDetails.role);
+      console.log(role);
+      if (!role) {
+        console.log("no user");
+        return;
+      }
     }
-    console.log(id);
-    console.log(userDetails);
     //update user
     await this.queryBuilder().update(userDetails).table("users").where({ id });
 
     const user = await this.getUserById(id);
     return user;
+  };
+
+  static getRoleByName = async (name: string) => {
+    const role = await this.queryBuilder()
+      .select("*")
+      .table("roles")
+      .where({ role_name: name })
+      .first();
+
+    return role;
+  };
+
+  static getRoleById = async (id: String) => {
+    const role = await this.queryBuilder().select("*").table("roles").first();
+    return role;
   };
 }
 

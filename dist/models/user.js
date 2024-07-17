@@ -32,11 +32,7 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
         password: user.password,
     };
     //get the id of the role
-    const role_id = (yield _a.queryBuilder()
-        .select("id")
-        .table("roles")
-        .where({ role_name: user.role })
-        .first()).id;
+    const role_id = (yield _a.getRoleByName(user.role)).id;
     //insert into user table
     yield _a.queryBuilder()
         .insert(Object.assign(Object.assign({}, userToCreate), { role_id }))
@@ -97,13 +93,29 @@ UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function
 UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, function* () {
     //check if role is available and valid
     if (userDetails.role) {
+        const role = yield _a.getRoleById(userDetails.role);
+        console.log(role);
+        if (!role) {
+            console.log("no user");
+            return;
+        }
     }
-    console.log(id);
-    console.log(userDetails);
     //update user
     yield _a.queryBuilder().update(userDetails).table("users").where({ id });
     const user = yield _a.getUserById(id);
     return user;
+});
+UserModel.getRoleByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    const role = yield _a.queryBuilder()
+        .select("*")
+        .table("roles")
+        .where({ role_name: name })
+        .first();
+    return role;
+});
+UserModel.getRoleById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const role = yield _a.queryBuilder().select("*").table("roles").first();
+    return role;
 });
 let users = [
     {
