@@ -77,14 +77,20 @@ export const addTodo = async (todo: ITodo) => {
  *  Delete a todo by id
  *
  * @param {string} id - id of the todo
- * @returns {ITodo} - deleted todo
+ * @returns - deleted todo
  */
-export const deleteTodo = (id: string, userId: string): ITodo => {
+export const deleteTodo = async (id: string, userId: string) => {
   logger.info("Started deleteTodo service");
-  const data = TodoModel.deleteTodo(id, userId);
+
+  const todoToDelete = await TodoModel.TodoModel.getTodoById(id, userId);
+
+  if (!todoToDelete) {
+    return;
+  }
+  await TodoModel.TodoModel.deleteTodo(id);
 
   logger.info("Exiting deleteTodo service");
-  return data;
+  return todoToDelete as ITodo;
 };
 
 /**
@@ -93,23 +99,23 @@ export const deleteTodo = (id: string, userId: string): ITodo => {
  * @param id - id of the todo
  * @param  userId - id of user
  * @param updatedTodo - updated field of todo
- * @returns {ITodo} - updated todo
+ * @returns- updated todo
  */
-export const updateTodo = (
+export const updateTodo = async (
   id: string,
   userId: string,
   updatedTodo: ITodo
-): ITodo => {
+) => {
   logger.info("Started updateTodo service");
 
-  const todoToUpdate = TodoModel.getTodoById(id, userId);
-
+  const todoToUpdate = await TodoModel.TodoModel.getTodoById(id, userId);
+  console.log(todoToUpdate);
   if (!todoToUpdate) {
     const message = messageGenerator.notFound("Todo");
     logger.error(message);
     throw new NotFoundError(message);
   }
-  const data = TodoModel.updateTodo(todoToUpdate, updatedTodo);
+  const data = TodoModel.TodoModel.updateTodo(todoToUpdate.id, updatedTodo);
 
   logger.info("Exiting updateTodo service");
   return data;

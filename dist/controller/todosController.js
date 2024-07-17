@@ -73,7 +73,7 @@ const getTodoById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const data = yield TodoServices.getTodoById(id, userId);
         res
             .status(http_status_codes_1.default.OK)
-            .json(new responseObject_1.default(message.fetched("Todo"), data));
+            .json(new responseObject_1.default(message.fetched("Todo"), [data]));
     }
     catch (error) {
         next(error);
@@ -111,14 +111,14 @@ exports.addTodo = addTodo;
  * @param {Response} res
  *
  */
-const deleteTodo = (req, res, next) => {
+const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { id: userId } = req.user;
-    const data = TodoServices.deleteTodo(id, userId);
+    const data = yield TodoServices.deleteTodo(id, userId);
     res
         .status(http_status_codes_1.default.OK)
         .json(new responseObject_1.default(message.deleted("Todo"), [data]));
-};
+});
 exports.deleteTodo = deleteTodo;
 /**
  * Update todo

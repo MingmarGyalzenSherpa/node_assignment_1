@@ -13,7 +13,7 @@ export class TodoModel extends BaseModel {
     const { q } = filter;
     console.log(filter);
     const query = this.queryBuilder()
-      .select("title", "completed", "created_at")
+      .select("id", "title", "completed", "created_at")
       .table("todos")
       .where({ created_by: userId })
       .limit(filter.size)
@@ -27,11 +27,12 @@ export class TodoModel extends BaseModel {
 
   static getTodoById = async (todoId: string, userId: string) => {
     const todo = await this.queryBuilder()
-      .select("title", "completed", "created_at")
+      .select("id", "title", "completed", "created_at")
       .table("todos")
-      .where({ id: todoId, created_by: userId });
+      .where({ id: todoId, created_by: userId })
+      .first();
     console.log(todo);
-    return todo as ITodo[];
+    return todo as ITodo;
   };
 
   static count = async () => {
@@ -43,7 +44,14 @@ export class TodoModel extends BaseModel {
     return await this.queryBuilder().insert(todo).table("todos");
   };
 
-  static updateTodo = async (id: string, updatedTodo: ITodo) => {};
+  static updateTodo = async (id: string, updatedTodo: ITodo) => {
+    console.log(updatedTodo);
+    await this.queryBuilder().update(updatedTodo).table("todos").where({ id });
+  };
+
+  static deleteTodo = async (id: string) => {
+    await this.queryBuilder().table("todos").where({ id: id }).del();
+  };
 }
 
 let todos: ITodo[] = [

@@ -103,14 +103,18 @@ exports.addTodo = addTodo;
  *  Delete a todo by id
  *
  * @param {string} id - id of the todo
- * @returns {ITodo} - deleted todo
+ * @returns - deleted todo
  */
-const deleteTodo = (id, userId) => {
+const deleteTodo = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started deleteTodo service");
-    const data = TodoModel.deleteTodo(id, userId);
+    const todoToDelete = yield TodoModel.TodoModel.getTodoById(id, userId);
+    if (!todoToDelete) {
+        return;
+    }
+    yield TodoModel.TodoModel.deleteTodo(id);
     logger.info("Exiting deleteTodo service");
-    return data;
-};
+    return todoToDelete;
+});
 exports.deleteTodo = deleteTodo;
 /**
  * Update a todo by id
@@ -118,19 +122,20 @@ exports.deleteTodo = deleteTodo;
  * @param id - id of the todo
  * @param  userId - id of user
  * @param updatedTodo - updated field of todo
- * @returns {ITodo} - updated todo
+ * @returns- updated todo
  */
-const updateTodo = (id, userId, updatedTodo) => {
+const updateTodo = (id, userId, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateTodo service");
-    const todoToUpdate = TodoModel.getTodoById(id, userId);
+    const todoToUpdate = yield TodoModel.TodoModel.getTodoById(id, userId);
+    console.log(todoToUpdate);
     if (!todoToUpdate) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
-    const data = TodoModel.updateTodo(todoToUpdate, updatedTodo);
+    const data = TodoModel.TodoModel.updateTodo(todoToUpdate.id, updatedTodo);
     logger.info("Exiting updateTodo service");
     return data;
-};
+});
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todoServices.js.map

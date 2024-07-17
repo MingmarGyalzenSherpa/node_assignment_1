@@ -55,7 +55,7 @@ export const getTodoById = async (
 
     res
       .status(HttpStatusCodes.OK)
-      .json(new ResponseObject<ITodo>(message.fetched("Todo"), data));
+      .json(new ResponseObject<ITodo>(message.fetched("Todo"), [data]));
   } catch (error) {
     next(error);
   }
@@ -98,10 +98,14 @@ export const addTodo = async (
  * @param {Response} res
  *
  */
-export const deleteTodo = (req: Request, res: Response, next: NextFunction) => {
+export const deleteTodo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   const { id: userId } = req.user;
-  const data = TodoServices.deleteTodo(id, userId as string);
+  const data = await TodoServices.deleteTodo(id, userId as string);
 
   res
     .status(HttpStatusCodes.OK)

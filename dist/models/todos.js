@@ -26,7 +26,7 @@ TodoModel.getTodos = (userId, filter) => __awaiter(void 0, void 0, void 0, funct
     const { q } = filter;
     console.log(filter);
     const query = _a.queryBuilder()
-        .select("title", "completed", "created_at")
+        .select("id", "title", "completed", "created_at")
         .table("todos")
         .where({ created_by: userId })
         .limit(filter.size)
@@ -38,9 +38,10 @@ TodoModel.getTodos = (userId, filter) => __awaiter(void 0, void 0, void 0, funct
 });
 TodoModel.getTodoById = (todoId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const todo = yield _a.queryBuilder()
-        .select("title", "completed", "created_at")
+        .select("id", "title", "completed", "created_at")
         .table("todos")
-        .where({ id: todoId, created_by: userId });
+        .where({ id: todoId, created_by: userId })
+        .first();
     console.log(todo);
     return todo;
 });
@@ -51,7 +52,13 @@ TodoModel.count = () => __awaiter(void 0, void 0, void 0, function* () {
 TodoModel.addTodo = (todo) => __awaiter(void 0, void 0, void 0, function* () {
     return yield _a.queryBuilder().insert(todo).table("todos");
 });
-TodoModel.updateTodo = (id, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () { });
+TodoModel.updateTodo = (id, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(updatedTodo);
+    yield _a.queryBuilder().update(updatedTodo).table("todos").where({ id });
+});
+TodoModel.deleteTodo = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield _a.queryBuilder().table("todos").where({ id: id }).del();
+});
 let todos = [
     {
         id: "1",
