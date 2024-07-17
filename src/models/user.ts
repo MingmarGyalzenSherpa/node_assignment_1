@@ -118,6 +118,10 @@ export class UserModel extends BaseModel {
     return user;
   };
 
+  static deleteUser = async (id: string) => {
+    await this.queryBuilder().table("users").where({ id }).del();
+  };
+
   static getRoleByName = async (name: string) => {
     const role = await this.queryBuilder()
       .select("*")

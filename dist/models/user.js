@@ -105,6 +105,9 @@ UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, fu
     const user = yield _a.getUserById(id);
     return user;
 });
+UserModel.deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield _a.queryBuilder().table("users").where({ id }).del();
+});
 UserModel.getRoleByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const role = yield _a.queryBuilder()
         .select("*")

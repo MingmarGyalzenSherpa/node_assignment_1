@@ -4,6 +4,7 @@ import { ITodo } from "../interfaces/ITodo";
 import * as TodoModel from "../models/todos";
 import * as messageGenerator from "../utils/messageGenerator";
 import loggerWithNameSpace from "../utils/logger";
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 
 const logger = loggerWithNameSpace("Todo Services");
 
@@ -11,12 +12,12 @@ const logger = loggerWithNameSpace("Todo Services");
  * Get all todos by id
  *
  * @param {string} userId - id of the user
- * @returns {ITodo[]} todos - list of todos created by user
+ * @returns todos - list of todos created by user
  */
-export const getTodos = (userId: string): ITodo[] => {
+export const getTodos = async (userId: string, query: IGetRequestQuery) => {
   logger.info("Started getTodos service");
 
-  const data = TodoModel.getTodos(userId);
+  const data = await TodoModel.TodoModel.getTodos(userId, query);
 
   if (!data) {
     const message = messageGenerator.notFound("Todo");
@@ -51,12 +52,12 @@ export const getTodoById = (id: string, userId: string): ITodo => {
  * Add a todo
  *
  * @param todo
- * @returns {todos}
+ * @returns
  */
-export const addTodo = (todo: ITodo): ITodo[] => {
+export const addTodo = async (todo: ITodo) => {
   logger.info("Started addTodo service");
 
-  const data = TodoModel.addTodo(todo);
+  const data = await TodoModel.TodoModel.addTodo(todo);
 
   logger.info("Exiting addTodo service");
   return data;

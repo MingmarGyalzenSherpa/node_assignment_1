@@ -1,4 +1,33 @@
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 import { ITodo } from "./../interfaces/ITodo";
+import { BaseModel } from "./base";
+
+export class TodoModel extends BaseModel {
+  /**
+   * Get all todos
+   *
+   * @param userId
+   * @returns
+   */
+  static getTodos = async (userId: string, filter: IGetRequestQuery) => {
+    const { q } = filter;
+    const query = this.queryBuilder()
+      .select("title", "completed", "created_at")
+      .table("todos")
+      .where({ created_by: userId })
+      .limit(filter.size)
+      .offset((filter.page - 1) * filter.size);
+
+    if (q) {
+      query.whereLike("title", `%${q}%`);
+    }
+    return await query;
+  };
+
+  static addTodo = async (todo: ITodo) => {
+    return await this.queryBuilder().insert(todo).table("todos");
+  };
+}
 
 let todos: ITodo[] = [
   {

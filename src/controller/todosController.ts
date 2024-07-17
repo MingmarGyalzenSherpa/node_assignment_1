@@ -1,3 +1,4 @@
+import { IGetRequestQuery } from "./../interfaces/IGetRequestQuery";
 import { NextFunction, Response } from "express";
 import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import * as TodoServices from "../services/todoServices";
@@ -12,12 +13,15 @@ import { ITodo } from "../interfaces/ITodo";
  * @param {Response} res
  *
  */
-export const getTodos = (req: Request, res: Response, next: NextFunction) => {
+export const getTodos = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { query } = req;
-    console.log(query);
     const { id: userId } = req.user;
-    const data = TodoServices.getTodos(userId as string);
+    const data = await TodoServices.getTodos(userId as string, query);
 
     res
       .status(HttpStatusCodes.OK)
@@ -57,7 +61,11 @@ export const getTodoById = (
  * @param {Response} res
  *
  */
-export const addTodo = (req: Request, res: Response, next: NextFunction) => {
+export const addTodo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const todo = req.body;
   const { id: userId } = req.user;
   if (!todo || !todo?.title) {
@@ -72,10 +80,10 @@ export const addTodo = (req: Request, res: Response, next: NextFunction) => {
 
   todo.createdBy = userId;
 
-  const data = TodoServices.addTodo(todo);
+  const data = await TodoServices.addTodo(todo);
   res
     .status(HttpStatusCodes.CREATED)
-    .json(new ResponseObject<ITodo>(message.created("Todo"), data));
+    .json(new ResponseObject<ITodo>(message.created("Todo"), []));
 };
 
 /**
