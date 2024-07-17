@@ -50,11 +50,11 @@ export const getAllUsers = async (query: IGetRequestQuery) => {
  * Get a user by email
  *
  * @param {string} email - email of the user
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns - user or undefined if doesn't exist
  */
-export const getUserByEmail = (email: string): IUser | undefined => {
+export const getUserByEmail = async (email: string) => {
   logger.info("Started getUserByEmail service");
-  const data = UserModel.getUserByEmail(email);
+  const data = await UserModel.UserModel.getUserByEmail(email);
 
   logger.info("Exiting getUserByEmail service");
   return data;

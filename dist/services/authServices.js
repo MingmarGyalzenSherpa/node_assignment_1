@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refresh = exports.login = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const userServices_1 = require("./userServices");
+const UserService = __importStar(require("./userServices"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../config");
 const NotFoundError_1 = require("../error/NotFoundError");
@@ -52,14 +52,16 @@ const logger = (0, logger_1.default)("Auth Services");
  * @returns {Promise<object>} - accessToken and refreshToken
  */
 const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const existingUser = (0, userServices_1.getUserByEmail)(user.email);
     //log
     logger.info("Started login service");
+    const existingUser = yield UserService.getUserByEmail(user.email);
     if (!existingUser) {
         const message = messageGenerator.invalid("email or password");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
+    console.log(user);
+    console.log(existingUser);
     const isValidPassword = yield bcrypt_1.default.compare(user.password, existingUser.password);
     if (!isValidPassword) {
         const message = messageGenerator.invalid("email or password");

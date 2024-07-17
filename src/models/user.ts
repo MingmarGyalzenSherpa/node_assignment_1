@@ -94,11 +94,12 @@ export class UserModel extends BaseModel {
     const query = this.queryBuilder()
       .table("users")
       .leftJoin("roles", "users.role_id", "=", "roles.id")
-      .select("users.name", "users.email", "roles.role_name")
+      .select("users.name", "users.email", "users.password", "roles.role_name")
       .where({ email })
       .first();
 
-    return await query;
+    const data: IUser = await query;
+    return data;
   };
 
   static updateUser = async (id: string, userDetails: IUser) => {

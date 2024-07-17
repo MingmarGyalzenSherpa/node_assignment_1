@@ -81,14 +81,14 @@ exports.getAllUsers = getAllUsers;
  * Get a user by email
  *
  * @param {string} email - email of the user
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns - user or undefined if doesn't exist
  */
-const getUserByEmail = (email) => {
+const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getUserByEmail service");
-    const data = UserModel.getUserByEmail(email);
+    const data = yield UserModel.UserModel.getUserByEmail(email);
     logger.info("Exiting getUserByEmail service");
     return data;
-};
+});
 exports.getUserByEmail = getUserByEmail;
 /**
  * Get a user by id

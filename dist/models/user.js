@@ -85,10 +85,11 @@ UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function
     const query = _a.queryBuilder()
         .table("users")
         .leftJoin("roles", "users.role_id", "=", "roles.id")
-        .select("users.name", "users.email", "roles.role_name")
+        .select("users.name", "users.email", "users.password", "roles.role_name")
         .where({ email })
         .first();
-    return yield query;
+    const data = yield query;
+    return data;
 });
 UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, function* () {
     //check if role is available and valid
