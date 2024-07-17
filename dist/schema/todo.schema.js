@@ -19,11 +19,16 @@ exports.getTodoQuerySchema = joi_1.default
         "number.max": "Size must be less than or equal to 10",
     })
         .default(1),
-    page: joi_1.default.number().min(1).optional().messages({
+    page: joi_1.default
+        .number()
+        .min(1)
+        .optional()
+        .messages({
         "number.base": "Page must be a number",
         "number.min": "Page must be greater than or equal to 1",
         "number.max": "Page must be less than or equal to 10",
-    }),
+    })
+        .default(1),
 })
     .default(1)
     .options({

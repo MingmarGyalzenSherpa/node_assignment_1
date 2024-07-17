@@ -19,25 +19,35 @@ export const getTodos = async (userId: string, query: IGetRequestQuery) => {
 
   const data = await TodoModel.TodoModel.getTodos(userId, query);
 
+  const count = await TodoModel.TodoModel.count();
+
+  const meta = {
+    page: query.page,
+    size: query.size,
+    count: +count.count,
+  };
   if (!data) {
     const message = messageGenerator.notFound("Todo");
     logger.error(message);
     throw new NotFoundError(message);
   }
   logger.info("Exiting get todos service");
-  return data;
+  return {
+    data,
+    meta,
+  };
 };
 
 /**
  * Get a todo by id
  *
  * @param {string} id - id of todo
- * @returns {ITodo} todo - the matching todo
+ * @returns todo - the matching todo
  */
-export const getTodoById = (id: string, userId: string): ITodo => {
+export const getTodoById = async (id: string, userId: string) => {
   logger.info("Started getTodoById service");
 
-  const data = TodoModel.getTodoById(id, userId);
+  const data = await TodoModel.TodoModel.getTodoById(id, userId);
   if (!data) {
     const message = messageGenerator.notFound("Todo");
     logger.error(message);

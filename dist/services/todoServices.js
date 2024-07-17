@@ -50,24 +50,33 @@ const logger = (0, logger_1.default)("Todo Services");
 const getTodos = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodos service");
     const data = yield TodoModel.TodoModel.getTodos(userId, query);
+    const count = yield TodoModel.TodoModel.count();
+    const meta = {
+        page: query.page,
+        size: query.size,
+        count: +count.count,
+    };
     if (!data) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
     logger.info("Exiting get todos service");
-    return data;
+    return {
+        data,
+        meta,
+    };
 });
 exports.getTodos = getTodos;
 /**
  * Get a todo by id
  *
  * @param {string} id - id of todo
- * @returns {ITodo} todo - the matching todo
+ * @returns todo - the matching todo
  */
-const getTodoById = (id, userId) => {
+const getTodoById = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodoById service");
-    const data = TodoModel.getTodoById(id, userId);
+    const data = yield TodoModel.TodoModel.getTodoById(id, userId);
     if (!data) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
@@ -75,7 +84,7 @@ const getTodoById = (id, userId) => {
     }
     logger.info("Exiting getTodoById service");
     return data;
-};
+});
 exports.getTodoById = getTodoById;
 /**
  * Add a todo

@@ -50,10 +50,10 @@ const getTodos = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { query } = req;
         const { id: userId } = req.user;
-        const data = yield TodoServices.getTodos(userId, query);
+        const result = yield TodoServices.getTodos(userId, query);
         res
             .status(http_status_codes_1.default.OK)
-            .json(new responseObject_1.default(message.fetched("Todo"), data));
+            .json(new responseObject_1.default(message.fetched("Todo"), result.data, result.meta));
     }
     catch (error) {
         next(error);
@@ -66,19 +66,19 @@ exports.getTodos = getTodos;
  * @param {Response} res
  *
  */
-const getTodoById = (req, res, next) => {
+const getTodoById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const { id: userId } = req.user;
-        const data = TodoServices.getTodoById(id, userId);
+        const data = yield TodoServices.getTodoById(id, userId);
         res
             .status(http_status_codes_1.default.OK)
-            .json(new responseObject_1.default(message.fetched("Todo"), [data]));
+            .json(new responseObject_1.default(message.fetched("Todo"), data));
     }
     catch (error) {
         next(error);
     }
-};
+});
 exports.getTodoById = getTodoById;
 /**
  * Add a todo

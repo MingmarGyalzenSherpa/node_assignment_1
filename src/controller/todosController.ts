@@ -21,11 +21,17 @@ export const getTodos = async (
   try {
     const { query } = req;
     const { id: userId } = req.user;
-    const data = await TodoServices.getTodos(userId as string, query);
+    const result = await TodoServices.getTodos(userId as string, query);
 
     res
       .status(HttpStatusCodes.OK)
-      .json(new ResponseObject<ITodo>(message.fetched("Todo"), data));
+      .json(
+        new ResponseObject<any>(
+          message.fetched("Todo"),
+          result.data,
+          result.meta
+        )
+      );
   } catch (error) {
     next(error);
   }
@@ -37,7 +43,7 @@ export const getTodos = async (
  * @param {Response} res
  *
  */
-export const getTodoById = (
+export const getTodoById = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -45,11 +51,11 @@ export const getTodoById = (
   try {
     const { id } = req.params;
     const { id: userId } = req.user;
-    const data = TodoServices.getTodoById(id, userId as string);
+    const data = await TodoServices.getTodoById(id, userId as string);
 
     res
       .status(HttpStatusCodes.OK)
-      .json(new ResponseObject<ITodo>(message.fetched("Todo"), [data]));
+      .json(new ResponseObject<ITodo>(message.fetched("Todo"), data));
   } catch (error) {
     next(error);
   }
