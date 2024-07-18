@@ -18,7 +18,10 @@ A simple Express-based CRUD API for managing TODO items.
    ```bash
    npm install
    ```
-3. Start the server:
+
+3.Create a database and .env file according to .env.example
+
+4. Start the server:
    ```bash
    npm start
    ```
