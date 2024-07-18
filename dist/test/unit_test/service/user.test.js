@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userServices_1 = require("../../../services/userServices");
 const expect_1 = __importDefault(require("expect"));
-const UserModel = __importStar(require("../../../models/user"));
+const user_1 = require("../../../models/user");
 const sinon_1 = __importDefault(require("sinon"));
 const messageGenerator = __importStar(require("../../../utils/messageGenerator"));
 const BadRequestError_1 = require("../../../error/BadRequestError");
@@ -47,17 +47,17 @@ describe("User Service Test Suite", () => {
     describe("getAllUsers", () => {
         let userModelGetAllUserStub;
         beforeEach(() => {
-            userModelGetAllUserStub = sinon_1.default.stub(UserModel, "getAllUsers");
+            userModelGetAllUserStub = sinon_1.default.stub(user_1.UserModel, "getUsers");
         });
         afterEach(() => {
             userModelGetAllUserStub.restore();
         });
-        it("should return array of users", () => {
+        it("should return array of users", () => __awaiter(void 0, void 0, void 0, function* () {
             userModelGetAllUserStub.returns([]);
-            const output = (0, userServices_1.getAllUsers)({});
+            const output = yield (0, userServices_1.getAllUsers)({});
             console.log(output);
             (0, expect_1.default)(output).toStrictEqual([]);
-        });
+        }));
     });
     //create a new user test
     describe("createUser", () => {
@@ -69,7 +69,7 @@ describe("User Service Test Suite", () => {
             password: "thisispassword",
         };
         beforeEach(() => {
-            userModelGetUserByEmailStub = sinon_1.default.stub(UserModel, "getUserByEmail");
+            userModelGetUserByEmailStub = sinon_1.default.stub(user_1.UserModel, "getUserByEmail");
             bcryptHashStub = sinon_1.default.stub(bcrypt_1.default, "hash");
         });
         afterEach(() => {
@@ -101,25 +101,25 @@ describe("User Service Test Suite", () => {
             name: "Mingma",
             email: testEmail,
             password: "password",
-            role: "user" /* userRole.USER */,
+            roleName: "user" /* userRole.USER */,
         };
         let userModelGetUserByEmailStub;
         beforeEach(() => {
-            userModelGetUserByEmailStub = sinon_1.default.stub(UserModel, "getUserByEmail");
+            userModelGetUserByEmailStub = sinon_1.default.stub(user_1.UserModel, "getUserByEmail");
         });
         afterEach(() => {
             userModelGetUserByEmailStub.restore();
         });
-        it("should return user if user is found", () => {
+        it("should return user if user is found", () => __awaiter(void 0, void 0, void 0, function* () {
             userModelGetUserByEmailStub.returns(user);
-            const response = (0, userServices_1.getUserByEmail)(testEmail);
+            const response = yield (0, userServices_1.getUserByEmail)(testEmail);
             (0, expect_1.default)(response).toStrictEqual(user);
-        });
-        it("should throw undefined user is not found", () => {
+        }));
+        it("should throw undefined user is not found", () => __awaiter(void 0, void 0, void 0, function* () {
             userModelGetUserByEmailStub.returns(undefined);
-            const response = (0, userServices_1.getUserByEmail)(testEmail);
+            const response = yield (0, userServices_1.getUserByEmail)(testEmail);
             (0, expect_1.default)(response).toBe(undefined);
-        });
+        }));
     });
 });
 //# sourceMappingURL=user.test.js.map

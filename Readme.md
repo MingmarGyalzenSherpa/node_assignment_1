@@ -25,11 +25,26 @@ A simple Express-based CRUD API for managing TODO items.
 
 ## API Endpoints
 
+### TODO API Endpoints
+
 - `GET /todos`: Retrieve all TODO items
 - `GET /todos/:id`: Retrieve a specific TODO item
 - `POST /todos`: Create a new TODO item
 - `PUT /todos/:id`: Update an existing TODO item
 - `DELETE /todos/:id`: Delete a TODO item
+
+### USER API Endpoints
+
+- `GET /users`: Retrieve all TODO items
+- `GET /users/:id`: Retrieve a specific TODO item
+- `POST /users`: Create a new TODO item
+- `PUT /users/:id`: Update an existing TODO item
+- `DELETE /users/:id`: Delete a TODO item
+
+### Authentication API Endpoints
+
+- `POST /auth/login`: User login
+- `POST /auth/refresh`: Refresh Access Token
 
 ## Live Link
 

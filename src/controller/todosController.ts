@@ -1,14 +1,13 @@
-import { IGetRequestQuery } from "./../interfaces/IGetRequestQuery";
 import { NextFunction, Response } from "express";
 import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import * as TodoServices from "../services/todoServices";
 import ResponseObject from "../utils/responseObject";
-import { httpResponseStatus } from "../constants/httpResponseStatus";
 import * as message from "../utils/messageGenerator";
 import HttpStatusCodes from "http-status-codes";
 import { ITodo } from "../interfaces/ITodo";
 /**
  * Get all todos
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -39,6 +38,7 @@ export const getTodos = async (
 
 /**
  * Get todo by id
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -63,6 +63,7 @@ export const getTodoById = async (
 
 /**
  * Add a todo
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -86,7 +87,7 @@ export const addTodo = async (
 
   todo.createdBy = userId;
 
-  const data = await TodoServices.addTodo(todo);
+  await TodoServices.addTodo(todo);
   res
     .status(HttpStatusCodes.CREATED)
     .json(new ResponseObject<ITodo>(message.created("Todo"), []));
@@ -94,6 +95,7 @@ export const addTodo = async (
 
 /**
  * Delete a todo by id
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -114,16 +116,21 @@ export const deleteTodo = async (
 
 /**
  * Update todo
+ *
  * @param {Request} req
  * @param {Response} res
  *
  */
-export const updateTodo = (req: Request, res: Response, next: NextFunction) => {
+export const updateTodo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { id: userId } = req.user;
     const todo = req.body;
-    const data = TodoServices.updateTodo(id, userId as string, todo);
+    const data = await TodoServices.updateTodo(id, userId as string, todo);
 
     res
       .status(HttpStatusCodes.OK)

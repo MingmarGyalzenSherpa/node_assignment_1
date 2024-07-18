@@ -72,8 +72,9 @@ const login = (user) => __awaiter(void 0, void 0, void 0, function* () {
         id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
-        role: existingUser.role,
+        roleName: existingUser.roleName,
     };
+    console.log(payload);
     const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
         expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),
     });
@@ -106,6 +107,7 @@ const refresh = (refreshToken) => {
             id: isValidToken.id,
             name: isValidToken.name,
             email: isValidToken.email,
+            roleName: isValidToken.roleName,
         };
         const accessToken = (0, jsonwebtoken_1.sign)(payload, config_1.config.jwt.secret, {
             expiresIn: parseInt(config_1.config.jwt.accessTokenExpiryMS),

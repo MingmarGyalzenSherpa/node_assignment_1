@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserById = exports.updateUser = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = void 0;
 const NotFoundError_1 = require("../error/NotFoundError");
-const UserModel = __importStar(require("../models/user"));
+const user_1 = require("../models/user");
 const messageGenerator = __importStar(require("../utils/messageGenerator"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const BadRequestError_1 = require("../error/BadRequestError");
@@ -47,11 +47,11 @@ const logger = (0, logger_1.default)("User Services");
  * Create a new user
  *
  * @param {IUser} user - new user field
- * @returns {Promise<object>} - message object
+ * @returns {Promise<{message:string}>} - message object
  */
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started createUser service");
-    const existingUser = yield UserModel.UserModel.getUserByEmail(user.email);
+    const existingUser = yield user_1.UserModel.getUserByEmail(user.email);
     console.log(existingUser);
     if (existingUser) {
         const message = messageGenerator.alreadyExists("User");
@@ -59,7 +59,7 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
         throw new BadRequestError_1.BadRequestError(message);
     }
     const hashedPassword = yield bcrypt_1.default.hash(user.password, 10);
-    UserModel.UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
+    user_1.UserModel.createUser(Object.assign(Object.assign({}, user), { password: hashedPassword }));
     logger.info("Exiting createUser service");
     return {
         message: messageGenerator.created("User"),
@@ -69,23 +69,23 @@ exports.createUser = createUser;
 /**
  * Get all users
  *
- * @returns
+ * @returns {Promise<IUser[]>} - promise containing users
  */
 const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getAllUsers service");
     logger.info("Exiting getAllUsers service");
-    return UserModel.UserModel.getUsers(query);
+    return yield user_1.UserModel.getUsers(query);
 });
 exports.getAllUsers = getAllUsers;
 /**
  * Get a user by email
  *
  * @param {string} email - email of the user
- * @returns - user or undefined if doesn't exist
+ * @returns {Promise<IUser | undefined>}- promise with user or undefined if doesn't exist
  */
 const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getUserByEmail service");
-    const data = yield UserModel.UserModel.getUserByEmail(email);
+    const data = yield user_1.UserModel.getUserByEmail(email);
     logger.info("Exiting getUserByEmail service");
     return data;
 });
@@ -94,11 +94,11 @@ exports.getUserByEmail = getUserByEmail;
  * Get a user by id
  *
  * @param id
- * @returns {object | undefined} - user or undefined if doesn't exist
+ * @returns {Promise<IUser | undefined>} - user or undefined if doesn't exist
  */
 const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getUserById service");
-    const data = yield UserModel.UserModel.getUserById(id);
+    const data = yield user_1.UserModel.getUserById(id);
     if (!data) {
         const message = messageGenerator.notFound("User");
         logger.error(message);
@@ -113,11 +113,11 @@ exports.getUserById = getUserById;
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns - user
+ * @returns {Promise<IUser>} - updated user
  */
 const updateUser = (id, updatedUser) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateUser service");
-    const userExists = UserModel.UserModel.getUserById(id);
+    const userExists = user_1.UserModel.getUserById(id);
     if (!userExists) {
         const message = messageGenerator.notFound("User");
         logger.error(message);
@@ -126,7 +126,7 @@ const updateUser = (id, updatedUser) => __awaiter(void 0, void 0, void 0, functi
     if (updatedUser.password) {
         updatedUser.password = yield bcrypt_1.default.hash(updatedUser.password, 10);
     }
-    const data = yield UserModel.UserModel.updateUser(id, updatedUser);
+    const data = yield user_1.UserModel.updateUser(id, updatedUser);
     logger.info("Exiting updateUser service");
     return data;
 });
@@ -135,19 +135,17 @@ exports.updateUser = updateUser;
  * Delete a user by id
  *
  * @param id - user id
- * @returns {IUser} - deleted user
  */
-const deleteUserById = (id) => {
+const deleteUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("started deleteUser service");
-    const userExists = UserModel.getUserById(id);
+    const userExists = user_1.UserModel.getUserById(id);
     if (!userExists) {
         const message = messageGenerator.notFound("User");
         logger.info(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
-    const data = UserModel.deleteUserById(id);
+    yield user_1.UserModel.deleteUser(id);
     logger.info("Exiting deleteUser service");
-    return data;
-};
+});
 exports.deleteUserById = deleteUserById;
 //# sourceMappingURL=userServices.js.map

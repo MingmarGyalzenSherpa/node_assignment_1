@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTodo = exports.deleteTodo = exports.addTodo = exports.getTodoById = exports.getTodos = exports.TodoModel = void 0;
+exports.TodoModel = void 0;
 const base_1 = require("./base");
 class TodoModel extends base_1.BaseModel {
 }
@@ -36,105 +36,53 @@ TodoModel.getTodos = (userId, filter) => __awaiter(void 0, void 0, void 0, funct
     }
     return yield query;
 });
+/**
+ * Get a todo by id
+ *
+ * @param todoId - id of todo
+ * @param userId  - id of user
+ * @returns {Promise<ITodo | undefined>} - corresponding todo or undefined
+ */
 TodoModel.getTodoById = (todoId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     const todo = yield _a.queryBuilder()
         .select("id", "title", "completed", "created_at")
         .table("todos")
         .where({ id: todoId, created_by: userId })
         .first();
-    console.log(todo);
     return todo;
 });
+/**
+ * Get count of all todos
+ *
+ * @returns {Promise<number>} - count of all todo
+ */
 TodoModel.count = () => __awaiter(void 0, void 0, void 0, function* () {
-    const count = yield _a.queryBuilder().count("*").table("todos").first();
-    return count;
+    const result = yield _a.queryBuilder().count("*").table("todos").first();
+    return result.count;
 });
-TodoModel.addTodo = (todo) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield _a.queryBuilder().insert(todo).table("todos");
-});
-TodoModel.updateTodo = (id, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(updatedTodo);
-    yield _a.queryBuilder().update(updatedTodo).table("todos").where({ id });
-});
-TodoModel.deleteTodo = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    yield _a.queryBuilder().table("todos").where({ id: id }).del();
-});
-let todos = [
-    {
-        id: "1",
-        title: "Go home",
-        completed: false,
-        createdBy: "1",
-    },
-    {
-        id: "2",
-        title: "Go shopping",
-        completed: false,
-        createdBy: "1",
-    },
-    {
-        id: "3",
-        title: "Work",
-        completed: true,
-        createdBy: "2",
-    },
-];
-/**
- * Get all todos
- *
- * @param {string} userId - id of the user
- * @returns {ITodo} - corresponding todos of the user
- */
-const getTodos = (userId) => todos.filter(({ createdBy }) => createdBy === userId);
-exports.getTodos = getTodos;
-/**
- * Get a todo by id
- *
- * @param {string} id - id of the todo
- * @returns {ITodo | undefined} - corresponding user or undefined if todo doesn't exist
- */
-const getTodoById = (id, userId) => {
-    const data = todos.find(({ id: todoId, createdBy }) => todoId === id && createdBy === userId);
-    return data;
-};
-exports.getTodoById = getTodoById;
 /**
  * Add a todo
  *
- * @param {ITodo} todo - details of the todo
- * @returns {ITodo[]} - new list of todos
+ * @param todo - todo details
+ * @returns
  */
-const addTodo = (todo) => {
-    todos.push(Object.assign({ id: `${todos.length + 1}` }, todo));
-    return todos;
-};
-exports.addTodo = addTodo;
+TodoModel.addTodo = (todo) => __awaiter(void 0, void 0, void 0, function* () {
+    yield _a.queryBuilder().insert(todo).table("todos");
+});
+/**
+ * Update a todo
+ *
+ * @param id  - id of the todo
+ * @param updatedTodo - updated todo
+ */
+TodoModel.updateTodo = (id, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
+    yield _a.queryBuilder().update(updatedTodo).table("todos").where({ id });
+});
 /**
  * Delete a todo
- *
- * @param id
- * @returns {ITodo} todo
+ * @param id - id of the todo
  */
-const deleteTodo = (id, userId) => {
-    let todo = (0, exports.getTodoById)(id, userId);
-    todos = todos.filter((todo) => todo.id !== id && todo.createdBy !== userId);
-    return todo;
-};
-exports.deleteTodo = deleteTodo;
-/**
- * Update a todo by id
- *
- * @param todoToUpdate - old todo
- * @param updatedTodo  - new todo fields
- * @returns {ITodo} - updated todo
- */
-const updateTodo = (todoToUpdate, updatedTodo) => {
-    todoToUpdate = Object.assign(Object.assign({}, todoToUpdate), updatedTodo);
-    todos = [
-        ...todos.filter(({ id: todoId }) => todoId != todoToUpdate.id),
-        todoToUpdate,
-    ];
-    return todoToUpdate;
-};
-exports.updateTodo = updateTodo;
+TodoModel.deleteTodo = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield _a.queryBuilder().table("todos").where({ id: id }).del();
+});
 //# sourceMappingURL=todos.js.map

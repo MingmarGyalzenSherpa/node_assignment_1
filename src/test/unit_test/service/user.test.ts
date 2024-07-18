@@ -5,7 +5,7 @@ import {
   getUserByEmail,
 } from "../../../services/userServices";
 import expect from "expect";
-import * as UserModel from "../../../models/user";
+import { UserModel } from "../../../models/user";
 import sinon from "sinon";
 import IUser from "../../../interfaces/IUser";
 import * as messageGenerator from "../../../utils/messageGenerator";
@@ -18,16 +18,16 @@ describe("User Service Test Suite", () => {
     let userModelGetAllUserStub: sinon.SinonStub;
 
     beforeEach(() => {
-      userModelGetAllUserStub = sinon.stub(UserModel, "getAllUsers");
+      userModelGetAllUserStub = sinon.stub(UserModel, "getUsers");
     });
 
     afterEach(() => {
       userModelGetAllUserStub.restore();
     });
 
-    it("should return array of users", () => {
+    it("should return array of users", async () => {
       userModelGetAllUserStub.returns([]);
-      const output = getAllUsers({});
+      const output = await getAllUsers({});
       console.log(output);
       expect(output).toStrictEqual([]);
     });
@@ -85,7 +85,7 @@ describe("User Service Test Suite", () => {
       name: "Mingma",
       email: testEmail,
       password: "password",
-      role: userRole.USER,
+      roleName: userRole.USER,
     };
     let userModelGetUserByEmailStub: sinon.SinonStub;
 
@@ -97,20 +97,18 @@ describe("User Service Test Suite", () => {
       userModelGetUserByEmailStub.restore();
     });
 
-    it("should return user if user is found", () => {
+    it("should return user if user is found", async () => {
       userModelGetUserByEmailStub.returns(user);
 
-      const response = getUserByEmail(testEmail);
+      const response = await getUserByEmail(testEmail);
       expect(response).toStrictEqual(user);
     });
 
-    it("should throw undefined user is not found", () => {
+    it("should throw undefined user is not found", async () => {
       userModelGetUserByEmailStub.returns(undefined);
 
-      const response = getUserByEmail(testEmail);
+      const response = await getUserByEmail(testEmail);
       expect(response).toBe(undefined);
     });
   });
-
-  
 });

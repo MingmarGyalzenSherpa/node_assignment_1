@@ -45,7 +45,7 @@ const logger = (0, logger_1.default)("Todo Services");
  * Get all todos by id
  *
  * @param {string} userId - id of the user
- * @returns todos - list of todos created by user
+ * @returns {Promise<{data:ITodo[],meta:{page:number,size:number,count:number}}>} - list of todos created by user
  */
 const getTodos = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodos service");
@@ -54,7 +54,7 @@ const getTodos = (userId, query) => __awaiter(void 0, void 0, void 0, function* 
     const meta = {
         page: query.page,
         size: query.size,
-        count: +count.count,
+        count: +count,
     };
     if (!data) {
         const message = messageGenerator.notFound("Todo");
@@ -72,7 +72,7 @@ exports.getTodos = getTodos;
  * Get a todo by id
  *
  * @param {string} id - id of todo
- * @returns todo - the matching todo
+ * @returns {Promise<ITodo | undefined>} - the matching todo
  */
 const getTodoById = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodoById service");
@@ -89,7 +89,7 @@ exports.getTodoById = getTodoById;
 /**
  * Add a todo
  *
- * @param todo
+ * @param todo - new todo details
  * @returns
  */
 const addTodo = (todo) => __awaiter(void 0, void 0, void 0, function* () {
@@ -103,7 +103,7 @@ exports.addTodo = addTodo;
  *  Delete a todo by id
  *
  * @param {string} id - id of the todo
- * @returns - deleted todo
+ * @returns {Promise<ITodo>}- deleted todo
  */
 const deleteTodo = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started deleteTodo service");
@@ -122,7 +122,7 @@ exports.deleteTodo = deleteTodo;
  * @param id - id of the todo
  * @param  userId - id of user
  * @param updatedTodo - updated field of todo
- * @returns- updated todo
+ * @returns
  */
 const updateTodo = (id, userId, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateTodo service");
@@ -133,9 +133,8 @@ const updateTodo = (id, userId, updatedTodo) => __awaiter(void 0, void 0, void 0
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
-    const data = TodoModel.TodoModel.updateTodo(todoToUpdate.id, updatedTodo);
+    yield TodoModel.TodoModel.updateTodo(todoToUpdate.id, updatedTodo);
     logger.info("Exiting updateTodo service");
-    return data;
 });
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todoServices.js.map
