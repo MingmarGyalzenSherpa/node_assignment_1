@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.deleteUserById = exports.getUserById = exports.getUserByEmail = exports.getAllUsers = exports.createUser = exports.UserModel = void 0;
+exports.UserModel = void 0;
 const base_1 = require("./base");
+const role_1 = require("./role");
 class UserModel extends base_1.BaseModel {
 }
 exports.UserModel = UserModel;
@@ -23,8 +24,8 @@ _a = UserModel;
  */
 UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     //check if user role is give
-    if (!user.role) {
-        user.role = "user" /* userRole.USER */;
+    if (!user.roleName) {
+        user.roleName = "user" /* userRole.USER */;
     }
     const userToCreate = {
         name: user.name,
@@ -32,7 +33,7 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
         password: user.password,
     };
     //get the id of the role
-    const role_id = (yield _a.getRoleByName(user.role)).id;
+    const role_id = (yield role_1.RoleModel.getRoleByName(user.roleName)).id;
     //insert into user table
     yield _a.queryBuilder()
         .insert(Object.assign(Object.assign({}, userToCreate), { role_id }))
@@ -42,7 +43,7 @@ UserModel.createUser = (user) => __awaiter(void 0, void 0, void 0, function* () 
  *  Get all users
  *
  * @param filter - filter for getting users
- * @returns
+ * @returns {Promise<IUser[]>} - promise containing users
  */
 UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () {
     const { q } = filter;
@@ -63,7 +64,7 @@ UserModel.getUsers = (filter) => __awaiter(void 0, void 0, void 0, function* () 
  * Get a user by id
  *
  * @param id - user id
- * @returns
+ * @returns {Promise<IUser | undefined>} - corresponding user or undefined
  */
 UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const query = _a.queryBuilder()
@@ -78,26 +79,31 @@ UserModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
 /**
  * Get a user by email
  *
- * @param email
- * @returns
+ * @param email - email of the user
+ * @returns {Promise<IUser | undefined>}
  */
 UserModel.getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const query = _a.queryBuilder()
         .table("users")
         .leftJoin("roles", "users.role_id", "=", "roles.id")
-        .select("users.name", "users.email", "users.password", "roles.role_name")
+        .select("users.id", "users.name", "users.email", "users.password", "roles.role_name")
         .where({ email })
         .first();
     const data = yield query;
     return data;
 });
+/**
+ * Update info of user
+ *
+ * @param id - user id
+ * @param userDetails - updated details of user
+ * @returns {Promise<IUser | undefined>} - user or undefined if user doesn't exist
+ */
 UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, function* () {
     //check if role is available and valid
-    if (userDetails.role) {
-        const role = yield _a.getRoleById(userDetails.role);
-        console.log(role);
+    if (userDetails.roleName) {
+        const role = yield role_1.RoleModel.getRoleById(userDetails.roleName);
         if (!role) {
-            console.log("no user");
             return;
         }
     }
@@ -106,106 +112,12 @@ UserModel.updateUser = (id, userDetails) => __awaiter(void 0, void 0, void 0, fu
     const user = yield _a.getUserById(id);
     return user;
 });
+/**
+ * Delete a user
+ *
+ * @param id - id of the user
+ */
 UserModel.deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     yield _a.queryBuilder().table("users").where({ id }).del();
 });
-UserModel.getRoleByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
-    const role = yield _a.queryBuilder()
-        .select("*")
-        .table("roles")
-        .where({ role_name: name })
-        .first();
-    return role;
-});
-UserModel.getRoleById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const role = yield _a.queryBuilder().select("*").table("roles").first();
-    return role;
-});
-let users = [
-    {
-        id: "1",
-        name: "test",
-        email: "test@test.com",
-        password: "$2b$10$cOMTC5jxv5hRZ8VHGTRMce7CIm.owtUdZIKJ73ZY5xL9ePIWMm2Re",
-        role: "superAdmin" /* userRole.SUPER_USER */,
-    },
-    {
-        id: "2",
-        email: "ming@test.com",
-        name: "ming",
-        password: "$2b$10$VpERQZT46YsPELr0ZJyLceIyW7zJcf1d1mZf6Os9HC2dtkTiLbd6K",
-        role: "user" /* userRole.USER */,
-    },
-];
-/**
- * Create a user
- *
- * @param {IUser} user - details of the user
- */
-const createUser = (user) => {
-    users.push(Object.assign({ id: `${users.length + 1}` }, user));
-};
-exports.createUser = createUser;
-/**
- * Get all users
- *
- * @returns {IUser[]}
- */
-const getAllUsers = (query) => {
-    const { q } = query;
-    console.log("inside model");
-    if (q) {
-        return users.filter((user) => user.name.includes(q));
-    }
-    return users;
-};
-exports.getAllUsers = getAllUsers;
-/**
- * Get user by email
- *
- * @param {string} email - email of the user
- * @returns {IUser | undefined} user - details of the user
- */
-const getUserByEmail = (email) => {
-    const user = users.find(({ email: userEmail }) => userEmail === email);
-    return user;
-};
-exports.getUserByEmail = getUserByEmail;
-/**
- *  Get a user by id
- *
- * @param {string} id - id of the user
- * @returns {IUser | undefined} - user
- */
-const getUserById = (id) => {
-    const user = users.find(({ id: userId }) => userId === id);
-    return user;
-};
-exports.getUserById = getUserById;
-/**
- * Delete a user by id
- *
- * @param {string} id
- * @returns {IUser} - deleted user
- */
-const deleteUserById = (id) => {
-    const user = (0, exports.getUserById)(id);
-    users = users.filter(({ id: userId }) => userId !== id);
-    return user;
-};
-exports.deleteUserById = deleteUserById;
-/**
- * Update a user by id
- *
- * @param id
- * @param updatedUser
- * @returns {IUser} - deleted user
- */
-const updateUser = (id, updatedUser) => {
-    let user = users.find(({ id: userId }) => userId === id);
-    user = Object.assign(Object.assign({}, user), updatedUser);
-    users = [...users.filter(({ id: userId }) => userId !== id), user];
-    return user;
-};
-exports.updateUser = updateUser;
 //# sourceMappingURL=user.js.map

@@ -45,9 +45,10 @@ export const login = async (
     id: existingUser.id,
     name: existingUser.name,
     email: existingUser.email,
-    role: existingUser.role,
+    roleName: existingUser.roleName,
   };
 
+  console.log(payload);
   const accessToken = sign(payload, config.jwt.secret, {
     expiresIn: parseInt(config.jwt.accessTokenExpiryMS),
   });
@@ -81,12 +82,13 @@ export const refresh = (refreshToken: string): object => {
   }
 
   try {
-    const isValidToken = verify(refreshToken, config.jwt.secret) as JwtPayload;
+    const isValidToken = verify(refreshToken, config.jwt.secret) as IUser;
 
     const payload = {
       id: isValidToken.id,
       name: isValidToken.name,
       email: isValidToken.email,
+      roleName: isValidToken.roleName,
     };
 
     const accessToken = sign(payload, config.jwt.secret, {

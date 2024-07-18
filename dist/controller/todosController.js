@@ -42,6 +42,7 @@ const message = __importStar(require("../utils/messageGenerator"));
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 /**
  * Get all todos
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -62,6 +63,7 @@ const getTodos = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 exports.getTodos = getTodos;
 /**
  * Get todo by id
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -82,6 +84,7 @@ const getTodoById = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.getTodoById = getTodoById;
 /**
  * Add a todo
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -99,7 +102,7 @@ const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         todo.completed = false;
     }
     todo.createdBy = userId;
-    const data = yield TodoServices.addTodo(todo);
+    yield TodoServices.addTodo(todo);
     res
         .status(http_status_codes_1.default.CREATED)
         .json(new responseObject_1.default(message.created("Todo"), []));
@@ -107,6 +110,7 @@ const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.addTodo = addTodo;
 /**
  * Delete a todo by id
+ *
  * @param {Request} req
  * @param {Response} res
  *
@@ -122,16 +126,17 @@ const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.deleteTodo = deleteTodo;
 /**
  * Update todo
+ *
  * @param {Request} req
  * @param {Response} res
  *
  */
-const updateTodo = (req, res, next) => {
+const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const { id: userId } = req.user;
         const todo = req.body;
-        const data = TodoServices.updateTodo(id, userId, todo);
+        const data = yield TodoServices.updateTodo(id, userId, todo);
         res
             .status(http_status_codes_1.default.OK)
             .json(new responseObject_1.default(message.updated("Todo"), [data]));
@@ -139,6 +144,6 @@ const updateTodo = (req, res, next) => {
     catch (error) {
         next(error);
     }
-};
+});
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todosController.js.map

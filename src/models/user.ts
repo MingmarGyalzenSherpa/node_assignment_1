@@ -3,7 +3,7 @@ import { userRole } from "../constants/userRole";
 import IUser from "../interfaces/IUser";
 import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 import { BaseModel } from "./base";
-import { table } from "console";
+import { RoleModel } from "./role";
 
 export class UserModel extends BaseModel {
   /**
@@ -13,17 +13,17 @@ export class UserModel extends BaseModel {
    */
   static createUser = async (user: IUser) => {
     //check if user role is give
-    if (!user.role) {
-      user.role = userRole.USER;
+    if (!user.roleName) {
+      user.roleName = userRole.USER;
     }
+
     const userToCreate = {
       name: user.name,
       email: user.email,
       password: user.password,
     };
-
     //get the id of the role
-    const role_id = (await this.getRoleByName(user.role)).id;
+    const role_id = (await RoleModel.getRoleByName(user.roleName)).id;
 
     //insert into user table
     await this.queryBuilder()
@@ -35,9 +35,9 @@ export class UserModel extends BaseModel {
    *  Get all users
    *
    * @param filter - filter for getting users
-   * @returns
+   * @returns {Promise<IUser[]>} - promise containing users
    */
-  static getUsers = async (filter: IGetRequestQuery) => {
+  static getUsers = async (filter: IGetRequestQuery): Promise<IUser[]> => {
     const { q } = filter;
     console.log(q);
     const query = this.queryBuilder()
@@ -52,21 +52,22 @@ export class UserModel extends BaseModel {
       )
       .limit(filter.size)
       .offset((filter.page - 1) * filter.size);
+
     if (q) {
       query.whereLike("name", `%${q}%`);
     }
 
     const data = await query;
-    return data;
+    return data as IUser[];
   };
 
   /**
    * Get a user by id
    *
    * @param id - user id
-   * @returns
+   * @returns {Promise<IUser | undefined>} - corresponding user or undefined
    */
-  static getUserById = async (id: string) => {
+  static getUserById = async (id: string): Promise<IUser | undefined> => {
     const query = this.queryBuilder()
       .table("users")
       .leftJoin("roles", "users.role_id", "=", "roles.id")
@@ -87,14 +88,20 @@ export class UserModel extends BaseModel {
   /**
    * Get a user by email
    *
-   * @param email
-   * @returns
+   * @param email - email of the user
+   * @returns {Promise<IUser | undefined>}
    */
-  static getUserByEmail = async (email: string) => {
+  static getUserByEmail = async (email: string): Promise<IUser | undefined> => {
     const query = this.queryBuilder()
       .table("users")
       .leftJoin("roles", "users.role_id", "=", "roles.id")
-      .select("users.name", "users.email", "users.password", "roles.role_name")
+      .select(
+        "users.id",
+        "users.name",
+        "users.email",
+        "users.password",
+        "roles.role_name"
+      )
       .where({ email })
       .first();
 
@@ -102,13 +109,22 @@ export class UserModel extends BaseModel {
     return data;
   };
 
-  static updateUser = async (id: string, userDetails: IUser) => {
+  /**
+   * Update info of user
+   *
+   * @param id - user id
+   * @param userDetails - updated details of user
+   * @returns {Promise<IUser | undefined>} - user or undefined if user doesn't exist
+   */
+  static updateUser = async (
+    id: string,
+    userDetails: IUser
+  ): Promise<IUser | undefined> => {
     //check if role is available and valid
-    if (userDetails.role) {
-      const role = await this.getRoleById(userDetails.role);
-      console.log(role);
+    if (userDetails.roleName) {
+      const role = await RoleModel.getRoleById(userDetails.roleName);
+
       if (!role) {
-        console.log("no user");
         return;
       }
     }
@@ -119,119 +135,12 @@ export class UserModel extends BaseModel {
     return user;
   };
 
+  /**
+   * Delete a user
+   *
+   * @param id - id of the user
+   */
   static deleteUser = async (id: string) => {
     await this.queryBuilder().table("users").where({ id }).del();
   };
-
-  static getRoleByName = async (name: string) => {
-    const role = await this.queryBuilder()
-      .select("*")
-      .table("roles")
-      .where({ role_name: name })
-      .first();
-
-    return role;
-  };
-
-  static getRoleById = async (id: String) => {
-    const role = await this.queryBuilder().select("*").table("roles").first();
-    return role;
-  };
 }
-
-let users: IUser[] = [
-  {
-    id: "1",
-    name: "test",
-    email: "test@test.com",
-    password: "$2b$10$cOMTC5jxv5hRZ8VHGTRMce7CIm.owtUdZIKJ73ZY5xL9ePIWMm2Re",
-    role: userRole.SUPER_USER,
-  },
-  {
-    id: "2",
-    email: "ming@test.com",
-    name: "ming",
-    password: "$2b$10$VpERQZT46YsPELr0ZJyLceIyW7zJcf1d1mZf6Os9HC2dtkTiLbd6K",
-    role: userRole.USER,
-  },
-];
-
-/**
- * Create a user
- *
- * @param {IUser} user - details of the user
- */
-export const createUser = (user: IUser) => {
-  users.push({
-    id: `${users.length + 1}`,
-    ...user,
-  });
-};
-
-/**
- * Get all users
- *
- * @returns {IUser[]}
- */
-export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
-  const { q } = query;
-  console.log("inside model");
-  if (q) {
-    return users.filter((user) => user.name.includes(q));
-  }
-  return users;
-};
-
-/**
- * Get user by email
- *
- * @param {string} email - email of the user
- * @returns {IUser | undefined} user - details of the user
- */
-export const getUserByEmail = (email: string): IUser | undefined => {
-  const user = users.find(({ email: userEmail }) => userEmail === email);
-
-  return user;
-};
-
-/**
- *  Get a user by id
- *
- * @param {string} id - id of the user
- * @returns {IUser | undefined} - user
- */
-export const getUserById = (id: string): IUser | undefined => {
-  const user = users.find(({ id: userId }) => userId === id);
-
-  return user;
-};
-
-/**
- * Delete a user by id
- *
- * @param {string} id
- * @returns {IUser} - deleted user
- */
-export const deleteUserById = (id: string): IUser => {
-  const user = getUserById(id);
-  users = users.filter(({ id: userId }) => userId !== id);
-
-  return user;
-};
-
-/**
- * Update a user by id
- *
- * @param id
- * @param updatedUser
- * @returns {IUser} - deleted user
- */
-export const updateUser = (id: string, updatedUser: IUser): IUser => {
-  let user = users.find(({ id: userId }) => userId === id);
-
-  user = { ...user, ...updatedUser };
-
-  users = [...users.filter(({ id: userId }) => userId !== id), user];
-
-  return user;
-};

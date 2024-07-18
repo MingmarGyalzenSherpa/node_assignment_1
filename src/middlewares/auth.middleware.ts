@@ -3,12 +3,13 @@ import { IExpressRequest as Request } from "../interfaces/IExpressRequest";
 import { verify } from "jsonwebtoken";
 import { config } from "../config";
 import IUser from "../interfaces/IUser";
-import { permissions } from "../constants/permissions";
 import { ForbiddenError } from "../error/ForbiddenError";
 import { UnAuthorizedError } from "../error/UnAuthorizedError";
-
+import { RoleModel } from "../models/role";
+import { RolePermissionsModel } from "../models/rolePermission";
 /**
  * Middleware for authentication
+ *
  * @param req
  * @param res
  * @param next
@@ -41,16 +42,38 @@ export const authentication = (
   next();
 };
 
+/**
+ * Authorization middleware
+ *
+ * @param permission - permission needed
+ * @returns
+ */
 export const authorization =
-  (permission: string) => (req: Request, res: Response, next: NextFunction) => {
+  (permission: string) =>
+  async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-    const userRole = user.role;
-    
-    console.log(userRole);
-    const userPermissions = permissions[userRole];
-    if (!userPermissions.includes(permission)) {
+    const userRole = await RoleModel.getRoleByName(user.roleName);
+
+    //get all corresponding permissions
+    const userPermissions =
+      await RolePermissionsModel.getAllPermissionsByRoleId(userRole.id);
+
+    console.log(userPermissions);
+    if (
+      !userPermissions.find(
+        (permissions) => (permissions.permissionName = permission)
+      )
+    ) {
       next(new ForbiddenError("Access denied"));
     }
+
+    console.log(
+      userPermissions.find((permissions) => {
+        console.log(permissions.permissionName);
+
+        return permissions.permissionName === permission;
+      })
+    );
 
     next();
   };
