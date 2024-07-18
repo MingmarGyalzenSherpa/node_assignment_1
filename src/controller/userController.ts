@@ -19,26 +19,31 @@ export const createUser = async (
   }
 };
 
-export const getAllUsers = (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   const { query } = req;
-  const data = UserServices.getAllUsers(query);
+  const data = await UserServices.getAllUsers(query);
+  console.log(data);
   res.status(HttpStatusCodes.OK).json({
     message: "User fetched successfully",
     data: data,
   });
 };
 
-export const getUserById = (req: Request, res: Response) => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id: userId } = req.params;
-    const data = UserServices.getUserById(userId);
+    const data = await UserServices.getUserById(userId);
 
     res.status(HttpStatusCodes.OK).json({
       message: "User fetched successfully",
       data: [data],
     });
   } catch (error) {
-    throw new BadRequestError(error.message);
+    next(error);
   }
 };
 

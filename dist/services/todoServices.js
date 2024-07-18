@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -36,29 +45,38 @@ const logger = (0, logger_1.default)("Todo Services");
  * Get all todos by id
  *
  * @param {string} userId - id of the user
- * @returns {ITodo[]} todos - list of todos created by user
+ * @returns todos - list of todos created by user
  */
-const getTodos = (userId) => {
+const getTodos = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodos service");
-    const data = TodoModel.getTodos(userId);
+    const data = yield TodoModel.TodoModel.getTodos(userId, query);
+    const count = yield TodoModel.TodoModel.count();
+    const meta = {
+        page: query.page,
+        size: query.size,
+        count: +count.count,
+    };
     if (!data) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
     logger.info("Exiting get todos service");
-    return data;
-};
+    return {
+        data,
+        meta,
+    };
+});
 exports.getTodos = getTodos;
 /**
  * Get a todo by id
  *
  * @param {string} id - id of todo
- * @returns {ITodo} todo - the matching todo
+ * @returns todo - the matching todo
  */
-const getTodoById = (id, userId) => {
+const getTodoById = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started getTodoById service");
-    const data = TodoModel.getTodoById(id, userId);
+    const data = yield TodoModel.TodoModel.getTodoById(id, userId);
     if (!data) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
@@ -66,33 +84,37 @@ const getTodoById = (id, userId) => {
     }
     logger.info("Exiting getTodoById service");
     return data;
-};
+});
 exports.getTodoById = getTodoById;
 /**
  * Add a todo
  *
  * @param todo
- * @returns {todos}
+ * @returns
  */
-const addTodo = (todo) => {
+const addTodo = (todo) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started addTodo service");
-    const data = TodoModel.addTodo(todo);
+    const data = yield TodoModel.TodoModel.addTodo(todo);
     logger.info("Exiting addTodo service");
     return data;
-};
+});
 exports.addTodo = addTodo;
 /**
  *  Delete a todo by id
  *
  * @param {string} id - id of the todo
- * @returns {ITodo} - deleted todo
+ * @returns - deleted todo
  */
-const deleteTodo = (id, userId) => {
+const deleteTodo = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started deleteTodo service");
-    const data = TodoModel.deleteTodo(id, userId);
+    const todoToDelete = yield TodoModel.TodoModel.getTodoById(id, userId);
+    if (!todoToDelete) {
+        return;
+    }
+    yield TodoModel.TodoModel.deleteTodo(id);
     logger.info("Exiting deleteTodo service");
-    return data;
-};
+    return todoToDelete;
+});
 exports.deleteTodo = deleteTodo;
 /**
  * Update a todo by id
@@ -100,19 +122,20 @@ exports.deleteTodo = deleteTodo;
  * @param id - id of the todo
  * @param  userId - id of user
  * @param updatedTodo - updated field of todo
- * @returns {ITodo} - updated todo
+ * @returns- updated todo
  */
-const updateTodo = (id, userId, updatedTodo) => {
+const updateTodo = (id, userId, updatedTodo) => __awaiter(void 0, void 0, void 0, function* () {
     logger.info("Started updateTodo service");
-    const todoToUpdate = TodoModel.getTodoById(id, userId);
+    const todoToUpdate = yield TodoModel.TodoModel.getTodoById(id, userId);
+    console.log(todoToUpdate);
     if (!todoToUpdate) {
         const message = messageGenerator.notFound("Todo");
         logger.error(message);
         throw new NotFoundError_1.NotFoundError(message);
     }
-    const data = TodoModel.updateTodo(todoToUpdate, updatedTodo);
+    const data = TodoModel.TodoModel.updateTodo(todoToUpdate.id, updatedTodo);
     logger.info("Exiting updateTodo service");
     return data;
-};
+});
 exports.updateTodo = updateTodo;
 //# sourceMappingURL=todoServices.js.map

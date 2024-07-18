@@ -1,4 +1,58 @@
+import { IGetRequestQuery } from "../interfaces/IGetRequestQuery";
 import { ITodo } from "./../interfaces/ITodo";
+import { BaseModel } from "./base";
+
+export class TodoModel extends BaseModel {
+  /**
+   * Get all todos
+   *
+   * @param userId
+   * @returns
+   */
+  static getTodos = async (userId: string, filter: IGetRequestQuery) => {
+    const { q } = filter;
+    console.log(filter);
+    const query = this.queryBuilder()
+      .select("id", "title", "completed", "created_at")
+      .table("todos")
+      .where({ created_by: userId })
+      .limit(filter.size)
+      .offset((filter.page - 1) * filter.size);
+
+    if (q) {
+      query.whereLike("title", `%${q}%`);
+    }
+    return await query;
+  };
+
+  static getTodoById = async (todoId: string, userId: string) => {
+    const todo = await this.queryBuilder()
+      .select("id", "title", "completed", "created_at")
+      .table("todos")
+      .where({ id: todoId, created_by: userId })
+      .first();
+    console.log(todo);
+    return todo as ITodo;
+  };
+
+  static count = async () => {
+    const count = await this.queryBuilder().count("*").table("todos").first();
+    return count;
+  };
+
+  static addTodo = async (todo: ITodo) => {
+    return await this.queryBuilder().insert(todo).table("todos");
+  };
+
+  static updateTodo = async (id: string, updatedTodo: ITodo) => {
+    console.log(updatedTodo);
+    await this.queryBuilder().update(updatedTodo).table("todos").where({ id });
+  };
+
+  static deleteTodo = async (id: string) => {
+    await this.queryBuilder().table("todos").where({ id: id }).del();
+  };
+}
 
 let todos: ITodo[] = [
   {

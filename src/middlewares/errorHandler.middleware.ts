@@ -17,10 +17,8 @@ export const genericErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("here");
-
   //unauthorized error
-  console.log(err.message);
+  console.log(err);
   if (err instanceof UnAuthorizedError) {
     return res.status(HttpStatusCodes.UNAUTHORIZED).json({
       message: err.message,

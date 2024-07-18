@@ -5,6 +5,7 @@ import { BadRequestError } from "../error/BadRequestError";
 
 export const validateReqQuery =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.query);
     const { error, value } = schema.validate(req.query);
     console.log(value);
     if (error) {

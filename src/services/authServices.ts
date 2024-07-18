@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
-import { getUserByEmail } from "./userServices";
+import * as UserService from "./userServices";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { config } from "../config";
 import { NotFoundError } from "../error/NotFoundError";
@@ -18,16 +18,17 @@ const logger = loggerWithNameSpace("Auth Services");
 export const login = async (
   user: Pick<IUser, "email" | "password">
 ): Promise<object> => {
-  const existingUser = getUserByEmail(user.email);
-
   //log
   logger.info("Started login service");
+  const existingUser = await UserService.getUserByEmail(user.email);
 
   if (!existingUser) {
     const message = messageGenerator.invalid("email or password");
     logger.error(message);
     throw new NotFoundError(message);
   }
+  console.log(user);
+  console.log(existingUser);
 
   const isValidPassword = await bcrypt.compare(
     user.password,

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateReqBody = exports.validateReqQuery = void 0;
 const BadRequestError_1 = require("../error/BadRequestError");
 const validateReqQuery = (schema) => (req, res, next) => {
+    console.log(req.query);
     const { error, value } = schema.validate(req.query);
     console.log(value);
     if (error) {

@@ -1,7 +1,7 @@
 import { userRole } from "./userRole";
 
 export const permissions: Record<userRole, string[]> = {
-  superUser: [
+  superAdmin: [
     "user.get",
     "user.create",
     "user.delete",

@@ -18,21 +18,16 @@ const logger = loggerWithNameSpace("User Services");
  */
 export const createUser = async (user: IUser): Promise<object> => {
   logger.info("Started createUser service");
-  console.log(user);
-  const existingUser = UserModel.getUserByEmail(user.email);
-
+  const existingUser = await UserModel.UserModel.getUserByEmail(user.email);
+  console.log(existingUser);
   if (existingUser) {
     const message = messageGenerator.alreadyExists("User");
     logger.error(message);
     throw new BadRequestError(message);
   }
 
-  if (!user.role) {
-    user.role = userRole.USER;
-  }
-
   const hashedPassword = await bcrypt.hash(user.password, 10);
-  UserModel.createUser({ ...user, password: hashedPassword });
+  UserModel.UserModel.createUser({ ...user, password: hashedPassword });
 
   logger.info("Exiting createUser service");
   return {
@@ -43,23 +38,23 @@ export const createUser = async (user: IUser): Promise<object> => {
 /**
  * Get all users
  *
- * @returns {IUser[]}
+ * @returns
  */
-export const getAllUsers = (query: IGetRequestQuery): IUser[] => {
+export const getAllUsers = async (query: IGetRequestQuery) => {
   logger.info("Started getAllUsers service");
   logger.info("Exiting getAllUsers service");
-  return UserModel.getAllUsers(query);
+  return UserModel.UserModel.getUsers(query);
 };
 
 /**
  * Get a user by email
  *
  * @param {string} email - email of the user
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns - user or undefined if doesn't exist
  */
-export const getUserByEmail = (email: string): IUser | undefined => {
+export const getUserByEmail = async (email: string) => {
   logger.info("Started getUserByEmail service");
-  const data = UserModel.getUserByEmail(email);
+  const data = await UserModel.UserModel.getUserByEmail(email);
 
   logger.info("Exiting getUserByEmail service");
   return data;
@@ -69,12 +64,13 @@ export const getUserByEmail = (email: string): IUser | undefined => {
  * Get a user by id
  *
  * @param id
- * @returns {IUser | undefined} - user or undefined if doesn't exist
+ * @returns {object | undefined} - user or undefined if doesn't exist
  */
-export const getUserById = (id: string): IUser | undefined => {
+export const getUserById = async (id: string) => {
   logger.info("Started getUserById service");
 
-  const data = UserModel.getUserById(id);
+  const data = await UserModel.UserModel.getUserById(id);
+
   if (!data) {
     const message = messageGenerator.notFound("User");
     logger.error(message);
@@ -90,15 +86,12 @@ export const getUserById = (id: string): IUser | undefined => {
  *
  * @param {string} id - id of user
  * @param {IUser} updatedUser - new field of user
- * @returns {Promise<IUser>} - user
+ * @returns - user
  */
-export const updateUser = async (
-  id: string,
-  updatedUser: IUser
-): Promise<IUser> => {
+export const updateUser = async (id: string, updatedUser: IUser) => {
   logger.info("Started updateUser service");
 
-  const userExists = UserModel.getUserById(id);
+  const userExists = UserModel.UserModel.getUserById(id);
 
   if (!userExists) {
     const message = messageGenerator.notFound("User");
@@ -106,14 +99,11 @@ export const updateUser = async (
     throw new NotFoundError(message);
   }
 
-  console.log(updatedUser);
-
   if (updatedUser.password) {
     updatedUser.password = await bcrypt.hash(updatedUser.password, 10);
   }
 
-  console.log(updatedUser.password);
-  const data = UserModel.updateUser(id, updatedUser);
+  const data = await UserModel.UserModel.updateUser(id, updatedUser);
 
   logger.info("Exiting updateUser service");
   return data;
